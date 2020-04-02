@@ -349,7 +349,7 @@ void Ntc_Igbt1_Igbt2_Read(void)
 
     Temp_Ntc_Igbt2 = Get_Temperature((((float)ADS1x1x_read(&ntc_igbt2)*6.144)/2047.0));
 
-    delay_ms(30);
+    delay_ms(300);
 
 }
 
