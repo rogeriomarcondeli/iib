@@ -51,8 +51,8 @@ static float A = 0.001003604774;
 static float B = 0.000264014765;
 static float C = 0.000000164677;
 
-static float Temp_Ntc_Igbt1 = 0.0;
-static float Temp_Ntc_Igbt2 = 0.0;
+static unsigned char Temp_Ntc_Igbt1 = 0;
+static unsigned char Temp_Ntc_Igbt2 = 0;
 
 /**************************************************************************/
 
@@ -356,7 +356,7 @@ void Ntc_Igbt1_Igbt2_Read(void)
 //******************************************************************************
 // Read the ADS1014 with NTC 5K Igbt1 and return value
 //******************************************************************************
-float Temp_Igbt1_Read(void)
+unsigned char Temp_Igbt1_Read(void)
 {
   return Temp_Ntc_Igbt1;
 }
@@ -364,7 +364,7 @@ float Temp_Igbt1_Read(void)
 //******************************************************************************
 // Read the ADS1014 with NTC 5K Igbt2 and return value
 //******************************************************************************
-float Temp_Igbt2_Read(void)
+unsigned char Temp_Igbt2_Read(void)
 {
   return Temp_Ntc_Igbt2;
 }

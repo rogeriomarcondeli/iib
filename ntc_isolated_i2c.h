@@ -15,8 +15,8 @@ extern "C" {
 #include <stdint.h>
 
 void Ntc_Igbt1_Igbt2_Init(void);
-float Temp_Igbt1_Read(void);
-float Temp_Igbt2_Read(void);
+unsigned char Temp_Igbt1_Read(void);
+unsigned char Temp_Igbt2_Read(void);
 
 extern void Ntc_Igbt1_Igbt2_Start_Conversion(void);
 extern void Ntc_Igbt1_Igbt2_Read(void);

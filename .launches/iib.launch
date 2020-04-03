@@ -55,8 +55,8 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.C:\Users\gabriel.brunheira\lnls-elp\iib\targetConfigs\Tiva TM4C129ENCPDT.ccxml.Texas Instruments XDS100v2 USB Debug Probe_0/CORTEX_M4_0" value="C:/Users\gabriel.brunheira\lnls-elp\iib\Debug\iib.out"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.C:\Users\grupoelp\lnls-elp\iib\targetConfigs\TM4C129-XDS110.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="C:/Users\grupoelp\lnls-elp\iib\Debug\iib.out"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.C:\Users\grupoelp\lnls-elp\iib\targetConfigs\Tiva TM4C129ENCPDT.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="C:/Users\grupoelp\lnls-elp\iib\Debug\iib.out"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.IibTargetConfiguration.ccxml.Texas Instruments XDS100v2 USB Debug Probe_0/CORTEX_M4_0" value="C:/Users\roger\workspace_v9\iib\Debug\iib.out"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.Tiva TM4C129ENCPDT.ccxml.Texas Instruments XDS100v2 USB Debug Probe_0/CORTEX_M4_0" value="C:/Users\roger\workspace_v9\iib\Debug\iib.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.IibTargetConfiguration.ccxml.Texas Instruments XDS100v2 USB Debug Probe_0/CORTEX_M4_0" value="C:\Users\roger\workspace_v10\iib\Debug\iib.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.Tiva TM4C129ENCPDT.ccxml.Texas Instruments XDS100v2 USB Debug Probe_0/CORTEX_M4_0" value="C:\Users\roger\workspace_v10\iib\Debug\iib.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/iib"/>
 </listAttribute>

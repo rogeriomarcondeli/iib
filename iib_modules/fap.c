@@ -361,13 +361,13 @@ void fap_application_readings()
     fap.TempLAlarmSts = Pt100ReadCh2AlarmSts();
     if(!fap.TempLItlkSts)fap.TempLItlkSts                       = Pt100ReadCh2TripSts();
 
-    fap.TempIGBT1.f = Temp_Igbt1_Read();
+    fap.TempIGBT1.f = (float) Temp_Igbt1_Read();
     fap.TempIGBT1AlarmSts = 0;
     fap.TempIGBT1ItlkSts = 0;
 
     if(!fap.TempIGBT1HwrItlkSts) fap.TempIGBT1HwrItlkSts        = Driver1OverTempRead();
 
-    fap.TempIGBT2.f = Temp_Igbt2_Read();
+    fap.TempIGBT2.f = (float) Temp_Igbt2_Read();
     fap.TempIGBT2AlarmSts = 0;
     fap.TempIGBT2ItlkSts = 0;
 
