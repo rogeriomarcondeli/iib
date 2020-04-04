@@ -41,6 +41,8 @@
 #define FAP_EXTERNAL_ITLK                   0x00004000
 #define FAP_RACK_ITLK                       0x00008000
 #define FAP_GROUND_LKG_ITLK                 0x00010000
+#define FAP_BOARD_IIB_OVERTEMP_ITLK         0x00020000
+#define FAP_BOARD_IIB_OVERHUMIDITY_ITLK     0x00040000
 
 #define FAP_INPUT_OVERVOLTAGE_ALM           0x00000001
 #define FAP_OUTPUT_OVERVOLTAGE_ALM          0x00000002
@@ -54,6 +56,8 @@
 #define FAP_INDUC_OVERTEMP_ALM              0x00000200
 #define FAP_HS_OVERTEMP_ALM                 0x00000400
 #define FAP_GROUND_LKG_ALM                  0x00000800
+#define FAP_BOARD_IIB_OVERTEMP_ALM          0x00001000
+#define FAP_BOARD_IIB_OVERHUMIDITY_ALM      0x00002000
 
 /**
  * TODO: Put here your functions prototypes. Just what need 

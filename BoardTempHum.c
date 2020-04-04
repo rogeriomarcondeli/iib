@@ -36,8 +36,8 @@
 #define q1  0.00237
 
 
-static float RelativeHumidity = 0.0;
-static float Temperature = 0.0;
+static unsigned char RelativeHumidity = 0;
+static unsigned char Temperature = 0;
 
 static unsigned char Start1 = 0x01;
 static unsigned char Start2 = 0x11;
