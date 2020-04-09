@@ -1,7 +1,4 @@
 
-
-
-
 #ifndef __ADC_INTERNAL_H__
 #define __ADC_INTERNAL_H__
 
@@ -37,8 +34,8 @@ extern void LvCurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsi
 extern void LvCurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
 extern void LvCurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
 
-extern void DriverVoltageInit(void);
-extern void DriverCurrentInit(void);
+extern void DriverVoltageInit(unsigned char delay_ms);
+extern void DriverCurrentInit(unsigned char delay_ms);
 
 extern void VoltageCh1Sample(void);
 extern void VoltageCh2Sample(void);

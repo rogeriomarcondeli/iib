@@ -646,16 +646,17 @@ static void config_module()
     Driver1ErrEnable();
     Driver2ErrEnable();
 
-    // Leitura da tensao dos drivers
+    DriverVoltageInit(3); // Inserir valor de delay
 
+    // Leitura da tensao dos drivers
     DriverVoltageAlarmLevelSet(FAP_DRIVER_OVERVOLTAGE_ALM_LIM_LIM); // Rogerio adicionou
     DriverVoltageTripLevelSet(FAP_DRIVER_OVERVOLTAGE_ITLK_LIM);     // Rogerio adicionou
 
-    // Leitura da corrente dos drivers
+    DriverCurrentInit(3); // Inserir valor de delay
 
+    // Leitura da corrente dos drivers
     Driver1CurrentAlarmLevelSet(FAP_DRIVER1_OVERCURRENT_ALM_LIM ); // Rogerio adicionou
     Driver1CurrentTripLevelSet(FAP_DRIVER1_OVERCURRENT_ITLK_LIM);  // Rogerio adicionou
-
 
     Driver2CurrentAlarmLevelSet(FAP_DRIVER2_OVERCURRENT_ALM_LIM);  // Rogerio adicionou
     Driver2CurrentTripLevelSet(FAP_DRIVER2_OVERCURRENT_ITLK_LIM);  // Rogerio adicionou

@@ -28,10 +28,8 @@
 #include "BoardTempHum.h"
 #include "ntc_isolated_i2c.h"
 #include "pt100.h"
-//#include "memory.h"
 #include "task.h"
 #include "iib_data.h"
-//#include "driver_board.h"
 
 #define ON  ~0
 #define OFF 0
@@ -157,12 +155,6 @@ int main(void)
     init_control_framwork(&g_controller_iib);
 
     AdcsInit();
-
-    //Driver Voltage channel configuration
-    DriverVoltageInit();
-
-    //Driver Current channel configuration
-    DriverCurrentInit();
 
     //LEDs initialization
     LedsInit();

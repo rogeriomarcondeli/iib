@@ -1,17 +1,13 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
 #include "inc/hw_memmap.h"
 #include "driverlib/adc.h"
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/sysctl.h"
-
-
 #include "adc_internal.h"
-//#include "memory.h"
-#include "math.h"
-//#include "application.h"
 
 static int Adc_Value = 0;
 static float Adc_Float = 0.0;
@@ -170,12 +166,11 @@ void AdcsInit(void)
     DriverVolt.Enable = 0;
     Driver1Curr.Enable = 0;
     Driver2Curr.Enable = 0;
-
+    
     NtcCh1Enable = 0;
     NtcCh2Enable = 0;
     NtcCh3Enable = 0;
     NtcCh4Enable = 0;
-    
 }
 
 void sample_adc(void)
@@ -216,7 +211,7 @@ void sample_adc(void)
 
 }
 
-void ConfigVoltCh1AsNtc(unsigned char sts) 
+void ConfigVoltCh1AsNtc(unsigned char sts)
 {
     NtcCh1Enable = sts;
 }
@@ -485,7 +480,7 @@ void LvCurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned ch
     LvCurrentCh3.Itlk_DelayCount = 0;
 }
 
-void DriverVoltageInit(void)
+void DriverVoltageInit(unsigned char delay_ms)
 {
     DriverVolt.Ch = 1;
     DriverVolt.Enable = 1;
@@ -497,9 +492,13 @@ void DriverVoltageInit(void)
     DriverVolt.Alarm = 0;
     DriverVolt.Trip = 0;
     DriverVolt.InvertPol = 0;
+    DriverVolt.Alarm_Delay_ms = delay_ms;
+    DriverVolt.Alarm_DelayCount = 0;
+    DriverVolt.Itlk_Delay_ms = delay_ms;
+    DriverVolt.Itlk_DelayCount = 0;
 }
 
-void DriverCurrentInit(void)
+void DriverCurrentInit(unsigned char delay_ms)
 {
     Driver1Curr.Ch = 1;
     Driver1Curr.Enable = 1;
@@ -511,7 +510,10 @@ void DriverCurrentInit(void)
     Driver1Curr.Alarm = 0;
     Driver1Curr.Trip = 0;
     Driver1Curr.InvertPol = 0;
-
+    Driver1Curr.Alarm_Delay_ms = delay_ms;
+    Driver1Curr.Alarm_DelayCount = 0;
+    Driver1Curr.Itlk_Delay_ms = delay_ms;
+    Driver1Curr.Itlk_DelayCount = 0;
 
     Driver2Curr.Ch = 1;
     Driver2Curr.Enable = 1;
@@ -523,6 +525,10 @@ void DriverCurrentInit(void)
     Driver2Curr.Alarm = 0;
     Driver2Curr.Trip = 0;
     Driver2Curr.InvertPol = 0;
+    Driver2Curr.Alarm_Delay_ms = delay_ms;
+    Driver2Curr.Alarm_DelayCount = 0;
+    Driver2Curr.Itlk_Delay_ms = delay_ms;
+    Driver2Curr.Itlk_DelayCount = 0;
 }
 
 void VoltageCh1Sample(void)
@@ -668,14 +674,27 @@ void DriverVoltageSample(void)
     Adc_Value = adc_1_value[4];
     DriverVolt.Value = Adc_Value * DriverVolt.Gain;
     
-    if(DriverVolt.Value > 18.0) DriverVolt.Value = 18.0;
-    else if(DriverVolt.Value < 0.0) DriverVolt.Value = 0.0;
-    
     if(DriverVolt.Value > DriverVolt.AlarmLimit)
     {
-        DriverVolt.Alarm = 1;
-        if(DriverVolt.Value > DriverVolt.TripLimit) DriverVolt.Trip = 1;
+        if(DriverVolt.Alarm_DelayCount < DriverVolt.Alarm_Delay_ms) DriverVolt.Alarm_DelayCount++;
+        else
+        {
+           DriverVolt.Alarm_DelayCount = 0;
+           DriverVolt.Alarm = 1;
+        }
     }
+    else DriverVolt.Alarm_DelayCount = 0;
+    
+    if(DriverVolt.Value > DriverVolt.TripLimit)
+    {
+        if(DriverVolt.Itlk_DelayCount < DriverVolt.Itlk_Delay_ms) DriverVolt.Itlk_DelayCount++;
+        else
+        {
+           DriverVolt.Itlk_DelayCount = 0;
+           DriverVolt.Trip = 1;
+        }
+    }
+    else DriverVolt.Itlk_DelayCount = 0;
 }
 
 void Driver1CurrentSample(void)
@@ -684,15 +703,27 @@ void Driver1CurrentSample(void)
     Adc_Value = Adc_Value - Driver1Curr.Offset;
     Driver1Curr.Value = Adc_Value * Driver1Curr.Gain;
     
-    if(Driver1Curr.Value > 2.5) Driver1Curr.Value = 2.5; // Rogerio alterou
-    else if(Driver1Curr.Value < 0.0) Driver1Curr.Value = 0.0;
-    
     if(Driver1Curr.Value > Driver1Curr.AlarmLimit)
     {
-        Driver1Curr.Alarm = 1;
-        if(Driver1Curr.Value > Driver1Curr.TripLimit) Driver1Curr.Trip = 1; // Rogerio alterou
+        if(Driver1Curr.Alarm_DelayCount < Driver1Curr.Alarm_Delay_ms) Driver1Curr.Alarm_DelayCount++;
+        else
+        {
+           Driver1Curr.Alarm_DelayCount = 0;
+           Driver1Curr.Alarm = 1;
+        }
     }
+    else Driver1Curr.Alarm_DelayCount = 0;
     
+    if(Driver1Curr.Value > Driver1Curr.TripLimit)
+    {
+        if(Driver1Curr.Itlk_DelayCount < Driver1Curr.Itlk_Delay_ms) Driver1Curr.Itlk_DelayCount++;
+        else
+        {
+           Driver1Curr.Itlk_DelayCount = 0;
+           Driver1Curr.Trip = 1;
+        }
+    }
+    else Driver1Curr.Itlk_DelayCount = 0;
 }
 
 void Driver2CurrentSample(void)
@@ -701,15 +732,27 @@ void Driver2CurrentSample(void)
     Adc_Value = Adc_Value - Driver2Curr.Offset;
     Driver2Curr.Value = Adc_Value * Driver2Curr.Gain;
 
-    if(Driver2Curr.Value > 2.5) Driver2Curr.Value = 2.5; // Rogerio alterou
-    else if(Driver2Curr.Value < 0.0) Driver2Curr.Value = 0.0;
-
     if(Driver2Curr.Value > Driver2Curr.AlarmLimit)
     {
-        Driver2Curr.Alarm = 1;
-        if(Driver2Curr.Value > Driver2Curr.TripLimit) Driver2Curr.Trip = 1; // Rogerio alterou
+        if(Driver2Curr.Alarm_DelayCount < Driver2Curr.Alarm_Delay_ms) Driver2Curr.Alarm_DelayCount++;
+        else
+        {
+           Driver2Curr.Alarm_DelayCount = 0;
+           Driver2Curr.Alarm = 1;
+        }
     }
+    else Driver2Curr.Alarm_DelayCount = 0;
 
+    if(Driver2Curr.Value > Driver2Curr.TripLimit)
+    {
+        if(Driver2Curr.Itlk_DelayCount < Driver2Curr.Itlk_Delay_ms) Driver2Curr.Itlk_DelayCount++;
+        else
+        {
+           Driver2Curr.Itlk_DelayCount = 0;
+           Driver2Curr.Trip = 1;
+        }
+    }
+    else Driver2Curr.Itlk_DelayCount = 0;
 }
 
 float DriverVoltageRead(void) // Rogerio alterou
@@ -1203,8 +1246,7 @@ void VoltageCh4TripLevelSet(float nValue)
     VoltageCh4.TripLimit = nValue;
 }
 
-
-
+//*****************************************************************************
 unsigned char VoltageCh1AlarmStatusRead(void)
 {
     if(VoltageCh1.Enable)return VoltageCh1.Alarm;
@@ -1253,8 +1295,7 @@ unsigned char VoltageCh4TripStatusRead(void)
     else return 0;
 }
 
-//**********************************************************
-
+//*****************************************************************************
 void CurrentCh1AlarmLevelSet(float nValue)
 {
     CurrentCh1.AlarmLimit = nValue;
@@ -1375,8 +1416,7 @@ void LvCurrentCh3TripLevelSet(float nValue)
     LvCurrentCh3.TripLimit = nValue;
 }
 
-
-
+//*****************************************************************************
 unsigned char LvCurrentCh1AlarmStatusRead(void)
 {
     if(LvCurrentCh1.Enable)return LvCurrentCh1.Alarm;
