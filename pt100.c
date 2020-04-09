@@ -12,12 +12,10 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/ssi.h"
 #include "driverlib/pin_map.h"
-
 #include "board_drivers/hardware_def.h"
 #include "peripheral_drivers/spi/spi.h"
 #include "peripheral_drivers/gpio/gpio_driver.h"
 #include "peripheral_drivers/timer/timer.h"
-
 #include "pt100.h"
 #include "leds.h"
 

@@ -21,10 +21,8 @@
 
 #include <iib_modules/fap.h>
 #include "iib_data.h"
-
 #include "adc_internal.h"
 #include "application.h"
-
 #include "BoardTempHum.h"
 #include "ntc_isolated_i2c.h"
 #include "pt100.h"
@@ -32,7 +30,6 @@
 #include "leds.h"
 #include "can_bus.h"
 #include "input.h"
-
 #include <stdbool.h>
 #include <stdint.h>
 

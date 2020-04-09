@@ -1,6 +1,4 @@
 
-
-
 #ifndef __PT100_H__
 #define __PT100_H__
 
