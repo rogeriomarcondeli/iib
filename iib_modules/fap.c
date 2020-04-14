@@ -183,9 +183,9 @@ typedef struct
     bool Drive2CurrentItlkSts;
 
     bool Driver1Error;
-    bool Driver1ErrorItlk;
+    bool Driver1ErrorItlkSts;
     bool Driver2Error;
-    bool Driver2ErrorItlk;
+    bool Driver2ErrorItlkSts;
 
     union {
         float   f;
@@ -267,8 +267,8 @@ void clear_fap_interlocks()
     fap.TempIGBT1HwrItlkSts      = 0;
     fap.TempIGBT2ItlkSts         = 0;
     fap.TempIGBT2HwrItlkSts      = 0;
-    fap.Driver1ErrorItlk         = 0;
-    fap.Driver2ErrorItlk         = 0;
+    fap.Driver1ErrorItlkSts      = 0;
+    fap.Driver2ErrorItlkSts      = 0;
     fap.TempLItlkSts             = 0;
     fap.TempHeatSinkItlkSts      = 0;
     fap.ExternalItlkSts          = 0;
@@ -297,8 +297,8 @@ uint8_t check_fap_interlocks()
     test |= fap.TempIGBT1HwrItlkSts;
     test |= fap.TempIGBT2ItlkSts;
     test |= fap.TempIGBT2HwrItlkSts;
-    test |= fap.Driver1ErrorItlk;
-    test |= fap.Driver2ErrorItlk;
+    test |= fap.Driver1ErrorItlkSts;
+    test |= fap.Driver2ErrorItlkSts;
     test |= fap.TempLItlkSts;
     test |= fap.TempHeatSinkItlkSts;
     test |= fap.ExternalItlkSts;
@@ -411,7 +411,7 @@ void check_fap_indication_leds()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlocks dos Drivers
-    if(fap.Driver1ErrorItlk || fap.Driver2ErrorItlk || fap.DriveVoltageItlkSts || fap.Drive1CurrentItlkSts || fap.Drive2CurrentItlkSts) Led9TurnOff();
+    if(fap.Driver1ErrorItlkSts || fap.Driver2ErrorItlkSts || fap.DriveVoltageItlkSts || fap.Drive1CurrentItlkSts || fap.Drive2CurrentItlkSts) Led9TurnOff();
     else if(fap.DriveVoltageAlarmSts || fap.Drive1CurrentAlarmSts || fap.Drive2CurrentAlarmSts) Led9Toggle();
     else Led9TurnOn();
 
@@ -536,13 +536,13 @@ void fap_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock externo
-    fap.ExternalItlk = Gpdi5Read();
+    fap.ExternalItlk = Gpdi5Read(); //Variavel usada para debug
     if(!fap.ExternalItlkSts) fap.ExternalItlkSts = Gpdi5Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock do Rack
-    fap.Rack = Gpdi6Read();
+    fap.Rack = Gpdi6Read(); //Variavel usada para debug
     if(!fap.RackSts) fap.RackSts = Gpdi6Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -553,19 +553,19 @@ void fap_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 1
-    fap.Driver1Error = Driver1TopErrRead();
-    if(!fap.Driver1ErrorItlk) fap.Driver1ErrorItlk = Driver1TopErrRead();
+    fap.Driver1Error = Driver1TopErrRead(); //Variavel usada para debug
+    if(!fap.Driver1ErrorItlkSts) fap.Driver1ErrorItlkSts = Driver1TopErrRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 2
-    fap.Driver2Error = Driver2TopErrRead();
-    if(!fap.Driver2ErrorItlk) fap.Driver2ErrorItlk = Driver2TopErrRead();
+    fap.Driver2Error = Driver2TopErrRead(); //Variavel usada para debug
+    if(!fap.Driver2ErrorItlkSts) fap.Driver2ErrorItlkSts = Driver2TopErrRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Ativa Interlock
-    if(fap.ExternalItlkSts || fap.Driver2ErrorItlk || fap.Driver2ErrorItlk) InterlockSet(); // If no signal over the port, then set Interlock action
+    //Se nao houver sinal na entrada digital dos 3 sinais, defina a acao como Interlock.
+    if(fap.ExternalItlkSts || fap.Driver1ErrorItlkSts || fap.Driver2ErrorItlkSts) InterlockSet();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -636,8 +636,8 @@ static void get_itlks_id()
     if (fap.IoutA2ItlkSts)             itlk_id |= FAP_OUTPUT_OVERCURRENT_2_ITLK;
     if (fap.TempIGBT1ItlkSts)          itlk_id |= FAP_IGBT1_OVERTEMP_ITLK;
     if (fap.TempIGBT2ItlkSts)          itlk_id |= FAP_IGBT2_OVERTEMP_ITLK;
-    if (fap.Driver1ErrorItlk)          itlk_id |= FAP_DRIVER1_ERROR_ITLK;
-    if (fap.Driver2ErrorItlk)          itlk_id |= FAP_DRIVER2_ERROR_ITLK;
+    if (fap.Driver1ErrorItlkSts)       itlk_id |= FAP_DRIVER1_ERROR_ITLK;
+    if (fap.Driver2ErrorItlkSts)       itlk_id |= FAP_DRIVER2_ERROR_ITLK;
     if (fap.TempLItlkSts)              itlk_id |= FAP_INDUC_OVERTEMP_ITLK;
     if (fap.TempHeatSinkItlkSts)       itlk_id |= FAP_HS_OVERTEMP_ITLK;
     if (fap.Relay)                     itlk_id |= FAP_RELAY_ITLK;
@@ -810,9 +810,9 @@ static void config_module()
     fap.Drive2CurrentAlarmSts    = 0;
     fap.Drive2CurrentItlkSts     = 0;
     fap.Driver1Error             = 0;
-    fap.Driver1ErrorItlk         = 0;
+    fap.Driver1ErrorItlkSts      = 0;
     fap.Driver2Error             = 0;
-    fap.Driver2ErrorItlk         = 0;
+    fap.Driver2ErrorItlkSts      = 0;
     fap.TempL.f                  = 0;
     fap.TempLAlarmSts            = 0;
     fap.TempLItlkSts             = 0;
