@@ -522,12 +522,12 @@ static void config_module()
     Pt100Ch4Disable();
 
     // Rh configuration limits
-    RhAlarmLimitSet(FAP_RH_ALM_LIM);
-    RhTripLimitSet(FAP_RH_ITLK_LIM);
+    RhAlarmLevelSet(FAP_RH_ALM_LIM);
+    RhTripLevelSet(FAP_RH_ITLK_LIM);
 
     // Temp board configuration limits
-    TempBoardAlarmLimitSet(FAP_BOARD_TEMP_ALM_LIM);
-    TempBoardTripLimitSet(FAP_BOARD_TEMP_ITLK_LIM);
+    BoardTempAlarmLevelSet(FAP_BOARD_TEMP_ALM_LIM);
+    BoardTempTripLevelSet(FAP_BOARD_TEMP_ITLK_LIM);
 
     Driver1ErrEnable();
     Driver2ErrEnable();

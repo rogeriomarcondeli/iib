@@ -483,12 +483,12 @@ static void config_module()
     Pt100Ch4Disable();           // Enable PT100 channel 4
 
     // Rh configuration limits
-    RhAlarmLimitSet(RM_RH_ALM_LIM);
-    RhTripLimitSet(RM_RH_ITLK_LIM);
+    RhAlarmLevelSet(RM_RH_ALM_LIM);
+    RhTripLevelSet(RM_RH_ITLK_LIM);
 
     // Temp board configuration limits
-    TempBoardAlarmLimitSet(RM_BOARD_TEMP_ALM_LIM);
-    TempBoardTripLimitSet(RM_BOARD_TEMP_ITLK_LIM);
+    BoardTempAlarmLevelSet(RM_BOARD_TEMP_ALM_LIM);
+    BoardTempTripLevelSet(RM_BOARD_TEMP_ITLK_LIM);
 
     Driver1ErrDisable();         // Driver1 Error Signal Disable
     Driver2ErrDisable();         // Driver1 Error Signal Disable

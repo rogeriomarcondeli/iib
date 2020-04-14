@@ -369,8 +369,8 @@ static void config_module()
     Pt100Ch2Enable();
 
     /* RH configuration limits */
-    TempBoardAlarmLimitSet(80);
-    TempBoardTripLimitSet(90);
+    BoardTempAlarmLevelSet(80);
+    BoardTempTripLevelSet(90);
 
     /* Driver Error Enable */
     Driver1ErrEnable();

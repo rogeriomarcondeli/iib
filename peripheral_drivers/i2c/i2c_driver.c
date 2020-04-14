@@ -1,3 +1,6 @@
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
  * i2c_driver.c
  *
@@ -13,54 +16,53 @@
 #include "inc/hw_memmap.h"
 #include "inc/hw_ints.h"
 #include "inc/hw_types.h"
-
 #include "driverlib/debug.h"
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/i2c.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/interrupt.h"
-
 #include "i2c_driver.h"
 #include "board_drivers/hardware_def.h"
 #include "peripheral_drivers/gpio/gpio_driver.h"
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 #define I2C_READ true
 #define I2C_WRITE false
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 //initialize I2C module 5
 //Slightly modified version of TI's example code
 void InitI2C5(void)
 {
-    //
+
     // Configure Pins for I2C2 Master Interface
-    //
     GPIOPinConfigure(GPIO_PB0_I2C5SCL);
     GPIOPinConfigure(GPIO_PB1_I2C5SDA);
     GPIOPinTypeI2C(GPIO_PORTB_BASE, GPIO_PIN_1);
     GPIOPinTypeI2CSCL(GPIO_PORTB_BASE, GPIO_PIN_0);
 
-    //
     // Stop the Clock, Reset and Enable I2C Module
     // in Master Function
-    //
     SysCtlPeripheralDisable(SYSCTL_PERIPH_I2C5);
     SysCtlPeripheralReset(SYSCTL_PERIPH_I2C5);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C5);
-    //
+
     // Wait for the Peripheral to be ready for programming
-    //
     while(!SysCtlPeripheralReady(SYSCTL_PERIPH_I2C5));
-    //
+
     // Initialize and Configure the Master Module
-    //
-    //I2CMasterInitExpClk(I2C5_BASE, SysCtlClockGet(), false); //Rogerio alterou (comentado) para 100Khz.
-    I2CMasterInitExpClk(I2C5_BASE, SysCtlClockGet(), true); //Rogerio alterou (descomentado) para 400Khz.
+    //I2CMasterInitExpClk(I2C5_BASE, SysCtlClockGet(), false); //para 100Khz.
+    I2CMasterInitExpClk(I2C5_BASE, SysCtlClockGet(), true); //para 400Khz.
 
     // Enable the Glitch Filter
     I2CMasterGlitchFilterConfigSet(I2C5_BASE, I2C_MASTER_GLITCH_FILTER_8);
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 //sends an I2C command to the specified slave
 void I2C5Send(uint8_t slave_addr, uint8_t num_of_args, ...)
@@ -82,7 +84,7 @@ void I2C5Send(uint8_t slave_addr, uint8_t num_of_args, ...)
     I2CMasterDataPut(I2C5_BASE, va_arg(vargs, uint32_t));
 
     // Wait until MCU is done transferring.
-    while(I2CMasterBusy(I2C5_BASE)); //Rogerio alterou (Descomentado)
+    while(I2CMasterBusy(I2C5_BASE));
 
     //if there is only one argument, we only need to use the
     //single send I2C function
@@ -135,6 +137,8 @@ void I2C5Send(uint8_t slave_addr, uint8_t num_of_args, ...)
     }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 //read specified register on slave device
 uint32_t I2C5Receive(uint32_t slave_addr, uint8_t reg)
 {
@@ -149,7 +153,7 @@ uint32_t I2C5Receive(uint32_t slave_addr, uint8_t reg)
     I2CMasterControl(I2C5_BASE, I2C_MASTER_CMD_BURST_SEND_START);
 
     //wait for MCU to finish transaction
-    while(!(I2CMasterBusy(I2C5_BASE))); //Rogerio alterou (Descomentado)
+    while(!(I2CMasterBusy(I2C5_BASE)));
 
     while(I2CMasterBusy(I2C5_BASE));
 
@@ -166,6 +170,8 @@ uint32_t I2C5Receive(uint32_t slave_addr, uint8_t reg)
     //return data pulled from the specified register
     return I2CMasterDataGet(I2C5_BASE);
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 //initialize I2C module 2
 //Slightly modified version of TI's example code
@@ -188,15 +194,15 @@ void InitI2C2(void)
     while(!SysCtlPeripheralReady(SYSCTL_PERIPH_I2C2));
 
     // Initialize and Configure the Master Module
-    //I2CMasterInitExpClk(I2C2_BASE, SysCtlClockGet(), false); //Rogerio alterou (descomentado) para 100Khz.
-    I2CMasterInitExpClk(I2C2_BASE, SysCtlClockGet(), true); //Rogerio alterou (comentado) para 400Khz.
+    //I2CMasterInitExpClk(I2C2_BASE, SysCtlClockGet(), false); //para 100Khz.
+    I2CMasterInitExpClk(I2C2_BASE, SysCtlClockGet(), true); //para 400Khz.
 
     // Enable the Glitch Filter
     I2CMasterGlitchFilterConfigSet(I2C2_BASE, I2C_MASTER_GLITCH_FILTER_8);
 
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

@@ -19,6 +19,7 @@
  *
  */
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * TODO: Put here your includes
@@ -34,6 +35,8 @@
  * private members.
  */
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 volatile control_framwork_t g_controller_iib;
 
 /**
@@ -41,6 +44,7 @@ volatile control_framwork_t g_controller_iib;
  * static in declaration.
  */
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * TODO: Put here the implementation for your public functions.
@@ -55,6 +59,8 @@ void init_control_framwork(volatile control_framwork_t *p_controller)
         p_controller->iib_alm_lim[i].f = 0.0;
     }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * TODO: Put here the implementation for your private functions.

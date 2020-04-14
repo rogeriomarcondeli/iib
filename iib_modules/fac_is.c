@@ -307,12 +307,12 @@ static void config_module()
     Pt100SetCh4Delay(4);
 
     // Rh configuration limits
-    RhAlarmLimitSet(FAC_IS_RH_ALM_LIM);
-    RhTripLimitSet(FAC_IS_RH_ITLK_LIM);
+    RhAlarmLevelSet(FAC_IS_RH_ALM_LIM);
+    RhTripLevelSet(FAC_IS_RH_ITLK_LIM);
 
     // Temp board configuration limits
-    TempBoardAlarmLimitSet(FAC_IS_BOARD_TEMP_ALM_LIM);
-    TempBoardTripLimitSet(FAC_IS_BOARD_TEMP_ITLK_LIM);
+    BoardTempAlarmLevelSet(FAC_IS_BOARD_TEMP_ALM_LIM);
+    BoardTempTripLevelSet(FAC_IS_BOARD_TEMP_ITLK_LIM);
 
     // Disable all Driver Error Monitoring
     Driver1ErrDisable();

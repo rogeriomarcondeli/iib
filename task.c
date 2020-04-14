@@ -20,6 +20,8 @@
  */
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * TODO: Put here your includes
  */
@@ -33,23 +35,20 @@
 #include "BoardTempHum.h"
 #include "pt100.h"
 #include "ntc_isolated_i2c.h"
-//#include "memory.h"
 #include "application.h"
-//#include "can_bus.h"
-//#include "driver_board.h"
 
 /**
  * TODO: Put here your defines. Just what is local. If you don't
  * need to access it from other module, consider use a constant (const)
  */
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * TODO: Put here your constants and variables. Always use static for 
  * private members.
  */
 unsigned char count = 0;
-
 unsigned int Second = 0;
 unsigned char uSecond = 0;
 unsigned char uSecondOld = 255;
@@ -57,6 +56,7 @@ unsigned char CanFast = 0;
 unsigned int CanSlow = 0;
 unsigned int _8Hz = 0;
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 bool TempCh1Read = 0;
 bool TempCh2Read = 0;
@@ -79,20 +79,26 @@ bool SendCanData          = 0;
 bool Ntc_Igbt1_Igbt2_Sample = 0;
 bool Ntc_Igbt1_Igbt2_SampleRead = 0;
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * TODO: Put here your function prototypes for private functions. Use
  * static in declaration.
  */
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * TODO: Put here the implementation for your public functions.
  */
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * TODO: Put here the implementation for your private functions.
  */
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void ErrorCheckHandle(void)
 {
@@ -113,6 +119,8 @@ void ErrorCheckHandle(void)
     if(Pt100ReadCh3RtdSts()) Pt100Ch3Reset();
     if(Pt100ReadCh4RtdSts()) Pt100Ch4Reset();
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void task_100_us(void)
 {
@@ -168,6 +176,8 @@ void task_100_us(void)
     }
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void task_1_ms(void)
 {
@@ -246,6 +256,8 @@ void task_1_ms(void)
 
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void BoardTask(void)
 {
 
@@ -273,32 +285,32 @@ void BoardTask(void)
   }
   else if(RhSample)
   {
-      RelativeHumidityStartConversion(); //Rogerio alterou (Descomentado)
+      RelativeHumidityStartConversion();
       RhSample = 0;
   }
   else if(RhSampleRead)
   {
-      RelativeHumidityRead(); //Rogerio alterou (Descomentado)
+      RelativeHumidityRead();
       RhSampleRead = 0;
   }
   else if(BoardTempSample)
   {
-      BoardTemperatureStartConversion(); //Rogerio alterou (Descomentado)
+      BoardTemperatureStartConversion();
       BoardTempSample = 0;
   }
   else if(BoardTempSampleRead)
   {
-      BoardTemperatureRead(); //Rogerio alterou (Descomentado)
+      BoardTemperatureRead();
       BoardTempSampleRead = 0;
   }
   else if(Ntc_Igbt1_Igbt2_Sample)
   {
-      Ntc_Igbt1_Igbt2_Start_Conversion(); //Rogerio adicionou
+      Ntc_Igbt1_Igbt2_Start_Conversion();
       Ntc_Igbt1_Igbt2_Sample = 0;
   }
   else if(Ntc_Igbt1_Igbt2_SampleRead)
   {
-      Ntc_Igbt1_Igbt2_Read(); //Rogerio adicionou
+      Ntc_Igbt1_Igbt2_Read();
       Ntc_Igbt1_Igbt2_SampleRead = 0;
   }
   else if(DriverVoltReadTask)
@@ -347,3 +359,7 @@ void BoardTask(void)
   //send_data_schedule();
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+

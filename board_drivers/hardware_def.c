@@ -15,9 +15,11 @@
  * @date 11/08/2017
  *
  */
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <stdint.h>
 #include <stdbool.h>
-
 #include "inc/hw_gpio.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -38,8 +40,9 @@
 #include "driverlib/usb.h"
 #include "driverlib/udma.h"
 #include "driverlib/pin_map.h"
-
 #include "hardware_def.h"
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void pinout_config(void)
 {
@@ -47,9 +50,7 @@ void pinout_config(void)
     SysCtlPeripheralDisable(SYSCTL_PERIPH_WDOG1);
     SysCtlPeripheralDisable(SYSCTL_PERIPH_WDOG0);
 
-	//
 	// Enable all GPIO.
-	//
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
@@ -66,10 +67,7 @@ void pinout_config(void)
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOP);
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOQ);
 
-	//
 	// Wait for the Peripheral to be ready for programming
-	//
-
 	while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOA)
     || !SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOB));
 
@@ -94,3 +92,7 @@ void pinout_config(void)
 	while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOQ));
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+

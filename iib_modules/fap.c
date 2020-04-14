@@ -19,6 +19,8 @@
  *
  */
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <iib_modules/fap.h>
 #include "iib_data.h"
 #include "adc_internal.h"
@@ -32,6 +34,8 @@
 #include "input.h"
 #include <stdbool.h>
 #include <stdint.h>
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * TODO: Put here your defines. Just what is local. If you don't
@@ -81,14 +85,16 @@
 #define FAP_DRIVER1_OVERCURRENT_ITLK_LIM        2.4
 #define FAP_DRIVER2_OVERCURRENT_ALM_LIM         1.15
 #define FAP_DRIVER2_OVERCURRENT_ITLK_LIM        2.4
-#define FAP_INDUC_OVERTEMP_ALM_LIM              50.0
-#define FAP_INDUC_OVERTEMP_ITLK_LIM             60.0
+#define FAP_INDUC_OVERTEMP_ALM_LIM              50
+#define FAP_INDUC_OVERTEMP_ITLK_LIM             60
 #define FAP_HS_OVERTEMP_ALM_LIM                 60
 #define FAP_HS_OVERTEMP_ITLK_LIM                80
 #define FAP_RH_ALM_LIM                          80
 #define FAP_RH_ITLK_LIM                         90
 #define FAP_BOARD_TEMP_ALM_LIM                  80
 #define FAP_BOARD_TEMP_ITLK_LIM                 90
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct
 {
@@ -157,7 +163,7 @@ typedef struct
         uint8_t u[4];
     } DriveVoltage;
 
-    bool DriveVoltageAlarmSts; // Rogerio adicionou
+    bool DriveVoltageAlarmSts;
     bool DriveVoltageItlkSts;
 
     union {
@@ -165,7 +171,7 @@ typedef struct
         uint8_t u[4];
     } Drive1Current;
 
-    bool Drive1CurrentAlarmSts; // Rogerio adicionou
+    bool Drive1CurrentAlarmSts;
     bool Drive1CurrentItlkSts;
 
     union {
@@ -173,7 +179,7 @@ typedef struct
         uint8_t u[4];
     } Drive2Current;
 
-    bool Drive2CurrentAlarmSts; // Rogerio adicionou
+    bool Drive2CurrentAlarmSts;
     bool Drive2CurrentItlkSts;
 
     bool Driver1Error;
@@ -202,7 +208,7 @@ typedef struct
         uint8_t u[4];
     } BoardTemperature;
 
-    bool BoardTemperatureAlarmSts; // Rogerio adicionou
+    bool BoardTemperatureAlarmSts;
     bool BoardTemperatureItlkSts;
 
     union {
@@ -210,7 +216,7 @@ typedef struct
         uint8_t u[4];
     } RelativeHumidity;
 
-    bool RelativeHumidityAlarmSts; // Rogerio adicionou
+    bool RelativeHumidityAlarmSts;
     bool RelativeHumidityItlkSts;
 
     bool Relay;
@@ -221,23 +227,35 @@ typedef struct
 
 } fap_t;
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 fap_t fap;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 uint32_t fap_interlocks_indication   = 0;
 uint32_t fap_alarms_indication       = 0;
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 static uint32_t itlk_id;
 static uint32_t alarm_id;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 static void get_itlks_id();
 static void get_alarms_id();
 static void map_vars();
 static void config_module();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void init_fap()
 {
     config_module();
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void clear_fap_interlocks()
 {
@@ -256,14 +274,16 @@ void clear_fap_interlocks()
     fap.ExternalItlkSts          = 0;
     fap.RackSts                  = 0;
     fap.GroundLeakageItlkSts     = 0;
-    fap.DriveVoltageItlkSts      = 0; // Rogerio adicionou
-    fap.Drive1CurrentItlkSts     = 0; // Rogerio adicionou
-    fap.Drive2CurrentItlkSts     = 0; // Rogerio adicionou
+    fap.DriveVoltageItlkSts      = 0;
+    fap.Drive1CurrentItlkSts     = 0;
+    fap.Drive2CurrentItlkSts     = 0;
     fap.BoardTemperatureItlkSts  = 0;
     fap.RelativeHumidityItlkSts  = 0;
 
     itlk_id = 0;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 uint8_t check_fap_interlocks()
 {
@@ -284,14 +304,16 @@ uint8_t check_fap_interlocks()
     test |= fap.ExternalItlkSts;
     test |= fap.RackSts;
     test |= fap.GroundLeakageItlkSts;
-    test |= fap.DriveVoltageItlkSts;  // Rogerio adicionou
-    test |= fap.Drive1CurrentItlkSts; // Rogerio adicionou
-    test |= fap.Drive2CurrentItlkSts; // Rogerio adicionou
+    test |= fap.DriveVoltageItlkSts;
+    test |= fap.Drive1CurrentItlkSts;
+    test |= fap.Drive2CurrentItlkSts;
     test |= fap.BoardTemperatureItlkSts;
     test |= fap.RelativeHumidityItlkSts;
 
     return test;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void clear_fap_alarms()
 {
@@ -304,14 +326,16 @@ void clear_fap_alarms()
     fap.TempLAlarmSts             = 0;
     fap.TempHeatSinkAlarmSts      = 0;
     fap.GroundLeakageAlarmSts     = 0;
-    fap.DriveVoltageAlarmSts      = 0; // Rogerio adicionou
-    fap.Drive1CurrentAlarmSts     = 0; // Rogerio adicionou
-    fap.Drive2CurrentAlarmSts     = 0; // Rogerio adicionou
+    fap.DriveVoltageAlarmSts      = 0;
+    fap.Drive1CurrentAlarmSts     = 0;
+    fap.Drive2CurrentAlarmSts     = 0;
     fap.BoardTemperatureAlarmSts  = 0;
     fap.RelativeHumidityAlarmSts  = 0;
 
     alarm_id = 0;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 uint8_t check_fap_alarms()
 {
@@ -326,167 +350,244 @@ uint8_t check_fap_alarms()
     test |= fap.TempLAlarmSts;
     test |= fap.TempHeatSinkAlarmSts;
     test |= fap.GroundLeakageAlarmSts;
-    test |= fap.DriveVoltageAlarmSts;  // Rogerio adicionou
-    test |= fap.Drive1CurrentAlarmSts; // Rogerio adicionou
-    test |= fap.Drive2CurrentAlarmSts; // Rogerio adicionou
+    test |= fap.DriveVoltageAlarmSts;
+    test |= fap.Drive1CurrentAlarmSts;
+    test |= fap.Drive2CurrentAlarmSts;
     test |= fap.BoardTemperatureAlarmSts;
     test |= fap.RelativeHumidityAlarmSts;
 
     return test;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void check_fap_indication_leds()
 {
-    // Output over voltage
+    //Output over voltage
     if(fap.VoutItlkSts) Led2TurnOff();
     else if(fap.VoutAlarmSts) Led2Toggle();
     else Led2TurnOn();
 
-    // Input over voltage
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Input over voltage
     if(fap.VinItlkSts) Led3TurnOff();
     else if(fap.VinAlarmSts) Led3Toggle();
     else Led3TurnOn();
 
-    // Output over current
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Output over current
     if (fap.IoutA1ItlkSts || fap.IoutA2ItlkSts) Led4TurnOff();
     else if(fap.IoutA1AlarmSts || fap.IoutA2AlarmSts) Led4Toggle();
     else Led4TurnOn();
 
-    // Over temperature
-    if(fap.TempIGBT1ItlkSts || fap.TempIGBT2ItlkSts ||  fap.TempLItlkSts || fap.TempHeatSinkItlkSts || fap.TempIGBT1HwrItlkSts || fap.TempIGBT2HwrItlkSts) Led5TurnOff();
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Over temperature
+    if(fap.TempIGBT1ItlkSts || fap.TempIGBT2ItlkSts ||  fap.TempLItlkSts || fap.TempHeatSinkItlkSts) Led5TurnOff();
     else if(fap.TempIGBT1AlarmSts || fap.TempIGBT2AlarmSts ||  fap.TempLAlarmSts || fap.TempHeatSinkAlarmSts) Led5Toggle();
     else Led5TurnOn();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Interlock Externo
     if(fap.ExternalItlkSts) Led6TurnOff();
     else Led6TurnOn();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Fuga para o Terra
     if(fap.GroundLeakageItlkSts) Led7TurnOff();
     else if(fap.GroundLeakageAlarmSts) Led7Toggle();
     else Led7TurnOn();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Interlock do Rack
     if(fap.RackSts) Led8TurnOff();
     else Led8TurnOn();
 
-    if(fap.Driver1ErrorItlk || fap.Driver2ErrorItlk || fap.DriveVoltageItlkSts || fap.Drive1CurrentItlkSts || fap.Drive2CurrentItlkSts) Led9TurnOff(); // Rogerio alterou
-    else if(fap.DriveVoltageAlarmSts || fap.Drive1CurrentAlarmSts || fap.Drive2CurrentAlarmSts) Led9Toggle(); // Rogerio alterou
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Interlocks dos Drivers
+    if(fap.Driver1ErrorItlk || fap.Driver2ErrorItlk || fap.DriveVoltageItlkSts || fap.Drive1CurrentItlkSts || fap.Drive2CurrentItlkSts) Led9TurnOff();
+    else if(fap.DriveVoltageAlarmSts || fap.Drive1CurrentAlarmSts || fap.Drive2CurrentAlarmSts) Led9Toggle();
     else Led9TurnOn();
 
-    //if(InterlockRead()) Led10TurnOff(); // Rogerio modificou
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Livre para Implementar
+    //if(InterlockRead()) Led10TurnOff();
     //else Led10TurnOn();
     if(InterlockRead()) Led10TurnOn();
     else Led10TurnOn();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void fap_application_readings()
 {
-    fap.TempHeatSink.f = (float) Pt100ReadCh1();//PT100 CH1
+    //PT100 CH1 Dissipador
+    fap.TempHeatSink.f = (float) Pt100ReadCh1();
     fap.TempHeatSinkAlarmSts = Pt100ReadCh1AlarmSts();
-    if(!fap.TempHeatSinkItlkSts)fap.TempHeatSinkItlkSts         = Pt100ReadCh1TripSts();
+    if(!fap.TempHeatSinkItlkSts)fap.TempHeatSinkItlkSts = Pt100ReadCh1TripSts();
 
-    fap.TempL.f = (float) Pt100ReadCh2();//PT100 CH2
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //PT100 CH2 Indutor
+    fap.TempL.f = (float) Pt100ReadCh2();
     fap.TempLAlarmSts = Pt100ReadCh2AlarmSts();
-    if(!fap.TempLItlkSts)fap.TempLItlkSts                       = Pt100ReadCh2TripSts();
+    if(!fap.TempLItlkSts)fap.TempLItlkSts = Pt100ReadCh2TripSts();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Temperatura IGBT1
     fap.TempIGBT1.f = (float) Temp_Igbt1_Read();
     fap.TempIGBT1AlarmSts = 0;
     fap.TempIGBT1ItlkSts = 0;
 
-    if(!fap.TempIGBT1HwrItlkSts) fap.TempIGBT1HwrItlkSts        = Driver1OverTempRead();
+/////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Temperatura IGBT1 via Hardware
+    if(!fap.TempIGBT1HwrItlkSts) fap.TempIGBT1HwrItlkSts = Driver1OverTempRead();
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Temperatura IGBT2
     fap.TempIGBT2.f = (float) Temp_Igbt2_Read();
     fap.TempIGBT2AlarmSts = 0;
     fap.TempIGBT2ItlkSts = 0;
 
-    if(!fap.TempIGBT2HwrItlkSts) fap.TempIGBT2HwrItlkSts        = Driver2OverTempRead();
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Temperatura PCB IIB leitura adicionado Rogerio
+    //Temperatura IGBT2 via Hardware
+    if(!fap.TempIGBT2HwrItlkSts) fap.TempIGBT2HwrItlkSts = Driver2OverTempRead();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Temperatura PCB IIB
     fap.BoardTemperature.f = (float) BoardTempRead();
-    fap.BoardTemperatureAlarmSts = 0;
-    fap.BoardTemperatureItlkSts = 0;
+    fap.BoardTemperatureAlarmSts = BoardTempAlarmStatusRead();
+    if(!fap.BoardTemperatureItlkSts)fap.BoardTemperatureItlkSts = BoardTempTripStatusRead();
 
-    // Umidade leitura adicionado Rogerio
+/////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Umidade Relativa
     fap.RelativeHumidity.f = (float) RhRead();
-    fap.RelativeHumidityAlarmSts = 0;
-    fap.RelativeHumidityItlkSts = 0;
+    fap.RelativeHumidityAlarmSts = RhAlarmStatusRead();
+    if(!fap.RelativeHumidityItlkSts)fap.RelativeHumidityItlkSts = RhTripStatusRead();
 
-    //DriverVotage leitura adicionado Rogerio
+/////////////////////////////////////////////////////////////////////////////////////////////
 
+    //DriverVotage
     fap.DriveVoltage.f = DriverVoltageRead();
     fap.DriveVoltageAlarmSts = DriverVoltageAlarmStatusRead();
-    if(!fap.DriveVoltageItlkSts)fap.DriveVoltageItlkSts         = DriverVolatgeTripStatusRead();
+    if(!fap.DriveVoltageItlkSts)fap.DriveVoltageItlkSts = DriverVolatgeTripStatusRead();
 
-    /////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Drive1Current leitura adicionado Rogerio
-
+    //Drive1Current
     fap.Drive1Current.f = Driver1CurrentRead();
     fap.Drive1CurrentAlarmSts = Driver1CurrentAlarmStatusRead();
-    if(!fap.Drive1CurrentItlkSts)fap.Drive1CurrentItlkSts       = Driver1CurrentTripStatusRead();
+    if(!fap.Drive1CurrentItlkSts)fap.Drive1CurrentItlkSts = Driver1CurrentTripStatusRead();
 
-    /////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Drive2Current leitura adicionado Rogerio
-
+    //Drive2Current
     fap.Drive2Current.f = Driver2CurrentRead();
     fap.Drive2CurrentAlarmSts = Driver2CurrentAlarmStatusRead();
-    if(!fap.Drive2CurrentItlkSts)fap.Drive2CurrentItlkSts       = Driver2CurrentTripStatusRead();
+    if(!fap.Drive2CurrentItlkSts)fap.Drive2CurrentItlkSts = Driver2CurrentTripStatusRead();
 
-    /////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-
+    //Corrente de Saida IGBT1
     fap.IoutA1.f = CurrentCh1Read();//HALL CH1
     fap.IoutA1AlarmSts = CurrentCh1AlarmStatusRead();
-    if(!fap.IoutA1ItlkSts)fap.IoutA1ItlkSts                     = CurrentCh1TripStatusRead();
+    if(!fap.IoutA1ItlkSts)fap.IoutA1ItlkSts = CurrentCh1TripStatusRead();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Corrente de Saida IGBT2
     fap.IoutA2.f = CurrentCh2Read();//HALL CH2
     fap.IoutA2AlarmSts = CurrentCh2AlarmStatusRead();
-    if(!fap.IoutA2ItlkSts)fap.IoutA2ItlkSts                     = CurrentCh2TripStatusRead();
+    if(!fap.IoutA2ItlkSts)fap.IoutA2ItlkSts = CurrentCh2TripStatusRead();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Tensao de Entrada
     fap.Vin.f = LvCurrentCh1Read();
     fap.VinAlarmSts = LvCurrentCh1AlarmStatusRead();
-    if(!fap.VinItlkSts)fap.VinItlkSts                           = LvCurrentCh1TripStatusRead();
+    if(!fap.VinItlkSts)fap.VinItlkSts = LvCurrentCh1TripStatusRead();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Tensao de Saida
     fap.Vout.f = LvCurrentCh2Read();
     fap.VoutAlarmSts = LvCurrentCh2AlarmStatusRead();
-    if(!fap.VoutItlkSts) fap.VoutItlkSts                        = LvCurrentCh2TripStatusRead();
+    if(!fap.VoutItlkSts) fap.VoutItlkSts = LvCurrentCh2TripStatusRead();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Medida de Fuga para o Terra
     fap.GroundLeakage.f = LvCurrentCh3Read();
     fap.GroundLeakageAlarmSts = LvCurrentCh3AlarmStatusRead();
-    if(!fap.GroundLeakageItlkSts) fap.GroundLeakageItlkSts      = LvCurrentCh3TripStatusRead();
+    if(!fap.GroundLeakageItlkSts) fap.GroundLeakageItlkSts = LvCurrentCh3TripStatusRead();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Interlock externo
     fap.ExternalItlk = Gpdi5Read();
-    if(!fap.ExternalItlkSts) fap.ExternalItlkSts               = Gpdi5Read();
+    if(!fap.ExternalItlkSts) fap.ExternalItlkSts = Gpdi5Read();
     //fap.ExternalItlk = Gpdi1Read();
-    //if(!fap.ExternalItlkSts) fap.ExternalItlkSts               = Gpdi1Read();
+    //if(!fap.ExternalItlkSts) fap.ExternalItlkSts = Gpdi1Read();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Interlock do Rack
     fap.Rack = Gpdi6Read();
-    if(!fap.RackSts) fap.RackSts                               = Gpdi6Read();
+    if(!fap.RackSts) fap.RackSts = Gpdi6Read();
     //fap.Rack = Gpdi2Read();
-    //if(!fap.RackSts) fap.RackSts                               = Gpdi2Read();
+    //if(!fap.RackSts) fap.RackSts = Gpdi2Read();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Status do Contato do Rele
     fap.Relay = Gpdi7Read();
     //fap.Relay = Gpdi3Read();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
     //fap.LeakageCurrent = Gpdi6Read();
-    //if(!fap.LeakageCurrentSts) fap.LeakageCurrentSts           = Gpdi6Read();
+    //if(!fap.LeakageCurrentSts) fap.LeakageCurrentSts = Gpdi6Read();
     //fap.LeakageCurrent = Gpdi2Read();
-    //if(!fap.LeakageCurrentSts) fap.LeakageCurrentSts           = Gpdi2Read();
+    //if(!fap.LeakageCurrentSts) fap.LeakageCurrentSts = Gpdi2Read();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Erro do Driver 1
     fap.Driver1Error = Driver1TopErrRead();
-    if(!fap.Driver1ErrorItlk) fap.Driver1ErrorItlk             = Driver1TopErrRead();
+    if(!fap.Driver1ErrorItlk) fap.Driver1ErrorItlk = Driver1TopErrRead();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Erro do Driver 2
     fap.Driver2Error = Driver2TopErrRead();
-    if(!fap.Driver2ErrorItlk) fap.Driver2ErrorItlk             = Driver2TopErrRead();
+    if(!fap.Driver2ErrorItlk) fap.Driver2ErrorItlk = Driver2TopErrRead();
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Ativa Interlock
     if(fap.ExternalItlkSts || fap.Driver2ErrorItlk || fap.Driver2ErrorItlk) InterlockSet(); // If no signal over the port, then set Interlock action
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
     map_vars();
     get_itlks_id();
     get_alarms_id();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void fap_power_on_check()
 {
@@ -500,6 +601,7 @@ void fap_power_on_check()
     }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 static void map_vars()
 {
@@ -521,6 +623,8 @@ static void map_vars()
     g_controller_iib.iib_signals[15].f      = fap.RelativeHumidity.f;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void send_fap_data()
 {
     //uint8_t i;
@@ -534,6 +638,8 @@ void send_fap_data()
 
     if (i > 15) i = 2;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 static void get_itlks_id()
 {
@@ -558,6 +664,8 @@ static void get_itlks_id()
     if (fap.RelativeHumidityItlkSts)   itlk_id |= FAP_BOARD_IIB_OVERHUMIDITY_ITLK;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 static void get_alarms_id()
 {
     if (fap.VinAlarmSts)               alarm_id |= FAP_INPUT_OVERVOLTAGE_ALM;
@@ -576,30 +684,33 @@ static void get_alarms_id()
     if (fap.RelativeHumidityAlarmSts)  alarm_id |= FAP_BOARD_IIB_OVERHUMIDITY_ALM;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void send_fap_itlk_msg()
 {
     //send_interlock_message(itlk_id);
     send_data_message(0);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 static void config_module()
 {
     //Set current range FAP 150 A
-    CurrentCh1Init(130.0, 0.130, 50.0, 3); // Corrente braço1: Sensor Hall
-    CurrentCh2Init(130.0, 0.130, 50.0, 3); // Corrente braço2: LEM LA 130-P
+    CurrentCh1Init(130.0, 0.130, 50.0, 3); //Corrente braço1: Sensor Hall
+    CurrentCh2Init(130.0, 0.130, 50.0, 3); //Corrente braço2: LEM LA 130-P
 
     //Set protection limits FAP 150 A
     //     These interlocks are bypassed due to the fact that their ADC's
     //     will most probably saturate during operation at 300 A. These
     //     measures are also performed by UDC, which guarantees these
     //     protections
-    CurrentCh1AlarmLevelSet(FAP_OUTPUT_OVERCURRENT_1_ALM_LIM);  // Corrente braço1
-    CurrentCh1TripLevelSet(FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM);  // Corrente braço1
-    CurrentCh2AlarmLevelSet(FAP_OUTPUT_OVERCURRENT_2_ALM_LIM);  // Corrente braço2
-    CurrentCh2TripLevelSet(FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM);  // Corrente braço2
+    CurrentCh1AlarmLevelSet(FAP_OUTPUT_OVERCURRENT_1_ALM_LIM);  //Corrente braço1
+    CurrentCh1TripLevelSet(FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM);  //Corrente braço1
+    CurrentCh2AlarmLevelSet(FAP_OUTPUT_OVERCURRENT_2_ALM_LIM);  //Corrente braço2
+    CurrentCh2TripLevelSet(FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM);  //Corrente braço2
 
-    // NTC contiguration type
-    //ConfigNtcType(SEMIX);
+/////////////////////////////////////////////////////////////////////////////////////////////
 
     //Leitura de tensão isolada
     LvCurrentCh1Init(720, 0.025, 120.0, 100);
@@ -608,61 +719,78 @@ static void config_module()
     // TODO: Check this values
     LvCurrentCh3Init(50.0, 0.025, 120.0, 3); // Ground Leakage
 
-    LvCurrentCh1AlarmLevelSet(FAP_INPUT_OVERVOLTAGE_ALM_LIM);   // Tensão de entrada Alarme
-    LvCurrentCh1TripLevelSet(FAP_INPUT_OVERVOLTAGE_ITLK_LIM);   // Tensão de entrada Interlock
-    LvCurrentCh2AlarmLevelSet(FAP_OUTPUT_OVERVOLTAGE_ALM_LIM);  // Tensão de saída Alarme
-    LvCurrentCh2TripLevelSet(FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM);  // Tensão de saída Interlock
+    LvCurrentCh1AlarmLevelSet(FAP_INPUT_OVERVOLTAGE_ALM_LIM);   //Tensão de entrada Alarme
+    LvCurrentCh1TripLevelSet(FAP_INPUT_OVERVOLTAGE_ITLK_LIM);   //Tensão de entrada Interlock
+    LvCurrentCh2AlarmLevelSet(FAP_OUTPUT_OVERVOLTAGE_ALM_LIM);  //Tensão de saída Alarme
+    LvCurrentCh2TripLevelSet(FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM);  //Tensão de saída Interlock
 
-    // Ground Leakage
+    //Ground Leakage
     // TODO: Check this
-    LvCurrentCh3AlarmLevelSet(FAP_GROUND_LEAKAGE_ALM_LIM);  // fuga para o terra alarme
-    LvCurrentCh3TripLevelSet(FAP_GROUND_LEAKAGE_ITLK_LIM);  // fuga para o terra interlock
+    LvCurrentCh3AlarmLevelSet(FAP_GROUND_LEAKAGE_ALM_LIM);  //fuga para o terra alarme
+    LvCurrentCh3TripLevelSet(FAP_GROUND_LEAKAGE_ITLK_LIM);  //fuga para o terra interlock
 
-    // PT100 configuration limits
-    Pt100SetCh1AlarmLevel(FAP_HS_OVERTEMP_ALM_LIM);     // Temperatura Dissipador
-    Pt100SetCh1TripLevel(FAP_HS_OVERTEMP_ITLK_LIM);     // Temperatura Dissipador
-    Pt100SetCh2AlarmLevel(FAP_INDUC_OVERTEMP_ALM_LIM);  // Temperatura L
-    Pt100SetCh2TripLevel(FAP_INDUC_OVERTEMP_ITLK_LIM);  // Temperatura L
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Delay 4 seconds
+    //PT100 configuration limits
+    Pt100SetCh1AlarmLevel(FAP_HS_OVERTEMP_ALM_LIM);     //Temperatura Dissipador
+    Pt100SetCh1TripLevel(FAP_HS_OVERTEMP_ITLK_LIM);     //Temperatura Dissipador
+    Pt100SetCh2AlarmLevel(FAP_INDUC_OVERTEMP_ALM_LIM);  //Temperatura L
+    Pt100SetCh2TripLevel(FAP_INDUC_OVERTEMP_ITLK_LIM);  //Temperatura L
+
+    //Delay 4 seconds
     Pt100SetCh1Delay(4);
-    // Delay 4 seconds
+    //Delay 4 seconds
     Pt100SetCh2Delay(4);
 
-    // PT100 channel enable
-    Pt100Ch1Enable(); // Temperatura Dissipador
-    Pt100Ch2Enable(); // Temperatura L
+    //PT100 channel enable
+    Pt100Ch1Enable(); //Temperatura Dissipador
+    Pt100Ch2Enable(); //Temperatura L
     Pt100Ch3Disable();
     Pt100Ch4Disable();
 
-    // Rh configuration limits
-    RhAlarmLimitSet(FAP_RH_ALM_LIM);
-    RhTripLimitSet(FAP_RH_ITLK_LIM);
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Temp board configuration limits
-    TempBoardAlarmLimitSet(FAP_BOARD_TEMP_ALM_LIM);
-    TempBoardTripLimitSet(FAP_BOARD_TEMP_ITLK_LIM);
+    BoardTempDelay(3); //Inserir valor de delay
+
+    //Temp board configuration limits
+    BoardTempAlarmLevelSet(FAP_BOARD_TEMP_ALM_LIM);
+    BoardTempTripLevelSet(FAP_BOARD_TEMP_ITLK_LIM);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    RhDelay(3); //Inserir valor de delay
+
+    //Rh configuration limits
+    RhAlarmLevelSet(FAP_RH_ALM_LIM);
+    RhTripLevelSet(FAP_RH_ITLK_LIM);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
     Driver1ErrEnable();
     Driver2ErrEnable();
 
-    DriverVoltageInit(3); // Inserir valor de delay
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Leitura da tensao dos drivers
-    DriverVoltageAlarmLevelSet(FAP_DRIVER_OVERVOLTAGE_ALM_LIM_LIM); // Rogerio adicionou
-    DriverVoltageTripLevelSet(FAP_DRIVER_OVERVOLTAGE_ITLK_LIM);     // Rogerio adicionou
+    DriverVoltageDelay(3); //Inserir valor de delay
 
-    DriverCurrentInit(3); // Inserir valor de delay
+    //Leitura da tensao dos drivers
+    DriverVoltageAlarmLevelSet(FAP_DRIVER_OVERVOLTAGE_ALM_LIM_LIM);
+    DriverVoltageTripLevelSet(FAP_DRIVER_OVERVOLTAGE_ITLK_LIM);
 
-    // Leitura da corrente dos drivers
-    Driver1CurrentAlarmLevelSet(FAP_DRIVER1_OVERCURRENT_ALM_LIM ); // Rogerio adicionou
-    Driver1CurrentTripLevelSet(FAP_DRIVER1_OVERCURRENT_ITLK_LIM);  // Rogerio adicionou
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    Driver2CurrentAlarmLevelSet(FAP_DRIVER2_OVERCURRENT_ALM_LIM);  // Rogerio adicionou
-    Driver2CurrentTripLevelSet(FAP_DRIVER2_OVERCURRENT_ITLK_LIM);  // Rogerio adicionou
+    DriverCurrentDelay(3); //Inserir valor de delay
 
+    //Leitura da corrente dos drivers
+    Driver1CurrentAlarmLevelSet(FAP_DRIVER1_OVERCURRENT_ALM_LIM );
+    Driver1CurrentTripLevelSet(FAP_DRIVER1_OVERCURRENT_ITLK_LIM);
 
-    // Init Variables
+    Driver2CurrentAlarmLevelSet(FAP_DRIVER2_OVERCURRENT_ALM_LIM);
+    Driver2CurrentTripLevelSet(FAP_DRIVER2_OVERCURRENT_ITLK_LIM);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Init Variables
     fap.Vin.f                    = 0.0;
     fap.VinAlarmSts              = 0;
     fap.VinItlkSts               = 0;
@@ -719,3 +847,5 @@ static void config_module()
     fap.RelativeHumidityAlarmSts = 0;
     fap.RelativeHumidityItlkSts  = 0;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////

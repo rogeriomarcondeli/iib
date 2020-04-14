@@ -1,3 +1,6 @@
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "application.h"
 #include "adc_internal.h"
 #include "BoardTempHum.h"
@@ -17,6 +20,7 @@
 #include "fap_300A.h"
 #include "rectifier_module.h"
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 static unsigned char PowerModuleModel = 0;
 static unsigned char Interlock = 0;
@@ -25,6 +29,8 @@ static unsigned char ItlkClrCmd = 0;
 static unsigned char InitApp = 0;
 static unsigned char Alarm = 0;
 static bool itlk_send_flag = false;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void AppConfiguration(void)
 {
@@ -96,16 +102,22 @@ void AppConfiguration(void)
     Led10TurnOn();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 // Set Interlock clear command
 void InterlockClear(void)
 {
     ItlkClrCmd = 1;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void InterlockSet(void)
 {
     Interlock = 1;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void InterlockClearCheck(void)
 {
@@ -119,7 +131,7 @@ void InterlockClearCheck(void)
 
           AdcClearAlarmTrip();
           Pt100ClearAlarmTrip();
-          RhTempClearAlarmTrip();
+          RhBoardTempClearAlarmTrip();
           
           ItlkClrCmd = 0;
           
@@ -175,16 +187,19 @@ void InterlockClearCheck(void)
       }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned char InterlockRead(void)
 {
       return Interlock;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void AppInterlock(void)
 {
       
       // caso haja algum Interlock, o rele auxiliar deve ser desligado e as operações cabiveis de Interlock devem ser executadas
-      
       // Analisar se todos os interlocks foram apagados para poder liberar o rele auxiliar
       // caso não haja mais Interlock, fechar o rele auxiliar
       
@@ -241,26 +256,34 @@ void AppInterlock(void)
       
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void AlarmSet(void)
 {
       Alarm = 1;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void AlarmClear(void)
 {
       Alarm = 0;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 unsigned char AlarmRead(void)
 {
       return Alarm;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 void AppAlarm(void)
 {
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void InterlockAppCheck(void)
 {
@@ -308,11 +331,7 @@ void InterlockAppCheck(void)
            break;
    }
 
-   test |= RhTripStatusRead();
-
-   test |= DriverVolatgeTripStatusRead();
-   test |= Driver1CurrentTripStatusRead();
-   test |= Driver2CurrentTripStatusRead();
+/////////////////////////////////////////////////////////////////////////////////////////////
 
    if(test) {
 
@@ -355,6 +374,8 @@ void InterlockAppCheck(void)
    }
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void AlarmAppCheck(void)
 {
@@ -402,13 +423,7 @@ void AlarmAppCheck(void)
            break;
    }
 
-   test |= RhAlarmStatusRead();
-
-   test |= DriverVoltageAlarmStatusRead();  // Rogerio adicionou
-   test |= Driver1CurrentAlarmStatusRead(); // Rogerio adicionou
-   test |= Driver2CurrentAlarmStatusRead(); // Rogerio adicionou
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////
 
    if(test) {
        AlarmSet();
@@ -416,7 +431,7 @@ void AlarmAppCheck(void)
    }
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void LedIndicationStatus(void)
 {
@@ -463,6 +478,8 @@ void LedIndicationStatus(void)
       }
       
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void Application(void)
 {
@@ -565,6 +582,8 @@ void Application(void)
       InterlockClearCheck();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void send_data_schedule()
 {
     switch(AppType())
@@ -597,6 +616,8 @@ void send_data_schedule()
             break;
     }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 void power_on_check()
 {
@@ -631,7 +652,8 @@ void power_on_check()
 }
 
 // Application type
-//******************************************************************************
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned char AppType(void)
 {
     return PowerModuleModel;
