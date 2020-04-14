@@ -145,8 +145,6 @@ typedef struct
 
     bool TempIGBT1AlarmSts;
     bool TempIGBT1ItlkSts;
-    bool TempIGBT1HwrItlk;
-    bool TempIGBT1HwrItlkSts;
 
     union {
         float   f;
@@ -155,8 +153,6 @@ typedef struct
 
     bool TempIGBT2AlarmSts;
     bool TempIGBT2ItlkSts;
-    bool TempIGBT2HwrItlk;
-    bool TempIGBT2HwrItlkSts;
 
     union {
         float   f;
@@ -223,7 +219,7 @@ typedef struct
     bool ExternalItlk;
     bool ExternalItlkSts;
     bool Rack;
-    bool RackSts;
+    bool RackItlkSts;
 
 } fap_t;
 
@@ -264,15 +260,13 @@ void clear_fap_interlocks()
     fap.IoutA1ItlkSts            = 0;
     fap.IoutA2ItlkSts            = 0;
     fap.TempIGBT1ItlkSts         = 0;
-    fap.TempIGBT1HwrItlkSts      = 0;
     fap.TempIGBT2ItlkSts         = 0;
-    fap.TempIGBT2HwrItlkSts      = 0;
     fap.Driver1ErrorItlkSts      = 0;
     fap.Driver2ErrorItlkSts      = 0;
     fap.TempLItlkSts             = 0;
     fap.TempHeatSinkItlkSts      = 0;
     fap.ExternalItlkSts          = 0;
-    fap.RackSts                  = 0;
+    fap.RackItlkSts              = 0;
     fap.GroundLeakageItlkSts     = 0;
     fap.DriveVoltageItlkSts      = 0;
     fap.Drive1CurrentItlkSts     = 0;
@@ -294,15 +288,13 @@ uint8_t check_fap_interlocks()
     test |= fap.IoutA1ItlkSts;
     test |= fap.IoutA2ItlkSts;
     test |= fap.TempIGBT1ItlkSts;
-    test |= fap.TempIGBT1HwrItlkSts;
     test |= fap.TempIGBT2ItlkSts;
-    test |= fap.TempIGBT2HwrItlkSts;
     test |= fap.Driver1ErrorItlkSts;
     test |= fap.Driver2ErrorItlkSts;
     test |= fap.TempLItlkSts;
     test |= fap.TempHeatSinkItlkSts;
     test |= fap.ExternalItlkSts;
-    test |= fap.RackSts;
+    test |= fap.RackItlkSts;
     test |= fap.GroundLeakageItlkSts;
     test |= fap.DriveVoltageItlkSts;
     test |= fap.Drive1CurrentItlkSts;
@@ -405,7 +397,7 @@ void check_fap_indication_leds()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock do Rack
-    if(fap.RackSts) Led8TurnOff();
+    if(fap.RackItlkSts) Led8TurnOff();
     else Led8TurnOn();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,20 +440,10 @@ void fap_application_readings()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Temperatura IGBT1 via Hardware
-    if(!fap.TempIGBT1HwrItlkSts) fap.TempIGBT1HwrItlkSts = Driver1OverTempRead();
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
     //Temperatura IGBT2
     fap.TempIGBT2.f = (float) Temp_Igbt2_Read();
     fap.TempIGBT2AlarmSts = 0;
     fap.TempIGBT2ItlkSts = 0;
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-    //Temperatura IGBT2 via Hardware
-    if(!fap.TempIGBT2HwrItlkSts) fap.TempIGBT2HwrItlkSts = Driver2OverTempRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -543,7 +525,7 @@ void fap_application_readings()
 
     //Interlock do Rack
     fap.Rack = Gpdi6Read(); //Variavel usada para debug
-    if(!fap.RackSts) fap.RackSts = Gpdi6Read();
+    if(!fap.RackItlkSts) fap.RackItlkSts = Gpdi6Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -564,8 +546,8 @@ void fap_application_readings()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Se nao houver sinal na entrada digital dos 3 sinais, defina a acao como Interlock.
-    if(fap.ExternalItlkSts || fap.Driver1ErrorItlkSts || fap.Driver2ErrorItlkSts) InterlockSet();
+    //Se nao houver sinal na entrada digital dos 4 sinais, defina a acao como Interlock.
+    if(fap.ExternalItlkSts || fap.RackItlkSts || fap.Driver1ErrorItlkSts || fap.Driver2ErrorItlkSts) InterlockSet();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -642,7 +624,7 @@ static void get_itlks_id()
     if (fap.TempHeatSinkItlkSts)       itlk_id |= FAP_HS_OVERTEMP_ITLK;
     if (fap.Relay)                     itlk_id |= FAP_RELAY_ITLK;
     if (fap.ExternalItlkSts)           itlk_id |= FAP_EXTERNAL_ITLK;
-    if (fap.RackSts)                   itlk_id |= FAP_RACK_ITLK;
+    if (fap.RackItlkSts)               itlk_id |= FAP_RACK_ITLK;
     if (fap.GroundLeakageItlkSts)      itlk_id |= FAP_GROUND_LKG_ITLK;
     if (fap.DriveVoltageItlkSts)       itlk_id |= FAP_DRIVER_OVERVOLTAGE_ITLK;
     if (fap.Drive1CurrentItlkSts)      itlk_id |= FAP_DRIVER1_OVERCURRENT_ITLK;
@@ -753,8 +735,8 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    Driver1ErrEnable();
-    Driver2ErrEnable();
+    Driver1ErrEnable(); //Habilitado driver error 1
+    Driver2ErrEnable(); //Habilitado driver error 2
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -793,13 +775,9 @@ static void config_module()
     fap.TempIGBT1.f              = 0.0;
     fap.TempIGBT1AlarmSts        = 0;
     fap.TempIGBT1ItlkSts         = 0;
-    fap.TempIGBT1HwrItlk         = 0;
-    fap.TempIGBT1HwrItlkSts      = 0;
     fap.TempIGBT2.f              = 0.0;
     fap.TempIGBT2AlarmSts        = 0;
     fap.TempIGBT2ItlkSts         = 0;
-    fap.TempIGBT2HwrItlk         = 0;
-    fap.TempIGBT2HwrItlkSts      = 0;
     fap.DriveVoltage.f           = 0.0;
     fap.DriveVoltageAlarmSts     = 0;
     fap.DriveVoltageItlkSts      = 0;
@@ -823,7 +801,7 @@ static void config_module()
     fap.ExternalItlk             = 0;
     fap.ExternalItlkSts          = 0;
     fap.Rack                     = 0;
-    fap.RackSts                  = 0;
+    fap.RackItlkSts              = 0;
     fap.GroundLeakage.f          = 0;
     fap.GroundLeakageAlarmSts    = 0;
     fap.GroundLeakageItlkSts     = 0;
@@ -836,3 +814,4 @@ static void config_module()
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+
