@@ -87,12 +87,12 @@
 #define FAP_DRIVER2_OVERCURRENT_ITLK_LIM        2.4
 #define FAP_INDUC_OVERTEMP_ALM_LIM              50
 #define FAP_INDUC_OVERTEMP_ITLK_LIM             60
-#define FAP_HS_OVERTEMP_ALM_LIM                 60
-#define FAP_HS_OVERTEMP_ITLK_LIM                80
-#define FAP_RH_ALM_LIM                          80
+#define FAP_HS_OVERTEMP_ALM_LIM                 50
+#define FAP_HS_OVERTEMP_ITLK_LIM                60
+#define FAP_RH_ALM_LIM                          60
 #define FAP_RH_ITLK_LIM                         90
-#define FAP_BOARD_TEMP_ALM_LIM                  80
-#define FAP_BOARD_TEMP_ITLK_LIM                 90
+#define FAP_BOARD_TEMP_ALM_LIM                  35
+#define FAP_BOARD_TEMP_ITLK_LIM                 40
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -417,10 +417,9 @@ void check_fap_indication_leds()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Livre para Implementar
-    //if(InterlockRead()) Led10TurnOff();
-    //else Led10TurnOn();
-    if(InterlockRead()) Led10TurnOn();
+    //Interlock Temperatura PCB e Umidade Relativa
+    if(fap.BoardTemperatureItlkSts || fap.RelativeHumidityItlkSts) Led10TurnOff();
+    else if(fap.BoardTemperatureAlarmSts || fap.RelativeHumidityAlarmSts) Led10Toggle();
     else Led10TurnOn();
 }
 
@@ -539,29 +538,17 @@ void fap_application_readings()
     //Interlock externo
     fap.ExternalItlk = Gpdi5Read();
     if(!fap.ExternalItlkSts) fap.ExternalItlkSts = Gpdi5Read();
-    //fap.ExternalItlk = Gpdi1Read();
-    //if(!fap.ExternalItlkSts) fap.ExternalItlkSts = Gpdi1Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock do Rack
     fap.Rack = Gpdi6Read();
     if(!fap.RackSts) fap.RackSts = Gpdi6Read();
-    //fap.Rack = Gpdi2Read();
-    //if(!fap.RackSts) fap.RackSts = Gpdi2Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Status do Contato do Rele
     fap.Relay = Gpdi7Read();
-    //fap.Relay = Gpdi3Read();
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-    //fap.LeakageCurrent = Gpdi6Read();
-    //if(!fap.LeakageCurrentSts) fap.LeakageCurrentSts = Gpdi6Read();
-    //fap.LeakageCurrent = Gpdi2Read();
-    //if(!fap.LeakageCurrentSts) fap.LeakageCurrentSts = Gpdi2Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -580,7 +567,7 @@ void fap_application_readings()
     // Ativa Interlock
     if(fap.ExternalItlkSts || fap.Driver2ErrorItlk || fap.Driver2ErrorItlk) InterlockSet(); // If no signal over the port, then set Interlock action
 
-    /////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
     map_vars();
     get_itlks_id();
