@@ -229,11 +229,6 @@ fap_t fap;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-uint32_t fap_interlocks_indication   = 0;
-uint32_t fap_alarms_indication       = 0;
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
 static uint32_t itlk_id;
 static uint32_t alarm_id;
 
@@ -574,8 +569,8 @@ void fap_power_on_check()
 
 static void map_vars()
 {
-    g_controller_iib.iib_signals[0].u32     = fap_interlocks_indication;
-    g_controller_iib.iib_signals[1].u32     = fap_alarms_indication;
+    g_controller_iib.iib_signals[0].u32     = itlk_id;
+    g_controller_iib.iib_signals[1].u32     = alarm_id;
     g_controller_iib.iib_signals[2].f       = fap.Vin.f;
     g_controller_iib.iib_signals[3].f       = fap.Vout.f;
     g_controller_iib.iib_signals[4].f       = fap.IoutA1.f;
@@ -657,7 +652,6 @@ static void get_alarms_id()
 
 void send_fap_itlk_msg()
 {
-    //send_interlock_message(itlk_id);
     send_data_message(0);
 }
 

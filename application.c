@@ -10,7 +10,6 @@
 #include "leds.h"
 #include "can_bus.h"
 #include "input.h"
-#include "can_bus.h"
 #include "stdbool.h"
 #include "stdint.h"
 #include "fac_cmd.h"
