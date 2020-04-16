@@ -591,8 +591,6 @@ static void map_vars()
 
 void send_fap_data()
 {
-    //uint8_t i;
-    //for (i = 2; i < 15; i++) send_data_message(i);
 
     static uint8_t i = 2;
 
