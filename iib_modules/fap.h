@@ -44,11 +44,12 @@
 #define FAP_INDUC_OVERTEMP_ITLK             0x00000800
 #define FAP_HS_OVERTEMP_ITLK                0x00001000
 #define FAP_RELAY_ITLK                      0x00002000
-#define FAP_EXTERNAL_ITLK                   0x00004000
-#define FAP_RACK_ITLK                       0x00008000
-#define FAP_GROUND_LKG_ITLK                 0x00010000
-#define FAP_BOARD_IIB_OVERTEMP_ITLK         0x00020000
-#define FAP_BOARD_IIB_OVERHUMIDITY_ITLK     0x00040000
+#define FAP_RELAY_CONTACT_STICKING_ITLK     0x00004000
+#define FAP_EXTERNAL_ITLK                   0x00008000
+#define FAP_RACK_ITLK                       0x00010000
+#define FAP_GROUND_LKG_ITLK                 0x00020000
+#define FAP_BOARD_IIB_OVERTEMP_ITLK         0x00040000
+#define FAP_BOARD_IIB_OVERHUMIDITY_ITLK     0x00080000
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

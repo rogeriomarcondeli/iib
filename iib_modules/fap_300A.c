@@ -392,11 +392,11 @@ void fap_300A_power_on_check()
 {
     if (Gpdi4Read()) {
         Led1TurnOff();
-        ReleItlkTurnOff();
+        ReleExtItlkTurnOff();
     }
     else {
         Led1TurnOn();
-        ReleItlkTurnOn();
+        ReleExtItlkTurnOn();
     }
 }
 

@@ -221,6 +221,11 @@ typedef struct
     bool Rack;
     bool RackItlkSts;
 
+    bool ReleAuxItlkSts;
+    bool ReleExtItlkSts;
+    bool RelayOpenItlkSts;
+    bool RelayContactStickingItlkSts;
+
 } fap_t;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -541,6 +546,23 @@ void fap_application_readings()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    fap.ReleAuxItlkSts = ReleAuxSts();
+    fap.ReleExtItlkSts = ReleExtItlkSts();
+
+    if(fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 0 && fap.Relay == 1) fap.RelayOpenItlkSts = 1;
+    else
+    {
+       fap.RelayOpenItlkSts = 0;
+    }
+
+    if(fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 1 && fap.Relay == 0) fap.RelayContactStickingItlkSts = 1;
+    else
+    {
+       fap.RelayContactStickingItlkSts = 0;
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
     //Se nao houver sinal na entrada digital dos 4 sinais, defina a acao como Interlock.
     if(fap.ExternalItlkSts || fap.RackItlkSts || fap.Driver1ErrorItlkSts || fap.Driver2ErrorItlkSts) InterlockSet();
 
@@ -557,11 +579,11 @@ void fap_power_on_check()
 {
     if (fap.Relay) {
         Led1TurnOff();
-        ReleItlkTurnOff();
+        ReleExtItlkTurnOff();
     }
     else {
         Led1TurnOn();
-        ReleItlkTurnOn();
+        ReleExtItlkTurnOn();
     }
 }
 
@@ -591,39 +613,46 @@ static void map_vars()
 
 void send_fap_data()
 {
-
-    static uint8_t i = 2;
+    static uint8_t i = 0;
 
     send_data_message(i);
 
     i++;
 
-    if (i > 15) i = 2;
+    if (i > 15) i = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 static void get_itlks_id()
 {
-    if (fap.VinItlkSts)                itlk_id |= FAP_INPUT_OVERVOLTAGE_ITLK;
-    if (fap.VoutItlkSts)               itlk_id |= FAP_OUTPUT_OVERVOLTAGE_ITLK;
-    if (fap.IoutA1ItlkSts)             itlk_id |= FAP_OUTPUT_OVERCURRENT_1_ITLK;
-    if (fap.IoutA2ItlkSts)             itlk_id |= FAP_OUTPUT_OVERCURRENT_2_ITLK;
-    if (fap.TempIGBT1ItlkSts)          itlk_id |= FAP_IGBT1_OVERTEMP_ITLK;
-    if (fap.TempIGBT2ItlkSts)          itlk_id |= FAP_IGBT2_OVERTEMP_ITLK;
-    if (fap.Driver1ErrorItlkSts)       itlk_id |= FAP_DRIVER1_ERROR_ITLK;
-    if (fap.Driver2ErrorItlkSts)       itlk_id |= FAP_DRIVER2_ERROR_ITLK;
-    if (fap.TempLItlkSts)              itlk_id |= FAP_INDUC_OVERTEMP_ITLK;
-    if (fap.TempHeatSinkItlkSts)       itlk_id |= FAP_HS_OVERTEMP_ITLK;
-    if (fap.Relay)                     itlk_id |= FAP_RELAY_ITLK;
-    if (fap.ExternalItlkSts)           itlk_id |= FAP_EXTERNAL_ITLK;
-    if (fap.RackItlkSts)               itlk_id |= FAP_RACK_ITLK;
-    if (fap.GroundLeakageItlkSts)      itlk_id |= FAP_GROUND_LKG_ITLK;
-    if (fap.DriveVoltageItlkSts)       itlk_id |= FAP_DRIVER_OVERVOLTAGE_ITLK;
-    if (fap.Drive1CurrentItlkSts)      itlk_id |= FAP_DRIVER1_OVERCURRENT_ITLK;
-    if (fap.Drive2CurrentItlkSts)      itlk_id |= FAP_DRIVER2_OVERCURRENT_ITLK;
-    if (fap.BoardTemperatureItlkSts)   itlk_id |= FAP_BOARD_IIB_OVERTEMP_ITLK;
-    if (fap.RelativeHumidityItlkSts)   itlk_id |= FAP_BOARD_IIB_OVERHUMIDITY_ITLK;
+    if (fap.VinItlkSts)                     itlk_id |= FAP_INPUT_OVERVOLTAGE_ITLK;
+    if (fap.VoutItlkSts)                    itlk_id |= FAP_OUTPUT_OVERVOLTAGE_ITLK;
+    if (fap.IoutA1ItlkSts)                  itlk_id |= FAP_OUTPUT_OVERCURRENT_1_ITLK;
+    if (fap.IoutA2ItlkSts)                  itlk_id |= FAP_OUTPUT_OVERCURRENT_2_ITLK;
+    if (fap.TempIGBT1ItlkSts)               itlk_id |= FAP_IGBT1_OVERTEMP_ITLK;
+    if (fap.TempIGBT2ItlkSts)               itlk_id |= FAP_IGBT2_OVERTEMP_ITLK;
+    if (fap.DriveVoltageItlkSts)            itlk_id |= FAP_DRIVER_OVERVOLTAGE_ITLK;
+    if (fap.Drive1CurrentItlkSts)           itlk_id |= FAP_DRIVER1_OVERCURRENT_ITLK;
+    if (fap.Drive2CurrentItlkSts)           itlk_id |= FAP_DRIVER2_OVERCURRENT_ITLK;
+    if (fap.Driver1ErrorItlkSts)            itlk_id |= FAP_DRIVER1_ERROR_ITLK;
+    if (fap.Driver2ErrorItlkSts)            itlk_id |= FAP_DRIVER2_ERROR_ITLK;
+    if (fap.TempLItlkSts)                   itlk_id |= FAP_INDUC_OVERTEMP_ITLK;
+    if (fap.TempHeatSinkItlkSts)            itlk_id |= FAP_HS_OVERTEMP_ITLK;
+    if (fap.RelayOpenItlkSts)               itlk_id |= FAP_RELAY_ITLK;
+    if (fap.RelayContactStickingItlkSts)    itlk_id |= FAP_RELAY_CONTACT_STICKING_ITLK;
+    if (fap.ExternalItlkSts)                itlk_id |= FAP_EXTERNAL_ITLK;
+    if (fap.RackItlkSts)                    itlk_id |= FAP_RACK_ITLK;
+    if (fap.GroundLeakageItlkSts)           itlk_id |= FAP_GROUND_LKG_ITLK;
+    if (fap.BoardTemperatureItlkSts)        itlk_id |= FAP_BOARD_IIB_OVERTEMP_ITLK;
+    if (fap.RelativeHumidityItlkSts)        itlk_id |= FAP_BOARD_IIB_OVERHUMIDITY_ITLK;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void send_fap_itlk_msg()
+{
+    send_data_message(0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -644,13 +673,6 @@ static void get_alarms_id()
     if (fap.Drive2CurrentAlarmSts)     alarm_id |= FAP_DRIVER2_OVERCURRENT_ALM;
     if (fap.BoardTemperatureAlarmSts)  alarm_id |= FAP_BOARD_IIB_OVERTEMP_ALM;
     if (fap.RelativeHumidityAlarmSts)  alarm_id |= FAP_BOARD_IIB_OVERHUMIDITY_ALM;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-void send_fap_itlk_msg()
-{
-    send_data_message(0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -752,57 +774,61 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Init Variables
-    fap.Vin.f                    = 0.0;
-    fap.VinAlarmSts              = 0;
-    fap.VinItlkSts               = 0;
-    fap.Vout.f                   = 0.0;
-    fap.VoutAlarmSts             = 0;
-    fap.VoutItlkSts              = 0;
-    fap.IoutA1.f                 = 0.0;
-    fap.IoutA1AlarmSts           = 0;
-    fap.IoutA1ItlkSts            = 0;
-    fap.IoutA2.f                 = 0.0;
-    fap.IoutA2AlarmSts           = 0;
-    fap.IoutA2ItlkSts            = 0;
-    fap.TempIGBT1.f              = 0.0;
-    fap.TempIGBT1AlarmSts        = 0;
-    fap.TempIGBT1ItlkSts         = 0;
-    fap.TempIGBT2.f              = 0.0;
-    fap.TempIGBT2AlarmSts        = 0;
-    fap.TempIGBT2ItlkSts         = 0;
-    fap.DriveVoltage.f           = 0.0;
-    fap.DriveVoltageAlarmSts     = 0;
-    fap.DriveVoltageItlkSts      = 0;
-    fap.Drive1Current.f          = 0.0;
-    fap.Drive1CurrentAlarmSts    = 0;
-    fap.Drive1CurrentItlkSts     = 0;
-    fap.Drive2Current.f          = 0.0;
-    fap.Drive2CurrentAlarmSts    = 0;
-    fap.Drive2CurrentItlkSts     = 0;
-    fap.Driver1Error             = 0;
-    fap.Driver1ErrorItlkSts      = 0;
-    fap.Driver2Error             = 0;
-    fap.Driver2ErrorItlkSts      = 0;
-    fap.TempL.f                  = 0;
-    fap.TempLAlarmSts            = 0;
-    fap.TempLItlkSts             = 0;
-    fap.TempHeatSink.f           = 0;
-    fap.TempHeatSinkAlarmSts     = 0;
-    fap.TempHeatSinkItlkSts      = 0;
-    fap.Relay                    = 0;
-    fap.ExternalItlk             = 0;
-    fap.ExternalItlkSts          = 0;
-    fap.Rack                     = 0;
-    fap.RackItlkSts              = 0;
-    fap.GroundLeakage.f          = 0;
-    fap.GroundLeakageAlarmSts    = 0;
-    fap.GroundLeakageItlkSts     = 0;
-    fap.BoardTemperature.f       = 0.0;
-    fap.BoardTemperatureAlarmSts = 0;
-    fap.BoardTemperatureItlkSts  = 0;
-    fap.RelativeHumidity.f       = 0.0;
-    fap.RelativeHumidityAlarmSts = 0;
-    fap.RelativeHumidityItlkSts  = 0;
+    fap.Vin.f                        = 0.0;
+    fap.VinAlarmSts                  = 0;
+    fap.VinItlkSts                   = 0;
+    fap.Vout.f                       = 0.0;
+    fap.VoutAlarmSts                 = 0;
+    fap.VoutItlkSts                  = 0;
+    fap.IoutA1.f                     = 0.0;
+    fap.IoutA1AlarmSts               = 0;
+    fap.IoutA1ItlkSts                = 0;
+    fap.IoutA2.f                     = 0.0;
+    fap.IoutA2AlarmSts               = 0;
+    fap.IoutA2ItlkSts                = 0;
+    fap.TempIGBT1.f                  = 0.0;
+    fap.TempIGBT1AlarmSts            = 0;
+    fap.TempIGBT1ItlkSts             = 0;
+    fap.TempIGBT2.f                  = 0.0;
+    fap.TempIGBT2AlarmSts            = 0;
+    fap.TempIGBT2ItlkSts             = 0;
+    fap.DriveVoltage.f               = 0.0;
+    fap.DriveVoltageAlarmSts         = 0;
+    fap.DriveVoltageItlkSts          = 0;
+    fap.Drive1Current.f              = 0.0;
+    fap.Drive1CurrentAlarmSts        = 0;
+    fap.Drive1CurrentItlkSts         = 0;
+    fap.Drive2Current.f              = 0.0;
+    fap.Drive2CurrentAlarmSts        = 0;
+    fap.Drive2CurrentItlkSts         = 0;
+    fap.Driver1Error                 = 0;
+    fap.Driver1ErrorItlkSts          = 0;
+    fap.Driver2Error                 = 0;
+    fap.Driver2ErrorItlkSts          = 0;
+    fap.TempL.f                      = 0;
+    fap.TempLAlarmSts                = 0;
+    fap.TempLItlkSts                 = 0;
+    fap.TempHeatSink.f               = 0;
+    fap.TempHeatSinkAlarmSts         = 0;
+    fap.TempHeatSinkItlkSts          = 0;
+    fap.Relay                        = 0;
+    fap.ExternalItlk                 = 0;
+    fap.ExternalItlkSts              = 0;
+    fap.Rack                         = 0;
+    fap.RackItlkSts                  = 0;
+    fap.GroundLeakage.f              = 0;
+    fap.GroundLeakageAlarmSts        = 0;
+    fap.GroundLeakageItlkSts         = 0;
+    fap.BoardTemperature.f           = 0.0;
+    fap.BoardTemperatureAlarmSts     = 0;
+    fap.BoardTemperatureItlkSts      = 0;
+    fap.RelativeHumidity.f           = 0.0;
+    fap.RelativeHumidityAlarmSts     = 0;
+    fap.RelativeHumidityItlkSts      = 0;
+    fap.ReleAuxItlkSts               = 0;
+    fap.ReleExtItlkSts               = 0;
+    fap.RelayOpenItlkSts             = 0;
+    fap.RelayContactStickingItlkSts  = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

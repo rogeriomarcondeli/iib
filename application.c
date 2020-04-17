@@ -120,7 +120,6 @@ void InterlockSet(void)
 
 void InterlockClearCheck(void)
 {
-      //if(ItlkClrCmd && Interlock)
       if(ItlkClrCmd)
       {
           Interlock = 0;
@@ -206,45 +205,45 @@ void AppInterlock(void)
       {
        case FAP:
 
-            ReleAuxTurnOff();
-            ReleItlkTurnOff();
+           ReleAuxTurnOff();
+           ReleExtItlkTurnOff();
 
-            break;
+           break;
 
        case FAC_OS:
 
-            ReleAuxTurnOff();
-            ReleItlkTurnOff();
-            Gpdo1TurnOff();
-            Gpdo2TurnOff();
+           ReleAuxTurnOff();
+           ReleExtItlkTurnOff();
+           Gpdo1TurnOff();
+           Gpdo2TurnOff();
 
-            break;
+           break;
 
        case RECTIFIER_MODULE:
 
-            ReleAuxTurnOff();
-            ReleItlkTurnOff();
+           ReleAuxTurnOff();
+           ReleExtItlkTurnOff();
 
-            break;
+           break;
 
        case FAC_IS:
 
-            ReleAuxTurnOff();
-            ReleItlkTurnOff();
+           ReleAuxTurnOff();
+           ReleExtItlkTurnOff();
 
-            break;
+           break;
 
        case FAC_CMD_MODULE:
 
            ReleAuxTurnOff();
-           ReleItlkTurnOff();
+           ReleExtItlkTurnOff();
 
            break;
 
        case FAP_300A:
 
            ReleAuxTurnOff();
-           ReleItlkTurnOff();
+           ReleExtItlkTurnOff();
 
            break;
 
@@ -330,40 +329,50 @@ void InterlockAppCheck(void)
            break;
    }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-   if(test) {
+   if(test){
 
        InterlockSet();
 
-       if (!itlk_send_flag) {
+       if (!itlk_send_flag){
 
            itlk_send_flag = true;
 
            switch (PowerModuleModel)
            {
                case FAP:
+
                    send_fap_itlk_msg();
+
                    break;
 
                case FAC_OS:
+
                    send_output_fac_os_itlk_msg();
+
                    break;
 
                case RECTIFIER_MODULE:
+
                    send_rectf_itlk_msg();
+
                    break;
 
                case FAC_IS:
+
                    send_fac_is_itlk_msg();
+
                    break;
 
                case FAC_CMD_MODULE:
+
                    send_fac_cmd_itlk_msg();
+
                    break;
 
                case FAP_300A:
+
                    send_fap_300A_itlk_msg();
+
                    break;
 
                default:
@@ -371,7 +380,6 @@ void InterlockAppCheck(void)
            }
        }
    }
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -422,10 +430,10 @@ void AlarmAppCheck(void)
            break;
    }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
+   if(test){
 
-   if(test) {
        AlarmSet();
+
        send_data_message(1);
    }
 }
@@ -438,15 +446,15 @@ void LedIndicationStatus(void)
     {
         case FAP:
 
-           check_fap_indication_leds();
+            check_fap_indication_leds();
 
-           break;
+            break;
 
         case FAC_OS:
 
-           check_fac_os_indication_leds();
+            check_fac_os_indication_leds();
 
-           break;
+            break;
 
         case RECTIFIER_MODULE:
 
@@ -540,37 +548,48 @@ void Application(void)
             switch(PowerModuleModel)
             {
              case FAP:
-                  ReleAuxTurnOn();
-                  ReleItlkTurnOff();
-                  break;
+
+                 ReleAuxTurnOn();
+                 ReleExtItlkTurnOff();
+
+                 break;
 
              case FAC_OS:
-                  ReleAuxTurnOn();
-                  ReleItlkTurnOn();
 
-                  Gpdo1TurnOn();
-                  Gpdo2TurnOn();
+                 ReleAuxTurnOn();
+                 ReleExtItlkTurnOn();
 
-                  break;
+                 Gpdo1TurnOn();
+                 Gpdo2TurnOn();
+
+                 break;
 
              case RECTIFIER_MODULE:
-                  ReleAuxTurnOn();
-                  ReleItlkTurnOn();
-                  break;
+
+                 ReleAuxTurnOn();
+                 ReleExtItlkTurnOn();
+
+                 break;
 
              case FAC_IS:
-                  ReleAuxTurnOn();
-                  ReleItlkTurnOn();
-                  break;
+
+                 ReleAuxTurnOn();
+                 ReleExtItlkTurnOn();
+
+                 break;
 
              case FAC_CMD_MODULE:
+
                  ReleAuxTurnOn();
-                 ReleItlkTurnOn();
+                 ReleExtItlkTurnOn();
+
                  break;
 
              case FAP_300A:
+
                  ReleAuxTurnOn();
-                 ReleItlkTurnOff();
+                 ReleExtItlkTurnOff();
+
                  break;
 
              default:
@@ -588,27 +607,39 @@ void send_data_schedule()
     switch(AppType())
     {
         case FAP:
+
             send_fap_data();
+
             break;
 
         case FAC_OS:
+
             send_fac_os_data();
+
             break;
 
         case RECTIFIER_MODULE:
+
             send_rm_data();
+
             break;
 
         case FAC_IS:
+
             send_fac_is_data();
+
             break;
 
         case FAC_CMD_MODULE:
+
             send_fac_cmd_data();
+
             break;
 
         case FAP_300A:
+
             send_fap_300A_data();
+
             break;
 
         default:
@@ -623,26 +654,37 @@ void power_on_check()
     switch(AppType())
     {
         case FAP:
+
             fap_power_on_check();
+
             break;
 
         case FAC_OS:
+
             fac_os_power_on_check();
+
             break;
 
         case RECTIFIER_MODULE:
+
             break;
 
         case FAC_IS:
+
             fac_is_power_on_check();
+
             break;
 
         case FAC_CMD_MODULE:
+
             fac_cmd_power_on_check();
+
             break;
 
         case FAP_300A:
+
             fap_300A_power_on_check();
+
             break;
 
         default:

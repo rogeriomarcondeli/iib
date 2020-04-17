@@ -281,7 +281,7 @@ void handle_reset_message(void)
 
 void send_data_message(uint8_t var)
 {
-    request_data_tx[0] = can_address;
+	request_data_tx[0] = can_address;
     request_data_tx[1] = var;
     request_data_tx[2] = 0;
     request_data_tx[3] = 0;
