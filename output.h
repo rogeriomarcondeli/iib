@@ -10,36 +10,70 @@ void OutputInit(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void Gpdo1TurnOn(void);
-void Gpdo1TurnOff(void);
-unsigned char Gpdo1Sts(void);
-void Gpdo2TurnOn(void);
-void Gpdo2TurnOff(void);
-unsigned char Gpdo2Sts(void);
-void Gpdo3TurnOn(void);
-void Gpdo3TurnOff(void);
-unsigned char Gpdo3Sts(void);
-void Gpdo4TurnOn(void);
-void Gpdo4TurnOff(void);
-unsigned char Gpdo4Sts(void);
+extern void Gpdo1TurnOn(void);
+extern void Gpdo1TurnOff(void);
+extern unsigned char Gpdo1Sts(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void ReleAuxTurnOn(void);
-void ReleAuxTurnOff(void);
-unsigned char ReleAuxSts(void);
+extern void Gpdo2TurnOn(void);
+extern void Gpdo2TurnOff(void);
+extern unsigned char Gpdo2Sts(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void ReleExtItlkTurnOn(void);
-void ReleExtItlkTurnOff(void);
-unsigned char ReleExtItlkSts(void);
+extern void Gpdo3TurnOn(void);
+extern void Gpdo3TurnOff(void);
+extern unsigned char Gpdo3Sts(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Gpdo4TurnOn(void);
+extern void Gpdo4TurnOff(void);
+extern unsigned char Gpdo4Sts(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void ReleAuxTurnOn(void);
+extern void ReleAuxTurnOff(void);
+extern unsigned char ReleAuxSts(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void ReleExtItlkTurnOn(void);
+extern void ReleExtItlkTurnOff(void);
+extern unsigned char ReleExtItlkSts(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Gpdo1Enable(void);
+extern void Gpdo2Enable(void);
+extern void Gpdo3Enable(void);
+extern void Gpdo4Enable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Gpdo1Disable(void);
+extern void Gpdo2Disable(void);
+extern void Gpdo3Disable(void);
+extern void Gpdo4Disable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void ReleAuxEnable(void);
+
+extern void ReleExtItlkEnable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void ReleAuxDisable(void);
+
+extern void ReleExtItlkDisable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-
 
 

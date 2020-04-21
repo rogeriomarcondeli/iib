@@ -866,6 +866,16 @@ static void config_module()
     Gpdi11Disable(); //Gpdi11 disable
     Gpdi12Disable(); //Gpdi12 disable
 
+    //Gpdo configuration
+    Gpdo1Disable();  //Gpdo1 disable
+    Gpdo2Disable();  //Gpdo2 disable
+    Gpdo3Disable();  //Gpdo3 disable
+    Gpdo4Disable();  //Gpdo4 disable
+
+    //ReleAux and ReleExtItlk configuration
+    ReleAuxEnable(); //ReleAux enable
+    ReleExtItlkEnable(); //ReleExtItlk enable
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Init Variables
