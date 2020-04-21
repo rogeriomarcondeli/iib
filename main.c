@@ -158,12 +158,6 @@ int main(void)
 
     AdcsInit();
 
-    //Driver Voltage configuration
-    DriverVoltageInit();
-
-    //Driver Current configuration
-    DriverCurrentInit();
-
     //LEDs initialization
     LedsInit();
 
@@ -185,7 +179,7 @@ int main(void)
     RhBoardTempSenseInit();
 
     //ADS1014 with NTC 5K Igbt1 and Igbt2 initialization
-    Ntc_Igbt1_Igbt2_Init();
+    NtcInit();
 
     //Led test
     LedPong();

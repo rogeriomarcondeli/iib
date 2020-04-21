@@ -34,11 +34,11 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-#define Series_Resistance       10000.00 //Resistor de 10K Ohms
+#define SeriesResistance       10000.00 //Resistor de 10K Ohms
 
 #define Vin                     3.3 //Tensão 3,3V de entrada do divisor resistivo
 
-float Get_Temperature(float Vout_ADS1014);
+float GetTemperature(float VoutADS1014);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -52,25 +52,43 @@ static float A = 0.001003604774;
 static float B = 0.000264014765;
 static float C = 0.000000164677;
 
-static unsigned char Temp_Ntc_Igbt1 = 0;
-static unsigned char Temp_Ntc_Igbt2 = 0;
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef struct
+{
+    unsigned char Enable;
+    unsigned char Value;
+    unsigned char AlarmLimit;
+    unsigned char TripLimit;
+    unsigned char Alarm;
+    unsigned char Trip;
+    unsigned char Alarm_Delay_ms; // milisecond
+    unsigned char Alarm_DelayCount;
+    unsigned char Itlk_Delay_ms; // milisecond
+    unsigned char Itlk_DelayCount;
+}ntc_t;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-float Get_Temperature(float Vout_ADS1014)
+static ntc_t TempNtcIgbt1;
+static ntc_t TempNtcIgbt2;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+float GetTemperature(float VoutADS1014)
 {
-    double NTC_Resistance;
-    double Thermistor_temperature;
+    double NtcResistance;
+    double Thermistortemperature;
     float Temperature;
 
-    NTC_Resistance = (((Series_Resistance * Vin) / Vout_ADS1014) - Series_Resistance); /* calculate the resistance */
+    NtcResistance = (((SeriesResistance * Vin) / VoutADS1014) - SeriesResistance); /* calculate the resistance */
 
-    Thermistor_temperature = log(NTC_Resistance); /* calculate natural log of resistance */
+    Thermistortemperature = log(NtcResistance); /* calculate natural log of resistance */
 
     /*  Steinhart-Hart Thermistor Equation: */
     /*  Temperature in Kelvin = 1 / (A + B[ln(R)] + C[ln(R)]^3)   */
 
-    Temperature = ( 1 / ( A + ( B * Thermistor_temperature ) + ( C * (pow(Thermistor_temperature,3) )) ) );  // temperatura em Kelvin
+    Temperature = ( 1 / ( A + ( B * Thermistortemperature ) + ( C * (pow(Thermistortemperature,3) )) ) );  // temperatura em Kelvin
 
     Temperature = Temperature - 273.15; // temperatura em graus Celsius
 
@@ -332,7 +350,7 @@ void ADS1x1x_set_comparator_queue(ADS1x1x_config_t *p_config, ADS1x1x_comparator
 //******************************************************************************
 //  ADS1014 with NTC 5K Igbt1 and Igbt2 initialization
 //******************************************************************************
-void Ntc_Igbt1_Igbt2_Init(void)
+void NtcInit(void)
 {
   // performs I2C initialization
   InitI2C2();
@@ -343,6 +361,28 @@ void Ntc_Igbt1_Igbt2_Init(void)
   // Initialise ADC object igbt2.
   ADS1x1x_init(&ntc_igbt2,ADS1014,ADS1x1x_I2C_ADDRESS_ADDR_TO_VCC,MUX_SINGLE_0,PGA_6144);
 
+  TempNtcIgbt1.Enable = 0;
+  TempNtcIgbt1.Value = 0;
+  TempNtcIgbt1.AlarmLimit = 50;
+  TempNtcIgbt1.TripLimit = 60;
+  TempNtcIgbt1.Alarm = 0;
+  TempNtcIgbt1.Trip = 0;
+  TempNtcIgbt1.Alarm_Delay_ms = 0; // milisecond
+  TempNtcIgbt1.Alarm_DelayCount = 0;
+  TempNtcIgbt1.Itlk_Delay_ms = 0; // milisecond
+  TempNtcIgbt1.Itlk_DelayCount = 0;
+
+  TempNtcIgbt2.Enable = 0;
+  TempNtcIgbt2.Value = 0;
+  TempNtcIgbt2.AlarmLimit = 50;
+  TempNtcIgbt2.TripLimit = 60;
+  TempNtcIgbt2.Alarm = 0;
+  TempNtcIgbt2.Trip = 0;
+  TempNtcIgbt2.Alarm_Delay_ms = 0; // milisecond
+  TempNtcIgbt2.Alarm_DelayCount = 0;
+  TempNtcIgbt2.Itlk_Delay_ms = 0; // milisecond
+  TempNtcIgbt2.Itlk_DelayCount = 0;
+
   delay_ms(100);
 }
 
@@ -351,7 +391,7 @@ void Ntc_Igbt1_Igbt2_Init(void)
 //******************************************************************************
 // Read the ADS1014 with NTC 5K Igbt1 and Igbt2
 //******************************************************************************
-void Ntc_Igbt1_Igbt2_Start_Conversion(void)
+void NtcStartConversion(void)
 {
   // Set input before starting conversion ntc igbt1.
   ADS1x1x_set_multiplexer(&ntc_igbt1,(ADS1x1x_mux_t)0x4000);
@@ -373,15 +413,89 @@ void Ntc_Igbt1_Igbt2_Start_Conversion(void)
 //******************************************************************************
 // Start read the ADS1014 with NTC 5K Igbt1 and Igbt2
 //******************************************************************************
-void Ntc_Igbt1_Igbt2_Read(void)
+void NtcRead(void)
 {
 
-    Temp_Ntc_Igbt1 = Get_Temperature((((float)ADS1x1x_read(&ntc_igbt1)*6.144)/2047.0));
+    TempNtcIgbt1.Value = GetTemperature((((float)ADS1x1x_read(&ntc_igbt1)*6.144)/2047.0));
 
-    Temp_Ntc_Igbt2 = Get_Temperature((((float)ADS1x1x_read(&ntc_igbt2)*6.144)/2047.0));
+    if(TempNtcIgbt1.Value > TempNtcIgbt1.AlarmLimit)
+    {
+        if(TempNtcIgbt1.Alarm_DelayCount < TempNtcIgbt1.Alarm_Delay_ms) TempNtcIgbt1.Alarm_DelayCount++;
+        else
+        {
+           TempNtcIgbt1.Alarm_DelayCount = 0;
+           TempNtcIgbt1.Alarm = 1;
+        }
+    }
+    else TempNtcIgbt1.Alarm_DelayCount = 0;
 
-    delay_ms(30);
+    if(TempNtcIgbt1.Value > TempNtcIgbt1.TripLimit)
+    {
+        if(TempNtcIgbt1.Itlk_DelayCount < TempNtcIgbt1.Itlk_Delay_ms) TempNtcIgbt1.Itlk_DelayCount++;
+        else
+        {
+           TempNtcIgbt1.Itlk_DelayCount = 0;
+           TempNtcIgbt1.Trip = 1;
+        }
+    }
+    else TempNtcIgbt1.Itlk_DelayCount = 0;
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    TempNtcIgbt2.Value = GetTemperature((((float)ADS1x1x_read(&ntc_igbt2)*6.144)/2047.0));
+
+    if(TempNtcIgbt2.Value > TempNtcIgbt2.AlarmLimit)
+    {
+        if(TempNtcIgbt2.Alarm_DelayCount < TempNtcIgbt2.Alarm_Delay_ms) TempNtcIgbt2.Alarm_DelayCount++;
+        else
+        {
+           TempNtcIgbt2.Alarm_DelayCount = 0;
+           TempNtcIgbt2.Alarm = 1;
+        }
+    }
+    else TempNtcIgbt2.Alarm_DelayCount = 0;
+
+    if(TempNtcIgbt2.Value > TempNtcIgbt2.TripLimit)
+    {
+        if(TempNtcIgbt2.Itlk_DelayCount < TempNtcIgbt2.Itlk_Delay_ms) TempNtcIgbt2.Itlk_DelayCount++;
+        else
+        {
+           TempNtcIgbt2.Itlk_DelayCount = 0;
+           TempNtcIgbt2.Trip = 1;
+        }
+    }
+    else TempNtcIgbt2.Itlk_DelayCount = 0;
+
+    delay_ms(50);
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt1Enable(void)
+{
+    TempNtcIgbt1.Enable = 1;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt1Disable(void)
+{
+    TempNtcIgbt1.Enable = 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt2Enable(void)
+{
+    TempNtcIgbt2.Enable = 1;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt2Disable(void)
+{
+    TempNtcIgbt2.Enable = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -389,9 +503,10 @@ void Ntc_Igbt1_Igbt2_Read(void)
 //******************************************************************************
 // Read the ADS1014 with NTC 5K Igbt1 and return value
 //******************************************************************************
-unsigned char Temp_Igbt1_Read(void)
+unsigned char TempIgbt1Read(void)
 {
-  return Temp_Ntc_Igbt1;
+    if(TempNtcIgbt1.Enable)return TempNtcIgbt1.Value;
+    else return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -399,7 +514,102 @@ unsigned char Temp_Igbt1_Read(void)
 //******************************************************************************
 // Read the ADS1014 with NTC 5K Igbt2 and return value
 //******************************************************************************
-unsigned char Temp_Igbt2_Read(void)
+unsigned char TempIgbt2Read(void)
 {
-  return Temp_Ntc_Igbt2;
+    if(TempNtcIgbt2.Enable)return TempNtcIgbt2.Value;
+    else return 0;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt1AlarmLevelSet(unsigned char nValue)
+{
+    TempNtcIgbt1.AlarmLimit = nValue;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt1TripLevelSet(unsigned char nValue)
+{
+    TempNtcIgbt1.TripLimit = nValue;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt1Delay(unsigned char Delay_Set)
+{
+    TempNtcIgbt1.Alarm_Delay_ms = Delay_Set;
+    TempNtcIgbt1.Itlk_Delay_ms = Delay_Set;
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned char TempIgbt1AlarmStatusRead(void)
+{
+   if(TempNtcIgbt1.Enable)return TempNtcIgbt1.Alarm;
+   else return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned char TempIgbt1TripStatusRead(void)
+{
+   if(TempNtcIgbt1.Enable)return TempNtcIgbt1.Trip;
+   else return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt2AlarmLevelSet(unsigned char nValue)
+{
+    TempNtcIgbt2.AlarmLimit = nValue;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt2TripLevelSet(unsigned char nValue)
+{
+    TempNtcIgbt2.TripLimit = nValue;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt2Delay(unsigned char Delay_Set)
+{
+    TempNtcIgbt2.Alarm_Delay_ms = Delay_Set;
+    TempNtcIgbt2.Itlk_Delay_ms = Delay_Set;
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned char TempIgbt2AlarmStatusRead(void)
+{
+   if(TempNtcIgbt2.Enable)return TempNtcIgbt2.Alarm;
+   else return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned char TempIgbt2TripStatusRead(void)
+{
+   if(TempNtcIgbt2.Enable)return TempNtcIgbt2.Trip;
+   else return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void TempIgbt1TempIgbt2ClearAlarmTrip(void)
+{
+    TempNtcIgbt1.Alarm = 0;
+    TempNtcIgbt1.Trip = 0;
+
+    TempNtcIgbt2.Alarm = 0;
+    TempNtcIgbt2.Trip = 0;
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+

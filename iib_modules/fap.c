@@ -45,54 +45,71 @@
 // Linhas de transporte
 //#define FAP_INPUT_OVERVOLTAGE_ALM_LIM           50.0
 //#define FAP_INPUT_OVERVOLTAGE_ITLK_LIM          55.0
+
 //#define FAP_OUTPUT_OVERVOLTAGE_ALM_LIM          35.0
 //#define FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM         40.0
+
 //#define FAP_OUTPUT_OVERCURRENT_1_ALM_LIM        105.0
 //#define FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM       115.0
+
 //#define FAP_OUTPUT_OVERCURRENT_2_ALM_LIM        105.0
 //#define FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM       115.0
 
 // Potencia nominal
 #define FAP_INPUT_OVERVOLTAGE_ALM_LIM         555.0
 #define FAP_INPUT_OVERVOLTAGE_ITLK_LIM        560.0
+
 #define FAP_OUTPUT_OVERVOLTAGE_ALM_LIM        260.0
 #define FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM       270.0
+
 #define FAP_OUTPUT_OVERCURRENT_1_ALM_LIM      115.0
 #define FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM     120.0
+
 #define FAP_OUTPUT_OVERCURRENT_2_ALM_LIM      115.0
 #define FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM     120.0
 
 // Fonte 750A
 //#define FAP_INPUT_OVERVOLTAGE_ALM_LIM                    55.0
 //#define FAP_INPUT_OVERVOLTAGE_ITLK_LIM                   60.0
+
 //#define FAP_OUTPUT_OVERVOLTAGE_ALM_LIM                   40.0
 //#define FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM                  45.0
+
 //#define FAP_OUTPUT_OVERCURRENT_1_ALM_LIM                 100.0
 //#define FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM                105.0
+
 //#define FAP_OUTPUT_OVERCURRENT_2_ALM_LIM                 100.0
 //#define FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM                105.0
 
 #define FAP_GROUND_LEAKAGE_ALM_LIM              40.0
 #define FAP_GROUND_LEAKAGE_ITLK_LIM             45.0
 
-#define FAP_IGBT1_OVERTEMP_ALM_LIM              00.0    // Not in use
-#define FAP_IGBT1_OVERTEMP_ITLK_LIM             00.0    // Not in use
-#define FAP_IGBT2_OVERTEMP_ALM_LIM              00.0    // Not in use
-#define FAP_IGBT2_OVERTEMP_ITLK_LIM             00.0    // Not in use
+#define FAP_IGBT1_OVERTEMP_ALM_LIM              60
+#define FAP_IGBT1_OVERTEMP_ITLK_LIM             80
+
+#define FAP_IGBT2_OVERTEMP_ALM_LIM              60
+#define FAP_IGBT2_OVERTEMP_ITLK_LIM             80
+
 #define FAP_DRIVER_OVERVOLTAGE_ALM_LIM_LIM      16.0
 #define FAP_DRIVER_OVERVOLTAGE_ITLK_LIM         17.0
+
 #define FAP_DRIVER1_OVERCURRENT_ALM_LIM         1.15
 #define FAP_DRIVER1_OVERCURRENT_ITLK_LIM        2.4
+
 #define FAP_DRIVER2_OVERCURRENT_ALM_LIM         1.15
 #define FAP_DRIVER2_OVERCURRENT_ITLK_LIM        2.4
+
 #define FAP_INDUC_OVERTEMP_ALM_LIM              50
 #define FAP_INDUC_OVERTEMP_ITLK_LIM             60
+
 #define FAP_HS_OVERTEMP_ALM_LIM                 50
 #define FAP_HS_OVERTEMP_ITLK_LIM                60
+
 #define FAP_RH_ALM_LIM                          60
 #define FAP_RH_ITLK_LIM                         90
-#define FAP_BOARD_TEMP_ALM_LIM                  35
-#define FAP_BOARD_TEMP_ITLK_LIM                 40
+
+#define FAP_BOARD_TEMP_ALM_LIM                  80
+#define FAP_BOARD_TEMP_ITLK_LIM                 90
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -434,16 +451,16 @@ void fap_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperatura IGBT1
-    fap.TempIGBT1.f = (float) Temp_Igbt1_Read();
-    fap.TempIGBT1AlarmSts = 0;
-    fap.TempIGBT1ItlkSts = 0;
+    fap.TempIGBT1.f = (float) TempIgbt1Read();
+    fap.TempIGBT1AlarmSts = TempIgbt1AlarmStatusRead();
+    if(!fap.TempIGBT1ItlkSts)fap.TempIGBT1ItlkSts = TempIgbt1TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperatura IGBT2
-    fap.TempIGBT2.f = (float) Temp_Igbt2_Read();
-    fap.TempIGBT2AlarmSts = 0;
-    fap.TempIGBT2ItlkSts = 0;
+    fap.TempIGBT2.f = (float) TempIgbt2Read();
+    fap.TempIGBT2AlarmSts = TempIgbt2AlarmStatusRead();;
+    if(!fap.TempIGBT2ItlkSts)fap.TempIGBT2ItlkSts = TempIgbt2TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -683,6 +700,11 @@ static void config_module()
     CurrentCh1Init(130.0, 0.130, 50.0, 3); //Corrente braço1: Sensor Hall
     CurrentCh2Init(130.0, 0.130, 50.0, 3); //Corrente braço2: LEM LA 130-P
 
+    CurrentCh1Enable();  //CurrentCh1 enable
+    CurrentCh2Enable();  //CurrentCh2 enable
+    CurrentCh3Disable(); //CurrentCh3 disable
+    CurrentCh4Disable(); //CurrentCh4 disable
+
     //Set protection limits FAP 150 A
     //     These interlocks are bypassed due to the fact that their ADC's
     //     will most probably saturate during operation at 300 A. These
@@ -696,33 +718,25 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Leitura de tensão isolada
-    LvCurrentCh1Init(720, 0.025, 120.0, 100);
-    LvCurrentCh2Init(300, 0.025, 120.0, 100);
-
-    // TODO: Check this values
+    LvCurrentCh1Init(720, 0.025, 120.0, 100); // Vin
+    LvCurrentCh2Init(300, 0.025, 120.0, 100); // Vout
     LvCurrentCh3Init(50.0, 0.025, 120.0, 3); // Ground Leakage
 
-    LvCurrentCh1AlarmLevelSet(FAP_INPUT_OVERVOLTAGE_ALM_LIM);   //Tensão de entrada Alarme
-    LvCurrentCh1TripLevelSet(FAP_INPUT_OVERVOLTAGE_ITLK_LIM);   //Tensão de entrada Interlock
-    LvCurrentCh2AlarmLevelSet(FAP_OUTPUT_OVERVOLTAGE_ALM_LIM);  //Tensão de saída Alarme
-    LvCurrentCh2TripLevelSet(FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM);  //Tensão de saída Interlock
+    LvCurrentCh1Enable(); //LvCurrentCh1 enable
+    LvCurrentCh2Enable(); //LvCurrentCh2 enable
+    LvCurrentCh3Enable(); //LvCurrentCh3 enable
 
-    //Ground Leakage
-    // TODO: Check this
-    LvCurrentCh3AlarmLevelSet(FAP_GROUND_LEAKAGE_ALM_LIM);  //fuga para o terra alarme
-    LvCurrentCh3TripLevelSet(FAP_GROUND_LEAKAGE_ITLK_LIM);  //fuga para o terra interlock
+    LvCurrentCh1AlarmLevelSet(FAP_INPUT_OVERVOLTAGE_ALM_LIM);  //Tensão de entrada Alarme
+    LvCurrentCh1TripLevelSet(FAP_INPUT_OVERVOLTAGE_ITLK_LIM);  //Tensão de entrada Interlock
+    LvCurrentCh2AlarmLevelSet(FAP_OUTPUT_OVERVOLTAGE_ALM_LIM); //Tensão de saída Alarme
+    LvCurrentCh2TripLevelSet(FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM); // Tensão de saída Interlock
+    LvCurrentCh3AlarmLevelSet(FAP_GROUND_LEAKAGE_ALM_LIM);     //Fuga para o terra alarme
+    LvCurrentCh3TripLevelSet(FAP_GROUND_LEAKAGE_ITLK_LIM);     //Fuga para o terra interlock
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //PT100 configuration limits
-    Pt100SetCh1AlarmLevel(FAP_HS_OVERTEMP_ALM_LIM);     //Temperatura Dissipador
-    Pt100SetCh1TripLevel(FAP_HS_OVERTEMP_ITLK_LIM);     //Temperatura Dissipador
-    Pt100SetCh2AlarmLevel(FAP_INDUC_OVERTEMP_ALM_LIM);  //Temperatura L
-    Pt100SetCh2TripLevel(FAP_INDUC_OVERTEMP_ITLK_LIM);  //Temperatura L
-
     //Delay 4 seconds
     Pt100SetCh1Delay(4);
-    //Delay 4 seconds
     Pt100SetCh2Delay(4);
 
     //PT100 channel enable
@@ -731,9 +745,37 @@ static void config_module()
     Pt100Ch3Disable();
     Pt100Ch4Disable();
 
+    //PT100 configuration limits
+    Pt100SetCh1AlarmLevel(FAP_HS_OVERTEMP_ALM_LIM);     //Temperatura Dissipador
+    Pt100SetCh1TripLevel(FAP_HS_OVERTEMP_ITLK_LIM);     //Temperatura Dissipador
+    Pt100SetCh2AlarmLevel(FAP_INDUC_OVERTEMP_ALM_LIM);  //Temperatura L
+    Pt100SetCh2TripLevel(FAP_INDUC_OVERTEMP_ITLK_LIM);  //Temperatura L
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    TempIgbt1Delay(3); //Inserir valor de delay
+
+    TempIgbt1Enable(); //TempIgbt1 enable
+
+    //Temp Igbt1 configuration limits
+    TempIgbt1AlarmLevelSet(FAP_IGBT1_OVERTEMP_ALM_LIM);
+    TempIgbt1TripLevelSet(FAP_IGBT1_OVERTEMP_ITLK_LIM);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    TempIgbt2Delay(3); //Inserir valor de delay
+
+    TempIgbt2Enable(); //TempIgbt2 enable
+
+    //Temp Igbt2 configuration limits
+    TempIgbt2AlarmLevelSet(FAP_IGBT2_OVERTEMP_ALM_LIM);
+    TempIgbt2TripLevelSet(FAP_IGBT2_OVERTEMP_ITLK_LIM);
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     BoardTempDelay(3); //Inserir valor de delay
+
+    BoardTempEnable(); //BoardTemp enable
 
     //Temp board configuration limits
     BoardTempAlarmLevelSet(FAP_BOARD_TEMP_ALM_LIM);
@@ -742,6 +784,8 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     RhDelay(3); //Inserir valor de delay
+
+    RhEnable(); //Rh enable
 
     //Rh configuration limits
     RhAlarmLevelSet(FAP_RH_ALM_LIM);
@@ -754,22 +798,41 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Driver Voltage configuration
+    DriverVoltageInit();
+
     DriverVoltageDelay(3); //Inserir valor de delay
 
-    //Leitura da tensao dos drivers
+    DriverVoltageEnable(); //DriverVoltage enable
+
+    //Limite de alarme e interlock da tensao dos drivers
     DriverVoltageAlarmLevelSet(FAP_DRIVER_OVERVOLTAGE_ALM_LIM_LIM);
     DriverVoltageTripLevelSet(FAP_DRIVER_OVERVOLTAGE_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Driver Current configuration
+    DriverCurrentInit();
+
     DriverCurrentDelay(3); //Inserir valor de delay
 
-    //Leitura da corrente dos drivers
+    Driver1CurrentEnable(); //Driver1Current enable
+    Driver2CurrentEnable(); //Driver2Current enable
+
+    //Limite de alarme e interlock da corrente do driver 1
     Driver1CurrentAlarmLevelSet(FAP_DRIVER1_OVERCURRENT_ALM_LIM );
     Driver1CurrentTripLevelSet(FAP_DRIVER1_OVERCURRENT_ITLK_LIM);
 
+    //Limite de alarme e interlock da corrente do driver 2
     Driver2CurrentAlarmLevelSet(FAP_DRIVER2_OVERCURRENT_ALM_LIM);
     Driver2CurrentTripLevelSet(FAP_DRIVER2_OVERCURRENT_ITLK_LIM);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    VoltageCh1Disable(); //VoltageCh1 disable
+    VoltageCh2Disable(); //VoltageCh2 disable
+    VoltageCh3Disable(); //VoltageCh3 disable
+    VoltageCh4Disable(); //VoltageCh4 disable
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

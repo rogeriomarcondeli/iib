@@ -76,8 +76,8 @@ bool DriverVoltReadTask = 0;
 bool Driver1CurrtReadTask = 0;
 bool Driver2CurrtReadTask = 0;
 bool SendCanData          = 0;
-bool Ntc_Igbt1_Igbt2_Sample = 0;
-bool Ntc_Igbt1_Igbt2_SampleRead = 0;
+bool NtcSample = 0;
+bool NtcSampleRead = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -237,10 +237,10 @@ void task_1_ms(void)
        Driver2CurrtReadTask = 1;
        break;
     case 850:
-       Ntc_Igbt1_Igbt2_Sample = 1;
+       NtcSample = 1;
        break;
     case 900:
-       Ntc_Igbt1_Igbt2_SampleRead = 1;
+       NtcSampleRead = 1;
        break;
     case 950:
        ErrorCheck = 1;
@@ -303,15 +303,15 @@ void BoardTask(void)
       BoardTemperatureRead();
       BoardTempSampleRead = 0;
   }
-  else if(Ntc_Igbt1_Igbt2_Sample)
+  else if(NtcSample)
   {
-      Ntc_Igbt1_Igbt2_Start_Conversion();
-      Ntc_Igbt1_Igbt2_Sample = 0;
+      NtcStartConversion();
+      NtcSample = 0;
   }
-  else if(Ntc_Igbt1_Igbt2_SampleRead)
+  else if(NtcSampleRead)
   {
-      Ntc_Igbt1_Igbt2_Read();
-      Ntc_Igbt1_Igbt2_SampleRead = 0;
+      NtcRead();
+      NtcSampleRead = 0;
   }
   else if(DriverVoltReadTask)
   {

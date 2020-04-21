@@ -8,13 +8,7 @@
 
 extern void AdcsInit(void);
 extern void sample_adc(void);
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-extern void ConfigVoltCh1AsNtc(unsigned char sts);
-extern void ConfigVoltCh2AsNtc(unsigned char sts);
-extern void ConfigVoltCh3AsNtc(unsigned char sts);
-extern void ConfigVoltCh4AsNtc(unsigned char sts);
+extern float CurrentRange(float nFstCurr, float nSecCurr, float nBurden, float MaxVoltInput);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,6 +37,12 @@ extern void CurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsign
 extern void CurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
 extern void CurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
 extern void CurrentCh4Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void ConfigPolLvCurrCh1(unsigned char sts);
+extern void ConfigPolLvCurrCh2(unsigned char sts);
+extern void ConfigPolLvCurrCh3(unsigned char sts);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -131,6 +131,20 @@ extern void VoltageCh4TripLevelSet(float nValue);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+extern void VoltageCh1Enable(void);
+extern void VoltageCh2Enable(void);
+extern void VoltageCh3Enable(void);
+extern void VoltageCh4Enable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void VoltageCh1Disable(void);
+extern void VoltageCh2Disable(void);
+extern void VoltageCh3Disable(void);
+extern void VoltageCh4Disable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern unsigned char CurrentCh1AlarmStatusRead(void);
 extern unsigned char CurrentCh1TripStatusRead(void);
 extern unsigned char CurrentCh2AlarmStatusRead(void);
@@ -153,6 +167,20 @@ extern void CurrentCh4TripLevelSet(float nValue);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+extern void CurrentCh1Enable(void);
+extern void CurrentCh2Enable(void);
+extern void CurrentCh3Enable(void);
+extern void CurrentCh4Enable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void CurrentCh1Disable(void);
+extern void CurrentCh2Disable(void);
+extern void CurrentCh3Disable(void);
+extern void CurrentCh4Disable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern unsigned char LvCurrentCh1AlarmStatusRead(void);
 extern unsigned char LvCurrentCh1TripStatusRead(void);
 extern unsigned char LvCurrentCh2AlarmStatusRead(void);
@@ -171,6 +199,18 @@ extern void LvCurrentCh3TripLevelSet(float nValue);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+extern void LvCurrentCh1Enable(void);
+extern void LvCurrentCh2Enable(void);
+extern void LvCurrentCh3Enable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void LvCurrentCh1Disable(void);
+extern void LvCurrentCh2Disable(void);
+extern void LvCurrentCh3Disable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern unsigned char DriverVoltageAlarmStatusRead(void);
 extern unsigned char DriverVolatgeTripStatusRead(void);
 
@@ -178,6 +218,14 @@ extern unsigned char DriverVolatgeTripStatusRead(void);
 
 extern void DriverVoltageAlarmLevelSet(float nValue);
 extern void DriverVoltageTripLevelSet(float nValue);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void DriverVoltageEnable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void DriverVoltageDisable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -195,6 +243,14 @@ extern void Driver1CurrentTripLevelSet(float nValue);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+extern void Driver1CurrentEnable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Driver1CurrentDisable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern unsigned char Driver2CurrentAlarmStatusRead(void);
 extern unsigned char Driver2CurrentTripStatusRead(void);
 
@@ -205,18 +261,15 @@ extern void Driver2CurrentTripLevelSet(float nValue);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+extern void Driver2CurrentEnable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Driver2CurrentDisable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern void DriverCurrentDelay(unsigned char Delay_Set);
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-extern void AdcCalibrationCharge(void);
-extern void AdcOffsetCalibration(void);
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-extern void SetNewCalibrationStatus(void);
-extern void ClearNewCalibrationStatus(void);
-extern unsigned char CalibrationRequestStatus(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

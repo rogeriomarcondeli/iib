@@ -47,12 +47,12 @@ static unsigned char Configuration = 0b10000000; //0x80H
 static unsigned char read_Configuration = 0b00000000; //0x00H
 static unsigned char Write_High_Fault_Threshold_MSB = 0b10000011; //0x83H
 static unsigned char Write_High_Fault_Threshold_LSB = 0b10000100; //0x84H
-static unsigned char Read_High_Fault_Threshold_MSB = 0b00000011; //0x03H
-static unsigned char Read_High_Fault_Threshold_LSB = 0b00000100; //0x04H
+//static unsigned char Read_High_Fault_Threshold_MSB = 0b00000011; //0x03H
+//static unsigned char Read_High_Fault_Threshold_LSB = 0b00000100; //0x04H
 static unsigned char Write_Low_Fault_Threshold_MSB = 0b10000101; //0x85H
 static unsigned char Write_Low_Fault_Threshold_LSB = 0b10000110; //0x86H
-static unsigned char Read_Low_Fault_Threshold_MSB = 0b00000101; //0x05H
-static unsigned char Read_Low_Fault_Threshold_LSB = 0b00000110; //0x06H
+//static unsigned char Read_Low_Fault_Threshold_MSB = 0b00000101; //0x05H
+//static unsigned char Read_Low_Fault_Threshold_LSB = 0b00000110; //0x06H
 static unsigned char Fault_Status = 0b00000111; //0x07H
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ static unsigned char Fault_Status = 0b00000111; //0x07H
 
 static float a = 0.00390830;
 static float b = -0.0000005775;
-static float c = -0.00000000000418301; // only for temperature = t < 0
+//static float c = -0.00000000000418301; // only for temperature = t < 0
 float Reference_Resistor = 400.0; //Reference Resistor installed on the board.
 float RTD_Resistance = 100.0; //RTD Resistance at 0 Degrees. Please refer to your RTD data sheet.
 
@@ -195,7 +195,7 @@ void Pt100InitChannel(pt100_t *pt100)
      write_spi_byte(Configuration, 0b10000010);
      delay_ms(100);
      
-     write_spi_byte(Configuration,0b11010000);              // Enabling Vbias of max31865
+     write_spi_byte(Configuration,0b11010000);             // Enabling Vbias of max31865
      value = read_spi_byte(read_Configuration);            // Reading contents of Configuration register to verify communication with max31865 is done properly
      
      if (value == 208)
@@ -240,7 +240,6 @@ void Pt100InitChannel(pt100_t *pt100)
 void Pt100ReadChannel(pt100_t *pt100)
 {
     unsigned int Fault_Error = 0;    // Variable to read Fault register and compute faults
-    unsigned int value = 0;
 
     // Set mux channel
     Pt100Channel(pt100);
@@ -362,7 +361,6 @@ void Pt100Init(void)
     Pt100Ch3.Itlk_Delay_s       = 0;
     Pt100Ch3.Itlk_DelayCount    = 0;
     Pt100InitChannel(&Pt100Ch3);
-
 
     Pt100Ch4.Ch                 = 4;
     Pt100Ch4.Enable             = 0;
@@ -497,7 +495,8 @@ void Pt100Ch4Disable(void)
 // Read Channel 1 Temperature value
 unsigned char Pt100ReadCh1(void)
 {
-    return Pt100Ch1.Temperature;
+    if(Pt100Ch1.Enable)return Pt100Ch1.Temperature;
+    else return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -505,7 +504,8 @@ unsigned char Pt100ReadCh1(void)
 // Read Channel 2 Temperature value
 unsigned char Pt100ReadCh2(void)
 {
-    return Pt100Ch2.Temperature;
+    if(Pt100Ch2.Enable)return Pt100Ch2.Temperature;
+    else return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -513,7 +513,8 @@ unsigned char Pt100ReadCh2(void)
 // Read Channel 3 Temperature value
 unsigned char Pt100ReadCh3(void)
 {
-    return Pt100Ch3.Temperature;
+    if(Pt100Ch3.Enable)return Pt100Ch3.Temperature;
+    else return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -521,7 +522,8 @@ unsigned char Pt100ReadCh3(void)
 // Read Channel 4 Temperature value
 unsigned char Pt100ReadCh4(void)
 {
-    return Pt100Ch4.Temperature;
+    if(Pt100Ch4.Enable)return Pt100Ch4.Temperature;
+    else return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

@@ -130,6 +130,7 @@ void InterlockClearCheck(void)
           AdcClearAlarmTrip();
           Pt100ClearAlarmTrip();
           RhBoardTempClearAlarmTrip();
+          TempIgbt1TempIgbt2ClearAlarmTrip();
           
           ItlkClrCmd = 0;
           

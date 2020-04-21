@@ -442,11 +442,6 @@ static void config_module()
 
     ConfigPolVoltCh2(1);                   // Change the voltage polarity of the channel 2 (rectifier 2 voltage)
 
-    ConfigVoltCh1AsNtc(0);                 // Config Voltage Ch2 as a voltage input
-    ConfigVoltCh2AsNtc(0);                 // Config Voltage Ch2 as a voltage input
-    ConfigVoltCh3AsNtc(1);                 // Config Voltage Ch3 as a NTC input
-    ConfigVoltCh4AsNtc(1);                 // Config Voltage Ch4 as a NTC input
-
     //Setar limites
     VoltageCh1AlarmLevelSet(RM_OUTPUT_OVERVOLTAGE_RECT1_ALM_LIM);  // Rectifier1 Voltage Alarm
     VoltageCh1TripLevelSet(RM_OUTPUT_OVERVOLTAGE_RECT1_ITLK_LIM);  // Rectifier1 Voltage Trip

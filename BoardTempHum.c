@@ -244,7 +244,7 @@ void RhBoardTempSenseInit(void)
 
    delay_ms(100);
 
-   TemperatureBoard.Enable = 1;
+   TemperatureBoard.Enable = 0;
    TemperatureBoard.Value = 0;
    TemperatureBoard.AlarmLimit = 90;
    TemperatureBoard.TripLimit = 100;
@@ -255,7 +255,7 @@ void RhBoardTempSenseInit(void)
    TemperatureBoard.Itlk_Delay_ms = 0; // milisecond
    TemperatureBoard.Itlk_DelayCount = 0;
 
-   RelativeHumidity.Enable = 1;
+   RelativeHumidity.Enable = 0;
    RelativeHumidity.Value = 0;
    RelativeHumidity.AlarmLimit = 90;
    RelativeHumidity.TripLimit = 100;
@@ -270,16 +270,46 @@ void RhBoardTempSenseInit(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+void BoardTempEnable(void)
+{
+    TemperatureBoard.Enable = 1;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void BoardTempDisable(void)
+{
+    TemperatureBoard.Enable = 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void RhEnable(void)
+{
+    RelativeHumidity.Enable = 1;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void RhDisable(void)
+{
+    RelativeHumidity.Enable = 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned char BoardTempRead(void)
 {
-   return TemperatureBoard.Value;
+    if(TemperatureBoard.Enable)return TemperatureBoard.Value;
+    else return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 unsigned char RhRead(void)
 {
-   return RelativeHumidity.Value;
+    if(RelativeHumidity.Enable)return RelativeHumidity.Value;
+    else return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
