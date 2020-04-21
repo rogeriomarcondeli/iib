@@ -249,6 +249,9 @@ typedef struct
 
 fap_t fap;
 
+//uint32_t fap_interlocks_indication   = 0;
+//uint32_t fap_alarms_indication       = 0;
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 static uint32_t itlk_id;
@@ -552,14 +555,14 @@ void fap_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 1
-    fap.Driver1Error = Driver1TopErrRead(); //Variavel usada para debug
-    if(!fap.Driver1ErrorItlkSts) fap.Driver1ErrorItlkSts = Driver1TopErrRead();
+    fap.Driver1Error = Driver1TopErrorRead(); //Variavel usada para debug
+    if(!fap.Driver1ErrorItlkSts) fap.Driver1ErrorItlkSts = Driver1TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 2
-    fap.Driver2Error = Driver2TopErrRead(); //Variavel usada para debug
-    if(!fap.Driver2ErrorItlkSts) fap.Driver2ErrorItlkSts = Driver2TopErrRead();
+    fap.Driver2Error = Driver2TopErrorRead(); //Variavel usada para debug
+    if(!fap.Driver2ErrorItlkSts) fap.Driver2ErrorItlkSts = Driver2TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -735,6 +738,7 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //PT100 configuration
     //Delay 4 seconds
     Pt100SetCh1Delay(4);
     Pt100SetCh2Delay(4);
@@ -753,6 +757,7 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Temperature igbt1 configuration
     TempIgbt1Delay(3); //Inserir valor de delay
 
     TempIgbt1Enable(); //TempIgbt1 enable
@@ -763,6 +768,7 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Temperature igbt2 configuration
     TempIgbt2Delay(3); //Inserir valor de delay
 
     TempIgbt2Enable(); //TempIgbt2 enable
@@ -773,6 +779,7 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Temperature Board configuration
     BoardTempDelay(3); //Inserir valor de delay
 
     BoardTempEnable(); //BoardTemp enable
@@ -783,6 +790,7 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Humidity Board configuration
     RhDelay(3); //Inserir valor de delay
 
     RhEnable(); //Rh enable
@@ -793,8 +801,15 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    Driver1ErrEnable(); //Habilitado driver error 1
-    Driver2ErrEnable(); //Habilitado driver error 2
+    //Driver1 error configuration
+    Driver1TopErrorEnable(); //Habilitado driver error 1 Top
+    Driver1BotErrorDisable(); //Desabilitado driver error 1 Bot
+    Driver1OverTempDisable(); //Desabilitado Temperatura por Hardware do modulo 1
+
+    //Driver2 error configuration
+    Driver2TopErrorEnable(); //Habilitado driver error 2 Top
+    Driver2BotErrorDisable(); //Desabilitado driver error 2 Bot
+    Driver2OverTempDisable(); //Desabilitado Temperatura por Hardware do modulo 2
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -829,10 +844,27 @@ static void config_module()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Voltage configuration
     VoltageCh1Disable(); //VoltageCh1 disable
     VoltageCh2Disable(); //VoltageCh2 disable
     VoltageCh3Disable(); //VoltageCh3 disable
     VoltageCh4Disable(); //VoltageCh4 disable
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Gpdi configuration
+    Gpdi1Disable();  //Gpdi1 disable
+    Gpdi2Disable();  //Gpdi2 disable
+    Gpdi3Disable();  //Gpdi3 disable
+    Gpdi4Disable();  //Gpdi4 disable
+    Gpdi5Enable();   //Gpdi5 enable ExternalITLK
+    Gpdi6Enable();   //Gpdi6 enable RackITLK
+    Gpdi7Enable();   //Gpdi7 enable RelayStatus
+    Gpdi8Disable();  //Gpdi8 disable
+    Gpdi9Disable();  //Gpdi9 disable
+    Gpdi10Disable(); //Gpdi10 disable
+    Gpdi11Disable(); //Gpdi11 disable
+    Gpdi12Disable(); //Gpdi12 disable
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -25,23 +25,68 @@ extern unsigned char Gpdi12Read(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void Driver1ErrEnable(void);
-extern void Driver1ErrDisable(void);
-extern void Driver2ErrEnable(void);
-extern void Driver2ErrDisable(void);
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-extern unsigned char Driver1TopErrRead(void);
-extern unsigned char Driver1BotErrRead(void);
+extern unsigned char Driver1TopErrorRead(void);
+extern unsigned char Driver1BotErrorRead(void);
 extern unsigned char Driver1OverTempRead(void);
-extern unsigned char Driver2TopErrRead(void);
-extern unsigned char Driver2BotErrRead(void);
+extern unsigned char Driver2TopErrorRead(void);
+extern unsigned char Driver2BotErrorRead(void);
 extern unsigned char Driver2OverTempRead(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 extern unsigned char BoardAddressRead(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Gpdi1Enable(void);
+extern void Gpdi2Enable(void);
+extern void Gpdi3Enable(void);
+extern void Gpdi4Enable(void);
+extern void Gpdi5Enable(void);
+extern void Gpdi6Enable(void);
+extern void Gpdi7Enable(void);
+extern void Gpdi8Enable(void);
+extern void Gpdi9Enable(void);
+extern void Gpdi10Enable(void);
+extern void Gpdi11Enable(void);
+extern void Gpdi12Enable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Gpdi1Disable(void);
+extern void Gpdi2Disable(void);
+extern void Gpdi3Disable(void);
+extern void Gpdi4Disable(void);
+extern void Gpdi5Disable(void);
+extern void Gpdi6Disable(void);
+extern void Gpdi7Disable(void);
+extern void Gpdi8Disable(void);
+extern void Gpdi9Disable(void);
+extern void Gpdi10Disable(void);
+extern void Gpdi11Disable(void);
+extern void Gpdi12Disable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Driver1TopErrorEnable(void);
+extern void Driver1TopErrorDisable(void);
+
+extern void Driver1BotErrorEnable(void);
+extern void Driver1BotErrorDisable(void);
+
+extern void Driver1OverTempEnable(void);
+extern void Driver1OverTempDisable(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern void Driver2TopErrorEnable(void);
+extern void Driver2TopErrorDisable(void);
+
+extern void Driver2BotErrorEnable(void);
+extern void Driver2BotErrorDisable(void);
+
+extern void Driver2OverTempEnable(void);
+extern void Driver2OverTempDisable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -485,8 +485,15 @@ static void config_module()
     BoardTempAlarmLevelSet(RM_BOARD_TEMP_ALM_LIM);
     BoardTempTripLevelSet(RM_BOARD_TEMP_ITLK_LIM);
 
-    Driver1ErrDisable();         // Driver1 Error Signal Disable
-    Driver2ErrDisable();         // Driver1 Error Signal Disable
+    //Driver1 error configuration
+    Driver1TopErrorDisable(); //Desabilitado driver error 1 Top
+    Driver1BotErrorDisable(); //Desabilitado driver error 1 Bot
+    Driver1OverTempDisable(); //Desabilitado Temperatura por Hardware do modulo 1
+
+    //Driver2 error configuration
+    Driver2TopErrorDisable(); //Desabilitado driver error 2 Top
+    Driver2BotErrorDisable(); //Desabilitado driver error 2 Bot
+    Driver2OverTempDisable(); //Desabilitado Temperatura por Hardware do modulo 2
 
     // Init variables
     rectf_module.IoutRectf1.f             = 0;

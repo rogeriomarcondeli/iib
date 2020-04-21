@@ -314,9 +314,16 @@ static void config_module()
     BoardTempAlarmLevelSet(FAC_IS_BOARD_TEMP_ALM_LIM);
     BoardTempTripLevelSet(FAC_IS_BOARD_TEMP_ITLK_LIM);
 
-    // Disable all Driver Error Monitoring
-    Driver1ErrDisable();
-    Driver2ErrDisable();
+    //Driver1 error configuration
+    Driver1TopErrorDisable(); //Desabilitado driver error 1 Top
+    Driver1BotErrorDisable(); //Desabilitado driver error 1 Bot
+    Driver1OverTempDisable(); //Desabilitado Temperatura por Hardware do modulo 1
+
+    //Driver2 error configuration
+    Driver2TopErrorDisable(); //Desabilitado driver error 2 Top
+    Driver2BotErrorDisable(); //Desabilitado driver error 2 Bot
+    Driver2OverTempDisable(); //Desabilitado Temperatura por Hardware do modulo 2
+
 
     // Init Variables
     fac_is.Iin.f                      = 0.0;

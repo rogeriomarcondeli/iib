@@ -375,11 +375,11 @@ void fap_300A_application_readings()
 
     fap_300A.Relay = Gpdi4Read();
 
-    fap_300A.Driver1Error = Driver1TopErrRead();
-    if(!fap_300A.Driver1ErrorItlk) fap_300A.Driver1ErrorItlk             = Driver1TopErrRead();
+    fap_300A.Driver1Error = Driver1TopErrorRead();
+    if(!fap_300A.Driver1ErrorItlk) fap_300A.Driver1ErrorItlk             = Driver1TopErrorRead();
 
-    fap_300A.Driver2Error = Driver2TopErrRead();
-    if(!fap_300A.Driver2ErrorItlk) fap_300A.Driver2ErrorItlk             = Driver2TopErrRead();
+    fap_300A.Driver2Error = Driver2TopErrorRead();
+    if(!fap_300A.Driver2ErrorItlk) fap_300A.Driver2ErrorItlk             = Driver2TopErrorRead();
 
     if(fap_300A.ExternalItlkSts || fap_300A.Driver2ErrorItlk || fap_300A.Driver2ErrorItlk) InterlockSet(); // If no signal over the port, then set Interlock action
 
@@ -529,8 +529,15 @@ static void config_module()
     BoardTempAlarmLevelSet(FAP_BOARD_TEMP_ALM_LIM);
     BoardTempTripLevelSet(FAP_BOARD_TEMP_ITLK_LIM);
 
-    Driver1ErrEnable();
-    Driver2ErrEnable();
+    //Driver1 error configuration
+    Driver1TopErrorEnable(); //Habilitado driver error 1 Top
+    Driver1BotErrorDisable(); //Desabilitado driver error 1 Bot
+    Driver1OverTempDisable(); //Desabilitado Temperatura por Hardware do modulo 1
+
+    //Driver2 error configuration
+    Driver2TopErrorEnable(); //Habilitado driver error 2 Top
+    Driver2BotErrorDisable(); //Desabilitado driver error 2 Bot
+    Driver2OverTempDisable(); //Desabilitado Temperatura por Hardware do modulo 2
 
     // Init Variables
     fap_300A.Vin.f                  = 0.0;
