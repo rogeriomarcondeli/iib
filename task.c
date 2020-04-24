@@ -245,6 +245,9 @@ void task_1_ms(void)
     case 950:
        ErrorCheck = 1;
        break;
+    case 990:
+       AlarmCheckTask = 1;
+       break;
     case 1000:
        //ClearDiagnosticCount();
        break;
@@ -340,23 +343,22 @@ void BoardTask(void)
   else if(AlarmCheckTask)
   {
       AlarmAppCheck();
-      AlarmCheckTask = 1;
+      AlarmCheckTask = 0;
   }
 
   else if(LedUpdate)
   {
-      LedUpdate = 0;
       LedIndicationStatus();
+      LedUpdate = 0;
   }
 
   else if (SendCanData)
   {
-      SendCanData = 0;
       send_data_schedule();
+      SendCanData = 0;
   }
 
   power_on_check();
-  //send_data_schedule();
 
 }
 

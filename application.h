@@ -31,7 +31,6 @@ void AppInterlock(void);
 void AlarmSet(void);
 void AlarmClear(void);
 unsigned char AlarmRead(void);
-void AppAlarm(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

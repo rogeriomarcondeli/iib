@@ -34,6 +34,10 @@
 #include "input.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include "peripheral_drivers/timer/timer.h"
+#include "inc/hw_ssi.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/ssi.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,13 +103,13 @@
 #define FAP_DRIVER2_OVERCURRENT_ALM_LIM         1.15
 #define FAP_DRIVER2_OVERCURRENT_ITLK_LIM        2.4
 
-#define FAP_INDUC_OVERTEMP_ALM_LIM              50
+#define FAP_INDUC_OVERTEMP_ALM_LIM              30
 #define FAP_INDUC_OVERTEMP_ITLK_LIM             60
 
-#define FAP_HS_OVERTEMP_ALM_LIM                 50
+#define FAP_HS_OVERTEMP_ALM_LIM                 30
 #define FAP_HS_OVERTEMP_ITLK_LIM                60
 
-#define FAP_RH_ALM_LIM                          60
+#define FAP_RH_ALM_LIM                          50
 #define FAP_RH_ITLK_LIM                         90
 
 #define FAP_BOARD_TEMP_ALM_LIM                  80
@@ -242,6 +246,7 @@ typedef struct
     bool ReleExtItlkSts;
     bool RelayOpenItlkSts;
     bool RelayContactStickingItlkSts;
+    bool FlagAux;
 
 } fap_t;
 
@@ -249,8 +254,8 @@ typedef struct
 
 fap_t fap;
 
-//uint32_t fap_interlocks_indication   = 0;
-//uint32_t fap_alarms_indication       = 0;
+static uint32_t fap_interlocks_indication;
+static uint32_t fap_alarms_indication;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -275,6 +280,14 @@ void init_fap()
 
 void clear_fap_interlocks()
 {
+    fap.RelayOpenItlkSts = 0;
+    fap.RelayContactStickingItlkSts = 0;
+    fap.ReleAuxItlkSts = 0;
+    fap.ReleExtItlkSts = 0;
+    fap.FlagAux = 0;
+
+////////////////////////////////////////
+
     fap.VinItlkSts               = 0;
     fap.VoutItlkSts              = 0;
     fap.IoutA1ItlkSts            = 0;
@@ -569,16 +582,27 @@ void fap_application_readings()
     fap.ReleAuxItlkSts = ReleAuxSts();
     fap.ReleExtItlkSts = ReleExtItlkSts();
 
-    if(fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 0 && fap.Relay == 1) fap.RelayOpenItlkSts = 1;
-    else
+    if(fap.ReleAuxItlkSts == 1 && fap.ReleExtItlkSts == 0)
     {
+       fap.FlagAux = 1;
        fap.RelayOpenItlkSts = 0;
+       fap.RelayContactStickingItlkSts = 0;
     }
 
-    if(fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 1 && fap.Relay == 0) fap.RelayContactStickingItlkSts = 1;
-    else
+    delay_ms(2);
+
+    if(fap.FlagAux == 1 && fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 0)
     {
+       fap.RelayOpenItlkSts = 1;
        fap.RelayContactStickingItlkSts = 0;
+    }
+
+    delay_ms(2);
+
+    if(fap.FlagAux == 1 && fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 1)
+    {
+       fap.RelayContactStickingItlkSts = 1;
+       fap.RelayOpenItlkSts = 0;
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -605,14 +629,18 @@ void fap_power_on_check()
         Led1TurnOn();
         ReleExtItlkTurnOn();
     }
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 static void map_vars()
 {
-    g_controller_iib.iib_signals[0].u32     = itlk_id;
-    g_controller_iib.iib_signals[1].u32     = alarm_id;
+    fap_interlocks_indication = itlk_id;
+    fap_alarms_indication = alarm_id;
+
+    g_controller_iib.iib_signals[0].u32     = fap_interlocks_indication;
+    g_controller_iib.iib_signals[1].u32     = fap_alarms_indication;
     g_controller_iib.iib_signals[2].f       = fap.Vin.f;
     g_controller_iib.iib_signals[3].f       = fap.Vout.f;
     g_controller_iib.iib_signals[4].f       = fap.IoutA1.f;
@@ -635,11 +663,24 @@ void send_fap_data()
 {
     static uint8_t i = 0;
 
+    static uint8_t flag1 = 0;
+
+    static uint8_t flag2 = 0;
+
+    flag1 = check_fap_interlocks();
+
+    if(flag1 == 1)send_data_message(0);flag1 = 0;
+
+    flag2 = check_fap_alarms();
+
+    if(flag2 == 1)send_data_message(1);flag2 = 0;
+
     send_data_message(i);
 
     i++;
 
     if (i > 15) i = 0;
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -672,7 +713,7 @@ static void get_itlks_id()
 
 void send_fap_itlk_msg()
 {
-    send_data_message(0);
+    //send_data_message(0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -910,10 +951,10 @@ static void config_module()
     fap.Driver1ErrorItlkSts          = 0;
     fap.Driver2Error                 = 0;
     fap.Driver2ErrorItlkSts          = 0;
-    fap.TempL.f                      = 0;
+    fap.TempL.f                      = 0.0;
     fap.TempLAlarmSts                = 0;
     fap.TempLItlkSts                 = 0;
-    fap.TempHeatSink.f               = 0;
+    fap.TempHeatSink.f               = 0.0;
     fap.TempHeatSinkAlarmSts         = 0;
     fap.TempHeatSinkItlkSts          = 0;
     fap.Relay                        = 0;
@@ -921,7 +962,7 @@ static void config_module()
     fap.ExternalItlkSts              = 0;
     fap.Rack                         = 0;
     fap.RackItlkSts                  = 0;
-    fap.GroundLeakage.f              = 0;
+    fap.GroundLeakage.f              = 0.0;
     fap.GroundLeakageAlarmSts        = 0;
     fap.GroundLeakageItlkSts         = 0;
     fap.BoardTemperature.f           = 0.0;
