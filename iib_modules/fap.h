@@ -86,7 +86,7 @@ extern void check_fap_indication_leds(void);
 extern void fap_application_readings(void);
 extern void send_fap_itlk_msg(void);
 extern void fap_power_on_check(void);
-extern void send_fap_data();
+extern void send_fap_data(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -417,8 +417,8 @@ void check_fap_indication_leds()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock Externo
-    if(fap.ExternalItlkSts) Led6TurnOff();
-    else Led6TurnOn();
+    if(fap.ExternalItlkSts)Led6TurnOff();
+    else Led6TurnOff();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -663,18 +663,6 @@ void send_fap_data()
 {
     static uint8_t i = 0;
 
-    static uint8_t flag1 = 0;
-
-    static uint8_t flag2 = 0;
-
-    flag1 = check_fap_interlocks();
-
-    if(flag1 == 1)send_data_message(0);flag1 = 0;
-
-    flag2 = check_fap_alarms();
-
-    if(flag2 == 1)send_data_message(1);flag2 = 0;
-
     send_data_message(i);
 
     i++;
@@ -713,7 +701,7 @@ static void get_itlks_id()
 
 void send_fap_itlk_msg()
 {
-    //send_data_message(0);
+    send_data_message(0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -975,6 +963,7 @@ static void config_module()
     fap.ReleExtItlkSts               = 0;
     fap.RelayOpenItlkSts             = 0;
     fap.RelayContactStickingItlkSts  = 0;
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

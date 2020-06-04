@@ -15,6 +15,7 @@
 extern void timer_init(void);
 extern void timer_task_init(void);
 extern void delay_ms(uint32_t time);
+extern uint32_t SysCtlClockGetTM4C129(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

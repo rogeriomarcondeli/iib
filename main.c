@@ -4,16 +4,24 @@
 #include <adc_internal.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdbool.h>
-#include <stdint.h>
+#include <string.h>
+#include "stdlib.h"
+#include <stdio.h>
 #include "inc/hw_can.h"
 #include "inc/hw_ints.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_sysctl.h"
+#include "inc/hw_gpio.h"
+#include "inc/hw_timer.h"
+#include "inc/hw_types.h"
 #include "driverlib/can.h"
 #include "driverlib/gpio.h"
 #include "driverlib/interrupt.h"
 #include "driverlib/pin_map.h"
+#include "driverlib/rom.h"
+#include "driverlib/rom_map.h"
+#include "driverlib/systick.h"
+#include "driverlib/debug.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
 #include "driverlib/timer.h"
@@ -22,6 +30,7 @@
 #include "application.h"
 #include "board_drivers/hardware_def.h"
 #include "peripheral_drivers/gpio/gpio_driver.h"
+#include "peripheral_drivers/timer/timer.h"
 #include "leds.h"
 #include "output.h"
 #include "input.h"
@@ -30,6 +39,20 @@
 #include "pt100.h"
 #include "task.h"
 #include "iib_data.h"
+#include "PWMSoftware.h"
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+/*#include "priorities.h"
+#include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"*/
+
+/*TaskHandle_t myTaskLed1Handle = NULL;
+
+void LED1Task(void *pvParameters);*/
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,6 +69,15 @@ volatile static uint32_t millis = 0;
 
 volatile static uint8_t can_timestamp_100ms = 0;
 
+static uint32_t ui32SysClock;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+uint32_t SysCtlClockGetTM4C129(void)
+{
+    return ui32SysClock;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 void delay_ms(uint32_t time)
@@ -56,9 +88,8 @@ void delay_ms(uint32_t time)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-static void int_timer_1ms_handler(void)
+void IntTimer1msHandler(void)
 {
-
     // Clear the timer interrupt.
     TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
 
@@ -69,8 +100,9 @@ static void int_timer_1ms_handler(void)
     if(can_timestamp_100ms >= 10)
     {
         RunToggle();
-        //send_data_schedule();
+
         can_timestamp_100ms = 0;
+
         RunToggle();
     }
     else can_timestamp_100ms++;
@@ -83,11 +115,11 @@ static void int_timer_1ms_handler(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-static void int_timer_100us_handler(void)
+void IntTimer100usHandler(void)
 {
-
     // Clear the timer interrupt.
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+
     RunToggle();
     task_100_us();
     RunToggle();
@@ -95,34 +127,32 @@ static void int_timer_100us_handler(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void timer_1ms_init(void)
-{
 
+void Timer_1ms_Init(void)
+{
     // Enable timer 1.
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
 
     // Configure the two 32-bit periodic timers.
     TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC);
     TimerLoadSet(TIMER1_BASE, TIMER_A, (SYSCLOCK / 1000) - 1);
-    IntPrioritySet(INT_TIMER1A, 1);
 
     // Setup the interrupts for the timer timeouts.
     IntEnable(INT_TIMER1A);
     TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-    TimerIntRegister(TIMER1_BASE, TIMER_A, int_timer_1ms_handler);
+    TimerIntRegister(TIMER1_BASE, TIMER_A, IntTimer1msHandler);
+    IntPrioritySet(INT_TIMER1A, 1);
 
-    // Enable the timers.
+    // Enable the timer 1.
     TimerEnable(TIMER1_BASE, TIMER_A);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void timer_100us_init(void)
+void Timer_100us_Init(void)
 {
-
-    // Enable the peripherals used by this example.
+    // Enable timer 0.
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
-    //SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
 
     // Configure the two 32-bit periodic timers.
     TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
@@ -131,12 +161,11 @@ void timer_100us_init(void)
     // Setup the interrupts for the timer timeouts.
     IntEnable(INT_TIMER0A);
     TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-    TimerIntRegister(TIMER0_BASE, TIMER_A, int_timer_100us_handler);
+    TimerIntRegister(TIMER0_BASE, TIMER_A, IntTimer100usHandler);
     IntPrioritySet(INT_TIMER0A, 0);
 
-    // Enable the timers.
+    // Enable the timer 0.
     TimerEnable(TIMER0_BASE, TIMER_A);
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,10 +176,13 @@ void timer_100us_init(void)
  */
 int main(void)
 {
-    uint32_t ui32SysClock;
 
     ui32SysClock = SysCtlClockFreqSet((SYSCTL_OSC_MAIN | SYSCTL_USE_PLL |
                             SYSCTL_XTAL_25MHZ | SYSCTL_CFG_VCO_480), 120000000);
+
+    // Create tasks
+    /*xTaskCreate(LED1Task, (const portCHAR *)"LED1",
+                configMINIMAL_STACK_SIZE, NULL, PRIORITY_LED1_TASK, &myTaskLed1Handle);*/
 
     pinout_config();
 
@@ -169,8 +201,11 @@ int main(void)
 
     InitCan(ui32SysClock);
 
-    timer_1ms_init();
-    timer_100us_init();
+    Timer_1ms_Init();
+
+    Timer_100us_Init();
+
+    PWM1SoftwareInit();
 
     //PT100 channels initialization
     Pt100Init();
@@ -183,6 +218,8 @@ int main(void)
 
     //Led test
     LedPong();
+
+    //vTaskStartScheduler();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -206,5 +243,12 @@ int main(void)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+/*void LED1Task(void *pvParameters)
+{
 
+    for (;;)
+    {
+
+    }
+}*/
 

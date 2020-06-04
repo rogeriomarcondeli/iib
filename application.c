@@ -10,8 +10,8 @@
 #include "leds.h"
 #include "can_bus.h"
 #include "input.h"
-#include "stdbool.h"
-#include "stdint.h"
+#include <stdbool.h>
+#include <stdint.h>
 #include "fac_cmd.h"
 #include "fac_is.h"
 #include "fac_os.h"
@@ -328,9 +328,9 @@ void InterlockAppCheck(void)
 
        InterlockSet();
 
-       if (!itlk_send_flag){
+       if(!itlk_send_flag){
 
-           itlk_send_flag = true;
+           itlk_send_flag = false;
 
            switch (PowerModuleModel)
            {
@@ -429,7 +429,7 @@ void AlarmAppCheck(void)
 
        AlarmSet();
 
-       //send_data_message(1);
+       send_data_message(1);
    }
 }
 
