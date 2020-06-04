@@ -43,19 +43,6 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-/*#include "priorities.h"
-#include "FreeRTOSConfig.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"*/
-
-/*TaskHandle_t myTaskLed1Handle = NULL;
-
-void LED1Task(void *pvParameters);*/
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
 #define ON  ~0
 #define OFF 0
 
@@ -180,10 +167,6 @@ int main(void)
     ui32SysClock = SysCtlClockFreqSet((SYSCTL_OSC_MAIN | SYSCTL_USE_PLL |
                             SYSCTL_XTAL_25MHZ | SYSCTL_CFG_VCO_480), 120000000);
 
-    // Create tasks
-    /*xTaskCreate(LED1Task, (const portCHAR *)"LED1",
-                configMINIMAL_STACK_SIZE, NULL, PRIORITY_LED1_TASK, &myTaskLed1Handle);*/
-
     pinout_config();
 
     init_control_framwork(&g_controller_iib);
@@ -219,8 +202,6 @@ int main(void)
     //Led test
     LedPong();
 
-    //vTaskStartScheduler();
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Block application to sign that CAN Address is out of range
@@ -243,12 +224,8 @@ int main(void)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-/*void LED1Task(void *pvParameters)
-{
 
-    for (;;)
-    {
 
-    }
-}*/
+
+
 
