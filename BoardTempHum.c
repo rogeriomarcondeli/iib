@@ -25,7 +25,6 @@
 #define RegisterAddress1 0x01
 #define RegisterAddress2 0x02
 #define RegisterAddress3 0x03
-#define RegisterAddress11 0x11
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -93,7 +92,7 @@ void BoardTemperatureRead(void)
     while(Status==1)
     {
 
-         Status = I2C5Receive(SlaveAddress, RegisterAddress0);
+        Status = I2C5Receive(SlaveAddress, RegisterAddress0);
 
     }
 
@@ -170,7 +169,7 @@ void RelativeHumidityRead(void)
     while(Status==1)
     {
 
-         Status = I2C5Receive(SlaveAddress, RegisterAddress0);
+        Status = I2C5Receive(SlaveAddress, RegisterAddress0);
 
     }
 
@@ -233,16 +232,14 @@ void RhBoardTempSenseInit(void)
     set_gpio_as_output(TP_1_BASE, TP_1_PIN);
     set_gpio_as_output(TP_2_BASE, TP_2_PIN);
 
-
-
-   // performs I2C initialization
+    // performs I2C initialization
     InitI2C5();
 
    // configura CS como output
    set_gpio_as_output(GPIO_PORTB_BASE, GPIO_PIN_2);
    clear_pin(GPIO_PORTB_BASE, GPIO_PIN_2);
 
-   delay_ms(100);
+   delay_ms(10);
 
    TemperatureBoard.Enable = 0;
    TemperatureBoard.Value = 0;
@@ -402,5 +399,10 @@ void RhBoardTempClearAlarmTrip(void)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 

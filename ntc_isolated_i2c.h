@@ -81,15 +81,6 @@ extern void TempIgbt1TempIgbt2ClearAlarmTrip(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-// I2C stubs, implementations to be provided by the user.
-extern uint8_t ADS1x1x_i2c_start_write(uint8_t i2c_address);
-extern uint8_t ADS1x1x_i2c_write(uint8_t x);
-extern uint8_t ADS1x1x_i2c_start_read(uint8_t i2c_address, uint16_t bytes_to_read);
-extern uint8_t ADS1x1x_i2c_read(void);
-extern uint8_t ADS1x1x_i2c_stop(void);
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
 // I2C definitions.
 #define ADS1x1x_I2C_ADDRESS_ADDR_TO_GND  (0x48)
 #define ADS1x1x_I2C_ADDRESS_ADDR_TO_VCC  (0x49)

@@ -165,7 +165,7 @@ int main(void)
 {
 
     ui32SysClock = SysCtlClockFreqSet((SYSCTL_OSC_MAIN | SYSCTL_USE_PLL |
-                            SYSCTL_XTAL_25MHZ | SYSCTL_CFG_VCO_480), 120000000);
+                                       SYSCTL_XTAL_25MHZ | SYSCTL_CFG_VCO_480), 120000000);
 
     pinout_config();
 
