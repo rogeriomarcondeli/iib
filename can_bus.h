@@ -8,54 +8,62 @@
 
 #include <stdint.h>
 
-#define INTERLOCK_MESSAGE_LEN               8
-#define INTERLOCK_MESSAGE_OBJ_ID            1
+#define MESSAGE_STATUS_IIB_LEN        1
+#define MESSAGE_STATUS_IIB_OBJ_ID     1
 
-#define ALARM_MESSAGE_LEN                   8
-#define ALARM_MESSAGE_OBJ_ID                2
+#define MESSAGE_DATA_IIB_LEN          8
+#define MESSAGE_DATA_IIB_OBJ_ID       2
 
-#define RESET_ITLK_MESSAGE_LEN              1
-#define RESET_ITLK_MESSAGE_OBJ_ID           3
+#define MESSAGE_ITLK_IIB_LEN          8
+#define MESSAGE_ITLK_IIB_OBJ_ID       3
 
-#define DATA_REQUEST_MESSAGE_LEN            4
-#define DATA_REQUEST_MESSAGE_OBJ_ID         4
+#define MESSAGE_ALARM_IIB_LEN         8
+#define MESSAGE_ALARM_IIB_OBJ_ID      4
 
-#define DATA_SEND_MESSAGE_LEN               8
-#define DATA_SEND_OBJ_ID                    5
+#define MESSAGE_PARAM_IIB_LEN         8
+#define MESSAGE_PARAM_IIB_OBJ_ID      5
 
-#define RECV_PARAM_MESSAGE_LEN              8
-#define RECV_PARAM_MESSAGE_OBJ_ID           6
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-#define HEART_BEAT_MESSAGE_LEN              1
-#define HEART_BEAT_MESSAGE_OB_ID            7
+#define MESSAGE_RESET_UDC_LEN         1
+#define MESSAGE_RESET_UDC_OBJ_ID      6
+
+#define MESSAGE_STATUS_UDC_LEN        1
+#define MESSAGE_STATUS_UDC_OBJ_ID     7
+
+#define MESSAGE_PARAM_UDC_LEN         8
+#define MESSAGE_PARAM_UDC_OBJ_ID      8
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef enum {
-    ItlkMsgId = 1,
-    AlmMsgId,
-    ResetMsgId,
-    DataRequestMsgId,
-    DataSendMsgId,
-    ParamsSetMsgId,
-    HeartBeatMsgId
+    MESSAGE_STATUS_IIB_ID = 1,
+    MESSAGE_DATA_IIB_ID,
+    MESSAGE_ITLK_IIB_ID,
+    MESSAGE_ALARM_IIB_ID,
+    MESSAGE_PARAM_IIB_ID,
+    MESSAGE_RESET_UDC_ID,
+    MESSAGE_STATUS_UDC_ID,
+    MESSAGE_PARAM_UDC_ID
 }can_message_id_t;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern volatile uint32_t g_itlk_id;
-extern volatile uint32_t g_alarm_id;
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-extern void SendCanSchedule(void);
-extern void SendCan(unsigned char Message);
+extern void can_isr(void);
 extern void InitCan(uint32_t ui32SysClock);
+extern void handle_reset_message(void);
 extern void send_data_message(uint8_t var);
 extern uint16_t get_can_address(void);
+extern void send_status_iib(uint8_t iib_status);
+extern void get_status_udc(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
