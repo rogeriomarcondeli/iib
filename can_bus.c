@@ -39,15 +39,15 @@ volatile bool g_bErrFlag = 0;
 // A flag for the interrupt handler to indicate that a message was received.
 //
 //*****************************************************************************
-volatile bool g_bRXFlag = 0;
+//volatile bool g_bTXFlag = 0;
+
+//volatile bool g_bRXFlag = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /******************************************************************************
  *                          Object Messages
  *****************************************************************************/
-
-tCANMsgObject tx_message_status_iib;
 
 tCANMsgObject tx_message_data_iib;
 
@@ -61,13 +61,9 @@ tCANMsgObject tx_message_param_iib;
 
 tCANMsgObject rx_message_reset_udc;
 
-tCANMsgObject rx_message_status_udc;
-
 tCANMsgObject rx_message_param_udc;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-
-uint8_t message_status_iib[MESSAGE_STATUS_IIB_LEN];
 
 uint8_t message_data_iib[MESSAGE_DATA_IIB_LEN];
 
@@ -80,8 +76,6 @@ uint8_t message_param_iib[MESSAGE_PARAM_IIB_LEN];
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 uint8_t message_reset_udc[MESSAGE_RESET_UDC_LEN];
-
-uint8_t message_status_udc[MESSAGE_STATUS_UDC_LEN];
 
 uint8_t message_param_udc[MESSAGE_PARAM_UDC_LEN];
 
@@ -126,13 +120,13 @@ void can_isr(void)
 
     // Check if the cause is message object 1, which what we are using for
     // sending messages.
-    else if(ui32Status == MESSAGE_STATUS_IIB_OBJ_ID)
+    else if(ui32Status == MESSAGE_DATA_IIB_OBJ_ID)
     {
         // Getting to this point means that the TX interrupt occurred on
         // message object 1, and the message TX is complete.
         // Clear the message object interrupt.
 
-        CANIntClear(CAN0_BASE, MESSAGE_STATUS_IIB_OBJ_ID);
+        CANIntClear(CAN0_BASE, MESSAGE_DATA_IIB_OBJ_ID);
 
         /* Tx object 1. Nothing to do for now. */
 
@@ -144,13 +138,13 @@ void can_isr(void)
 
     // Check if the cause is message object 2, which what we are using for
     // sending messages.
-    else if(ui32Status == MESSAGE_DATA_IIB_OBJ_ID)
+    else if(ui32Status == MESSAGE_ITLK_IIB_OBJ_ID)
     {
         // Getting to this point means that the TX interrupt occurred on
         // message object 2, and the message TX is complete.
         // Clear the message object interrupt.
 
-        CANIntClear(CAN0_BASE, MESSAGE_DATA_IIB_OBJ_ID);
+        CANIntClear(CAN0_BASE, MESSAGE_ITLK_IIB_OBJ_ID);
 
         /* Tx object 2. Nothing to do for now. */
 
@@ -162,13 +156,13 @@ void can_isr(void)
 
     // Check if the cause is message object 3, which what we are using for
     // sending messages.
-    else if(ui32Status == MESSAGE_ITLK_IIB_OBJ_ID)
+    else if(ui32Status == MESSAGE_ALARM_IIB_OBJ_ID)
     {
         // Getting to this point means that the TX interrupt occurred on
         // message object 3, and the message TX is complete.
         // Clear the message object interrupt.
 
-        CANIntClear(CAN0_BASE, MESSAGE_ITLK_IIB_OBJ_ID);
+        CANIntClear(CAN0_BASE, MESSAGE_ALARM_IIB_OBJ_ID);
 
         /* Tx object 3. Nothing to do for now. */
 
@@ -180,13 +174,13 @@ void can_isr(void)
 
     // Check if the cause is message object 4, which what we are using for
     // sending messages.
-    else if(ui32Status == MESSAGE_ALARM_IIB_OBJ_ID)
+    else if(ui32Status == MESSAGE_PARAM_IIB_OBJ_ID)
     {
         // Getting to this point means that the TX interrupt occurred on
         // message object 4, and the message TX is complete.
         // Clear the message object interrupt.
 
-        CANIntClear(CAN0_BASE, MESSAGE_ALARM_IIB_OBJ_ID);
+        CANIntClear(CAN0_BASE, MESSAGE_PARAM_IIB_OBJ_ID);
 
         /* Tx object 4. Nothing to do for now. */
 
@@ -197,29 +191,11 @@ void can_isr(void)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     // Check if the cause is message object 5, which what we are using for
-    // sending messages.
-    else if(ui32Status == MESSAGE_PARAM_IIB_OBJ_ID)
-    {
-        // Getting to this point means that the TX interrupt occurred on
-        // message object 5, and the message TX is complete.
-        // Clear the message object interrupt.
-
-        CANIntClear(CAN0_BASE, MESSAGE_PARAM_IIB_OBJ_ID);
-
-        /* Tx object 5. Nothing to do for now. */
-
-        // Since the message was sent, clear any error flags.
-        g_bErrFlag = 0;
-    }
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Check if the cause is message object 6, which what we are using for
     // receiving messages.
     else if(ui32Status == MESSAGE_RESET_UDC_OBJ_ID)
     {
         // Getting to this point means that the RX interrupt occurred on
-        // message object 6, and the message RX is complete.
+        // message object 5, and the message RX is complete.
         // Clear the message object interrupt.
 
         CANIntClear(CAN0_BASE, MESSAGE_RESET_UDC_OBJ_ID);
@@ -232,35 +208,17 @@ void can_isr(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Check if the cause is message object 7, which what we are using for
-    // receiving messages.
-    else if(ui32Status == MESSAGE_STATUS_UDC_OBJ_ID)
-    {
-        // Getting to this point means that the RX interrupt occurred on
-        // message object 7, and the message RX is complete.
-        // Clear the message object interrupt.
-
-        CANIntClear(CAN0_BASE, MESSAGE_STATUS_UDC_OBJ_ID);
-
-        get_status_udc();
-
-        // Since the message was sent, clear any error flags.
-        g_bErrFlag = 0;
-    }
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Check if the cause is message object 8, which what we are using for
+    // Check if the cause is message object 6, which what we are using for
     // receiving messages.
     else if(ui32Status == MESSAGE_PARAM_UDC_OBJ_ID)
     {
         // Getting to this point means that the RX interrupt occurred on
-        // message object 8, and the message RX is complete.
+        // message object 6, and the message RX is complete.
         // Clear the message object interrupt.
 
         CANIntClear(CAN0_BASE, MESSAGE_PARAM_UDC_OBJ_ID);
 
-        /* Rx object 8. Nothing to do for now. */
+        /* Rx object 6. Nothing to do for now. */
 
         // Since the message was sent, clear any error flags.
         g_bErrFlag = 0;
@@ -302,27 +260,21 @@ void InitCan(uint32_t ui32SysClock)
     // Enable interrupts on the CAN peripheral.
     CANIntEnable(CAN0_BASE, CAN_INT_MASTER | CAN_INT_ERROR | CAN_INT_STATUS);
 
-    CANIntRegister(CAN0_BASE, can_isr);
+    CANIntRegister(CAN0_BASE, &can_isr);
 
     IntPrioritySet(INT_CAN0, 1);
 
-    // Enable the CAN interrupt on the processor (NVIC).
-    IntEnable(INT_CAN0);
+    // Disable auto-retry if no ACK-bit is received by the CAN controller.
+    CANRetrySet(CAN0_BASE, 0);
 
     // Enable the CAN for operation.
     CANEnable(CAN0_BASE);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-
-    //message object 1
-    tx_message_status_iib.ui32MsgID         = MESSAGE_STATUS_IIB_ID;
-    tx_message_status_iib.ui32MsgIDMask     = 0;
-    tx_message_status_iib.ui32Flags         = MSG_OBJ_TX_INT_ENABLE;
-    tx_message_status_iib.ui32MsgLen        = MESSAGE_STATUS_IIB_LEN;
-
+    /*configuration sending messages*/
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //message object 2
+    //message object 1
     tx_message_data_iib.ui32MsgID           = MESSAGE_DATA_IIB_ID;
     tx_message_data_iib.ui32MsgIDMask       = 0;
     tx_message_data_iib.ui32Flags           = MSG_OBJ_TX_INT_ENABLE;
@@ -330,7 +282,7 @@ void InitCan(uint32_t ui32SysClock)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //message object 3
+    //message object 2
     tx_message_itlk_iib.ui32MsgID           = MESSAGE_ITLK_IIB_ID;
     tx_message_itlk_iib.ui32MsgIDMask       = 0;
     tx_message_itlk_iib.ui32Flags           = MSG_OBJ_TX_INT_ENABLE;
@@ -338,7 +290,7 @@ void InitCan(uint32_t ui32SysClock)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //message object 4
+    //message object 3
     tx_message_alarm_iib.ui32MsgID          = MESSAGE_ALARM_IIB_ID;
     tx_message_alarm_iib.ui32MsgIDMask      = 0;
     tx_message_alarm_iib.ui32Flags          = MSG_OBJ_TX_INT_ENABLE;
@@ -346,15 +298,17 @@ void InitCan(uint32_t ui32SysClock)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //message object 5
+    //message object 4
     tx_message_param_iib.ui32MsgID          = MESSAGE_PARAM_IIB_ID;
     tx_message_param_iib.ui32MsgIDMask      = 0;
     tx_message_param_iib.ui32Flags          = MSG_OBJ_TX_INT_ENABLE;
     tx_message_param_iib.ui32MsgLen         = MESSAGE_PARAM_IIB_LEN;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+    /*configuration receiving messages*/
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    //message object 6
+    //message object 5
     rx_message_reset_udc.ui32MsgID          = MESSAGE_RESET_UDC_ID;
     rx_message_reset_udc.ui32MsgIDMask      = 0;
     rx_message_reset_udc.ui32Flags          = MSG_OBJ_RX_INT_ENABLE;
@@ -364,17 +318,7 @@ void InitCan(uint32_t ui32SysClock)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //message object 7
-    rx_message_status_udc.ui32MsgID         = MESSAGE_STATUS_UDC_ID;
-    rx_message_status_udc.ui32MsgIDMask     = 0;
-    rx_message_status_udc.ui32Flags         = MSG_OBJ_RX_INT_ENABLE;
-    rx_message_status_udc.ui32MsgLen        = MESSAGE_STATUS_UDC_LEN;
-
-    CANMessageSet(CAN0_BASE, MESSAGE_STATUS_UDC_OBJ_ID, &rx_message_status_udc, MSG_OBJ_TYPE_RX);
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-    //message object 8
+    //message object 6
     rx_message_param_udc.ui32MsgID         = MESSAGE_PARAM_UDC_ID;
     rx_message_param_udc.ui32MsgIDMask     = 0;
     rx_message_param_udc.ui32Flags         = MSG_OBJ_RX_INT_ENABLE;
@@ -399,15 +343,18 @@ void handle_reset_message(void)
 
     rx_message_reset_udc.pui8MsgData = message_reset_udc;
 
-    CANMessageGet(CAN0_BASE, MESSAGE_RESET_UDC_OBJ_ID, &rx_message_reset_udc, false);
+    CANMessageGet(CAN0_BASE, MESSAGE_RESET_UDC_OBJ_ID, &rx_message_reset_udc, 0);
 
     id = message_reset_udc[0];
 
     if (id == 1)
-	{
+    {
         InterlockClear();
+
         AlarmClear();
-	}
+
+        message_reset_udc[0] = 0;
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -423,15 +370,9 @@ void send_data_message(uint8_t var)
     message_data_iib[6] = g_controller_iib.iib_signals[var].u8[2];
     message_data_iib[7] = g_controller_iib.iib_signals[var].u8[3];
 
-    if(g_bRXFlag == 1)
-    {
-        tx_message_data_iib.pui8MsgData = message_data_iib;
+    tx_message_data_iib.pui8MsgData = message_data_iib;
 
-        CANMessageSet(CAN0_BASE, MESSAGE_DATA_IIB_OBJ_ID, &tx_message_data_iib, MSG_OBJ_TYPE_TX);
-
-        send_status_iib(11);
-    }
-
+    CANMessageSet(CAN0_BASE, MESSAGE_DATA_IIB_OBJ_ID, &tx_message_data_iib, MSG_OBJ_TYPE_TX);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -443,7 +384,7 @@ uint16_t get_can_address(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void send_status_iib(uint8_t iib_status)
+/*void send_status_iib(uint8_t iib_status)
 {
     message_status_iib[0] = iib_status;
 
@@ -462,15 +403,14 @@ void get_status_udc(void)
 
     status = message_status_udc[0];
 
-    if(status == 10)
+    if(status == 1)
     {
-        g_bRXFlag = 1;
+        g_bRXFlag_status_udc = 1;
+
+        //message_status_udc[0] = 0;
     }
-    else
-    {
-        g_bRXFlag = 0;
-    }
-}
+
+}*/
 
 
 
