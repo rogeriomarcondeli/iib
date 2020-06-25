@@ -257,6 +257,9 @@ fap_t fap;
 static uint32_t fap_interlocks_indication;
 static uint32_t fap_alarms_indication;
 
+static uint32_t ResetInterlocksRegister = 0;
+static uint32_t ResetAlarmsRegister = 0;
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 static uint32_t itlk_id;
@@ -308,6 +311,8 @@ void clear_fap_interlocks()
     fap.RelativeHumidityItlkSts  = 0;
 
     itlk_id = 0;
+
+    send_itlk_message(1);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -358,6 +363,8 @@ void clear_fap_alarms()
     fap.RelativeHumidityAlarmSts  = 0;
 
     alarm_id = 0;
+
+    send_alarm_message(1);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -639,22 +646,26 @@ static void map_vars()
     fap_interlocks_indication = itlk_id;
     fap_alarms_indication = alarm_id;
 
-    g_controller_iib.iib_signals[0].u32     = fap_interlocks_indication;
-    g_controller_iib.iib_signals[1].u32     = fap_alarms_indication;
-    g_controller_iib.iib_signals[2].f       = fap.Vin.f;
-    g_controller_iib.iib_signals[3].f       = fap.Vout.f;
-    g_controller_iib.iib_signals[4].f       = fap.IoutA1.f;
-    g_controller_iib.iib_signals[5].f       = fap.IoutA2.f;
-    g_controller_iib.iib_signals[6].f       = fap.TempIGBT1.f;
-    g_controller_iib.iib_signals[7].f       = fap.TempIGBT2.f;
-    g_controller_iib.iib_signals[8].f       = fap.DriveVoltage.f;
-    g_controller_iib.iib_signals[9].f       = fap.Drive1Current.f;
-    g_controller_iib.iib_signals[10].f      = fap.Drive2Current.f;
-    g_controller_iib.iib_signals[11].f      = fap.TempL.f;
-    g_controller_iib.iib_signals[12].f      = fap.TempHeatSink.f;
-    g_controller_iib.iib_signals[13].f      = fap.GroundLeakage.f;
-    g_controller_iib.iib_signals[14].f      = fap.BoardTemperature.f;
-    g_controller_iib.iib_signals[15].f      = fap.RelativeHumidity.f;
+    g_controller_iib.iib_itlk[0].u32        = fap_interlocks_indication;
+    g_controller_iib.iib_itlk[1].u32        = ResetInterlocksRegister;
+
+    g_controller_iib.iib_alarm[0].u32       = fap_alarms_indication;
+    g_controller_iib.iib_alarm[1].u32       = ResetAlarmsRegister;
+
+    g_controller_iib.iib_signals[0].f       = fap.Vin.f;
+    g_controller_iib.iib_signals[1].f       = fap.Vout.f;
+    g_controller_iib.iib_signals[2].f       = fap.IoutA1.f;
+    g_controller_iib.iib_signals[3].f       = fap.IoutA2.f;
+    g_controller_iib.iib_signals[4].f       = fap.TempIGBT1.f;
+    g_controller_iib.iib_signals[5].f       = fap.TempIGBT2.f;
+    g_controller_iib.iib_signals[6].f       = fap.DriveVoltage.f;
+    g_controller_iib.iib_signals[7].f       = fap.Drive1Current.f;
+    g_controller_iib.iib_signals[8].f       = fap.Drive2Current.f;
+    g_controller_iib.iib_signals[9].f       = fap.TempL.f;
+    g_controller_iib.iib_signals[10].f      = fap.TempHeatSink.f;
+    g_controller_iib.iib_signals[11].f      = fap.GroundLeakage.f;
+    g_controller_iib.iib_signals[12].f      = fap.BoardTemperature.f;
+    g_controller_iib.iib_signals[13].f      = fap.RelativeHumidity.f;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -667,7 +678,7 @@ void send_fap_data()
 
     i++;
 
-    if (i > 15) i = 0;
+    if (i > 13) i = 0;
 
 }
 
@@ -701,7 +712,7 @@ static void get_itlks_id()
 
 void send_fap_itlk_msg()
 {
-    send_data_message(0);
+    send_itlk_message(0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

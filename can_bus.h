@@ -46,8 +46,8 @@ extern void InitCan(uint32_t ui32SysClock);
 extern void handle_reset_message(void);
 extern void send_data_message(uint8_t var);
 extern uint16_t get_can_address(void);
-//extern void send_status_iib(uint8_t iib_status);
-//extern void get_status_udc(void);
+extern void send_itlk_message(uint8_t var);
+extern void send_alarm_message(uint8_t var);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

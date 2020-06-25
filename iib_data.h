@@ -46,14 +46,14 @@ typedef volatile struct
         volatile uint32_t   u32;
         volatile uint8_t    u8[4];
         volatile float      f;
-    } iib_itlk_lim[NUM_MAX_IIB_SIGNALS];
+    } iib_itlk[NUM_MAX_IIB_SIGNALS];
 
     union
     {
         volatile uint32_t   u32;
         volatile uint8_t    u8[4];
         volatile float      f;
-    } iib_alm_lim[NUM_MAX_IIB_SIGNALS];
+    } iib_alarm[NUM_MAX_IIB_SIGNALS];
 
 } control_framwork_t;
 

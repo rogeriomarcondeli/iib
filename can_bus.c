@@ -352,8 +352,6 @@ void handle_reset_message(void)
         InterlockClear();
 
         AlarmClear();
-
-        message_reset_udc[0] = 0;
     }
 }
 
@@ -377,46 +375,48 @@ void send_data_message(uint8_t var)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+void send_itlk_message(uint8_t var)
+{
+    message_itlk_iib[0] = can_address;
+    message_itlk_iib[1] = var;
+    message_itlk_iib[2] = 0;
+    message_itlk_iib[3] = 0;
+    message_itlk_iib[4] = g_controller_iib.iib_itlk[var].u8[0];
+    message_itlk_iib[5] = g_controller_iib.iib_itlk[var].u8[1];
+    message_itlk_iib[6] = g_controller_iib.iib_itlk[var].u8[2];
+    message_itlk_iib[7] = g_controller_iib.iib_itlk[var].u8[3];
+
+    tx_message_itlk_iib.pui8MsgData = message_itlk_iib;
+
+    CANMessageSet(CAN0_BASE, MESSAGE_ITLK_IIB_OBJ_ID, &tx_message_itlk_iib, MSG_OBJ_TYPE_TX);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void send_alarm_message(uint8_t var)
+{
+    message_alarm_iib[0] = can_address;
+    message_alarm_iib[1] = var;
+    message_alarm_iib[2] = 0;
+    message_alarm_iib[3] = 0;
+    message_alarm_iib[4] = g_controller_iib.iib_alarm[var].u8[0];
+    message_alarm_iib[5] = g_controller_iib.iib_alarm[var].u8[1];
+    message_alarm_iib[6] = g_controller_iib.iib_alarm[var].u8[2];
+    message_alarm_iib[7] = g_controller_iib.iib_alarm[var].u8[3];
+
+    tx_message_alarm_iib.pui8MsgData = message_alarm_iib;
+
+    CANMessageSet(CAN0_BASE, MESSAGE_ALARM_IIB_OBJ_ID, &tx_message_alarm_iib, MSG_OBJ_TYPE_TX);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 uint16_t get_can_address(void)
 {
     return can_address;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-
-/*void send_status_iib(uint8_t iib_status)
-{
-    message_status_iib[0] = iib_status;
-
-    tx_message_status_iib.pui8MsgData = message_status_iib;
-
-    CANMessageSet(CAN0_BASE, MESSAGE_STATUS_IIB_OBJ_ID, &tx_message_status_iib, MSG_OBJ_TYPE_TX);
-}
-
-void get_status_udc(void)
-{
-    uint8_t status;
-
-    rx_message_status_udc.pui8MsgData = message_status_udc;
-
-    CANMessageGet(CAN0_BASE, MESSAGE_STATUS_UDC_OBJ_ID, &rx_message_status_udc, false);
-
-    status = message_status_udc[0];
-
-    if(status == 1)
-    {
-        g_bRXFlag_status_udc = 1;
-
-        //message_status_udc[0] = 0;
-    }
-
-}*/
-
-
-
-
-
-
 
 
 

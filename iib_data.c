@@ -55,8 +55,8 @@ void init_control_framwork(volatile control_framwork_t *p_controller)
 
     for (i = 0; i < NUM_MAX_IIB_SIGNALS; i++) {
         p_controller->iib_signals[i].f = 0.0;
-        p_controller->iib_itlk_lim[i].f = 0.0;
-        p_controller->iib_alm_lim[i].f = 0.0;
+        p_controller->iib_itlk[i].u32 = 0;
+        p_controller->iib_alarm[i].u32 = 0;
     }
 }
 
