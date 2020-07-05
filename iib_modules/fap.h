@@ -9,7 +9,7 @@
  *****************************************************************************/
 
 /**
- * @file fap_module.h
+ * @file fap.h
  * @brief Brief description of module
  * 
  * Detailed description
