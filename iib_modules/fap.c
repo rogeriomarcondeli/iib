@@ -97,23 +97,23 @@
 #define FAP_DRIVER_OVERVOLTAGE_ALM_LIM_LIM      16.0
 #define FAP_DRIVER_OVERVOLTAGE_ITLK_LIM         17.0
 
-#define FAP_DRIVER1_OVERCURRENT_ALM_LIM         1.15
+#define FAP_DRIVER1_OVERCURRENT_ALM_LIM         2.0
 #define FAP_DRIVER1_OVERCURRENT_ITLK_LIM        2.4
 
-#define FAP_DRIVER2_OVERCURRENT_ALM_LIM         1.15
+#define FAP_DRIVER2_OVERCURRENT_ALM_LIM         2.0
 #define FAP_DRIVER2_OVERCURRENT_ITLK_LIM        2.4
 
-#define FAP_INDUC_OVERTEMP_ALM_LIM              30
+#define FAP_INDUC_OVERTEMP_ALM_LIM              50
 #define FAP_INDUC_OVERTEMP_ITLK_LIM             60
 
-#define FAP_HS_OVERTEMP_ALM_LIM                 30
+#define FAP_HS_OVERTEMP_ALM_LIM                 50
 #define FAP_HS_OVERTEMP_ITLK_LIM                60
 
-#define FAP_RH_ALM_LIM                          50
+#define FAP_RH_ALM_LIM                          45
 #define FAP_RH_ITLK_LIM                         90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  80
-#define FAP_BOARD_TEMP_ITLK_LIM                 90
+#define FAP_BOARD_TEMP_ALM_LIM                  50
+#define FAP_BOARD_TEMP_ITLK_LIM                 60
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -424,8 +424,8 @@ void check_fap_indication_leds()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock Externo
-    if(fap.ExternalItlkSts)Led6TurnOff();
-    else Led6TurnOff();
+    if(fap.ExternalItlkSts) Led6TurnOff();
+    else Led6TurnOn();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -188,7 +188,7 @@ int main(void)
 
     Timer_100us_Init();
 
-    PWM1SoftwareInit();
+    //PWM1SoftwareInit();
 
     //PT100 channels initialization
     Pt100Init();
