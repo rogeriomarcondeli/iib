@@ -23,8 +23,10 @@
 
 #include <iib_modules/fap.h>
 #include "iib_data.h"
+
 #include "adc_internal.h"
 #include "application.h"
+
 #include "BoardTempHum.h"
 #include "ntc_isolated_i2c.h"
 #include "pt100.h"
@@ -32,8 +34,10 @@
 #include "leds.h"
 #include "can_bus.h"
 #include "input.h"
+
 #include <stdbool.h>
 #include <stdint.h>
+
 #include "peripheral_drivers/timer/timer.h"
 #include "inc/hw_ssi.h"
 #include "driverlib/sysctl.h"
@@ -94,7 +98,7 @@
 #define FAP_IGBT2_OVERTEMP_ALM_LIM              60
 #define FAP_IGBT2_OVERTEMP_ITLK_LIM             80
 
-#define FAP_DRIVER_OVERVOLTAGE_ALM_LIM_LIM      16.0
+#define FAP_DRIVER_OVERVOLTAGE_ALM_LIM          16.0
 #define FAP_DRIVER_OVERVOLTAGE_ITLK_LIM         17.0
 
 #define FAP_DRIVER1_OVERCURRENT_ALM_LIM         2.0
@@ -482,7 +486,7 @@ void fap_application_readings()
 
     //Temperatura IGBT2
     fap.TempIGBT2.f = (float) TempIgbt2Read();
-    fap.TempIGBT2AlarmSts = TempIgbt2AlarmStatusRead();;
+    fap.TempIGBT2AlarmSts = TempIgbt2AlarmStatusRead();
     if(!fap.TempIGBT2ItlkSts)fap.TempIGBT2ItlkSts = TempIgbt2TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -558,13 +562,13 @@ void fap_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock externo
-    fap.ExternalItlk = Gpdi5Read(); //Variavel usada para debug
+    fap.ExternalItlk = Gpdi5Read();//Variavel usada para debug
     if(!fap.ExternalItlkSts) fap.ExternalItlkSts = Gpdi5Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock do Rack
-    fap.Rack = Gpdi6Read(); //Variavel usada para debug
+    fap.Rack = Gpdi6Read();//Variavel usada para debug
     if(!fap.RackItlkSts) fap.RackItlkSts = Gpdi6Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -575,13 +579,13 @@ void fap_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 1
-    fap.Driver1Error = Driver1TopErrorRead(); //Variavel usada para debug
+    fap.Driver1Error = Driver1TopErrorRead();//Variavel usada para debug
     if(!fap.Driver1ErrorItlkSts) fap.Driver1ErrorItlkSts = Driver1TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 2
-    fap.Driver2Error = Driver2TopErrorRead(); //Variavel usada para debug
+    fap.Driver2Error = Driver2TopErrorRead();//Variavel usada para debug
     if(!fap.Driver2ErrorItlkSts) fap.Driver2ErrorItlkSts = Driver2TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -739,7 +743,7 @@ static void get_alarms_id()
 
 static void config_module()
 {
-    //Set current range FAP 150 A
+    //Set current range FAP 130 A
     CurrentCh1Init(130.0, 0.130, 50.0, 3); //Corrente braço1: Sensor Hall
     CurrentCh2Init(130.0, 0.130, 50.0, 3); //Corrente braço2: LEM LA 130-P
 
@@ -748,11 +752,7 @@ static void config_module()
     CurrentCh3Disable(); //CurrentCh3 disable
     CurrentCh4Disable(); //CurrentCh4 disable
 
-    //Set protection limits FAP 150 A
-    //     These interlocks are bypassed due to the fact that their ADC's
-    //     will most probably saturate during operation at 300 A. These
-    //     measures are also performed by UDC, which guarantees these
-    //     protections
+    //Set protection limits FAP 130 A
     CurrentCh1AlarmLevelSet(FAP_OUTPUT_OVERCURRENT_1_ALM_LIM);  //Corrente braço1
     CurrentCh1TripLevelSet(FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM);  //Corrente braço1
     CurrentCh2AlarmLevelSet(FAP_OUTPUT_OVERCURRENT_2_ALM_LIM);  //Corrente braço2
@@ -772,7 +772,7 @@ static void config_module()
     LvCurrentCh1AlarmLevelSet(FAP_INPUT_OVERVOLTAGE_ALM_LIM);  //Tensão de entrada Alarme
     LvCurrentCh1TripLevelSet(FAP_INPUT_OVERVOLTAGE_ITLK_LIM);  //Tensão de entrada Interlock
     LvCurrentCh2AlarmLevelSet(FAP_OUTPUT_OVERVOLTAGE_ALM_LIM); //Tensão de saída Alarme
-    LvCurrentCh2TripLevelSet(FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM); // Tensão de saída Interlock
+    LvCurrentCh2TripLevelSet(FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM); //Tensão de saída Interlock
     LvCurrentCh3AlarmLevelSet(FAP_GROUND_LEAKAGE_ALM_LIM);     //Fuga para o terra alarme
     LvCurrentCh3TripLevelSet(FAP_GROUND_LEAKAGE_ITLK_LIM);     //Fuga para o terra interlock
 
@@ -861,7 +861,7 @@ static void config_module()
     DriverVoltageEnable(); //DriverVoltage enable
 
     //Limite de alarme e interlock da tensao dos drivers
-    DriverVoltageAlarmLevelSet(FAP_DRIVER_OVERVOLTAGE_ALM_LIM_LIM);
+    DriverVoltageAlarmLevelSet(FAP_DRIVER_OVERVOLTAGE_ALM_LIM);
     DriverVoltageTripLevelSet(FAP_DRIVER_OVERVOLTAGE_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
