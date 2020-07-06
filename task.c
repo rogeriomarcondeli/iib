@@ -48,12 +48,9 @@
  * TODO: Put here your constants and variables. Always use static for 
  * private members.
  */
-unsigned char count = 0;
+
 unsigned int Second = 0;
 unsigned char uSecond = 0;
-unsigned char uSecondOld = 255;
-unsigned char CanFast = 0;
-unsigned int CanSlow = 0;
 unsigned int _8Hz = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,11 +63,8 @@ bool RhSample = 0;
 bool RhSampleRead = 0;
 bool BoardTempSample = 0;
 bool BoardTempSampleRead = 0;
-bool SendCanMessSlow = 0;
-bool SendCanMessFast = 0;
 bool ErrorCheck = 0;
 bool LedUpdate = 0;
-bool PrintDiagnose = 0;
 bool AlarmCheckTask = 0;
 bool DriverVoltReadTask = 0;
 bool Driver1CurrtReadTask = 0;
@@ -78,25 +72,6 @@ bool Driver2CurrtReadTask = 0;
 bool SendCanData          = 0;
 bool NtcSample = 0;
 bool NtcSampleRead = 0;
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * TODO: Put here your function prototypes for private functions. Use
- * static in declaration.
- */
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * TODO: Put here the implementation for your public functions.
- */
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * TODO: Put here the implementation for your private functions.
- */
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -249,7 +224,7 @@ void task_1_ms(void)
        AlarmCheckTask = 1;
        break;
     case 1000:
-       //ClearDiagnosticCount();
+
        break;
     default:
 

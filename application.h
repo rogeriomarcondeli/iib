@@ -8,10 +8,9 @@
 
 #define  FAP                        0
 #define  FAC_OS                     1
-#define  RECTIFIER_MODULE           2
-#define  FAC_IS                     3
-#define  FAC_CMD_MODULE             4
-#define  FAP_300A                   5
+#define  FAC_IS                     2
+#define  FAC_CMD_MODULE             3
+#define  FAP_300A                   4
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
