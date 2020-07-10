@@ -50,44 +50,18 @@
  * need to access it from other module, consider use a constant (const)
  */
 
-// Linhas de transporte
-//#define FAP_INPUT_OVERVOLTAGE_ALM_LIM           50.0
-//#define FAP_INPUT_OVERVOLTAGE_ITLK_LIM          55.0
-
-//#define FAP_OUTPUT_OVERVOLTAGE_ALM_LIM          35.0
-//#define FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM         40.0
-
-//#define FAP_OUTPUT_OVERCURRENT_1_ALM_LIM        105.0
-//#define FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM       115.0
-
-//#define FAP_OUTPUT_OVERCURRENT_2_ALM_LIM        105.0
-//#define FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM       115.0
-
 // Potencia nominal
-#define FAP_INPUT_OVERVOLTAGE_ALM_LIM         555.0
-#define FAP_INPUT_OVERVOLTAGE_ITLK_LIM        560.0
+#define FAP_INPUT_OVERVOLTAGE_ALM_LIM           555.0
+#define FAP_INPUT_OVERVOLTAGE_ITLK_LIM          560.0
 
-#define FAP_OUTPUT_OVERVOLTAGE_ALM_LIM        260.0
-#define FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM       270.0
+#define FAP_OUTPUT_OVERVOLTAGE_ALM_LIM          260.0
+#define FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM         270.0
 
-#define FAP_OUTPUT_OVERCURRENT_1_ALM_LIM      115.0
-#define FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM     120.0
+#define FAP_OUTPUT_OVERCURRENT_1_ALM_LIM        115.0
+#define FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM       120.0
 
-#define FAP_OUTPUT_OVERCURRENT_2_ALM_LIM      115.0
-#define FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM     120.0
-
-// Fonte 750A
-//#define FAP_INPUT_OVERVOLTAGE_ALM_LIM                    55.0
-//#define FAP_INPUT_OVERVOLTAGE_ITLK_LIM                   60.0
-
-//#define FAP_OUTPUT_OVERVOLTAGE_ALM_LIM                   40.0
-//#define FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM                  45.0
-
-//#define FAP_OUTPUT_OVERCURRENT_1_ALM_LIM                 100.0
-//#define FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM                105.0
-
-//#define FAP_OUTPUT_OVERCURRENT_2_ALM_LIM                 100.0
-//#define FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM                105.0
+#define FAP_OUTPUT_OVERCURRENT_2_ALM_LIM        115.0
+#define FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM       120.0
 
 #define FAP_GROUND_LEAKAGE_ALM_LIM              40.0
 #define FAP_GROUND_LEAKAGE_ITLK_LIM             45.0
@@ -250,7 +224,6 @@ typedef struct
     bool ReleExtItlkSts;
     bool RelayOpenItlkSts;
     bool RelayContactStickingItlkSts;
-    bool FlagAux;
 
 } fap_t;
 
@@ -268,6 +241,12 @@ static uint32_t ResetAlarmsRegister = 0;
 
 static uint32_t itlk_id;
 static uint32_t alarm_id;
+
+static uint8_t flag1 = 0;
+static uint32_t FiltroUP1 = 1024;
+
+static uint8_t flag2 = 0;
+static uint32_t FiltroUP2 = 1024;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -291,7 +270,12 @@ void clear_fap_interlocks()
     fap.RelayContactStickingItlkSts = 0;
     fap.ReleAuxItlkSts = 0;
     fap.ReleExtItlkSts = 0;
-    fap.FlagAux = 0;
+
+    flag1 = 0;
+    FiltroUP1 = 1024;
+
+    flag2 = 0;
+    FiltroUP2 = 1024;
 
 ////////////////////////////////////////
 
@@ -591,29 +575,47 @@ void fap_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     fap.ReleAuxItlkSts = ReleAuxSts();
+
     fap.ReleExtItlkSts = ReleExtItlkSts();
 
-    if(fap.ReleAuxItlkSts == 1 && fap.ReleExtItlkSts == 0)
+    if(fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 0 && flag1 == 0)
     {
-       fap.FlagAux = 1;
-       fap.RelayOpenItlkSts = 0;
-       fap.RelayContactStickingItlkSts = 0;
+        if(!FiltroUP1)
+        {
+            fap.RelayOpenItlkSts = 1;
+            fap.RelayContactStickingItlkSts = 0;
+
+            FiltroUP1 = 1024;
+            flag1 = 1;
+        }
+        else FiltroUP1--;
+
+    }
+    else if(flag1 == 1)
+    {
+        flag1 = 0;
+        FiltroUP1 = 1024;
     }
 
-    delay_ms(2);
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-    if(fap.FlagAux == 1 && fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 0)
+    if(fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 1 && flag2 == 0)
     {
-       fap.RelayOpenItlkSts = 1;
-       fap.RelayContactStickingItlkSts = 0;
+        if(!FiltroUP2)
+        {
+            fap.RelayContactStickingItlkSts = 1;
+            fap.RelayOpenItlkSts = 0;
+
+            FiltroUP2 = 1024;
+            flag2 = 1;
+        }
+        else FiltroUP2--;
+
     }
-
-    delay_ms(2);
-
-    if(fap.FlagAux == 1 && fap.ReleAuxItlkSts == 0 && fap.ReleExtItlkSts == 1)
+    else if(flag2 == 1)
     {
-       fap.RelayContactStickingItlkSts = 1;
-       fap.RelayOpenItlkSts = 0;
+        flag2 = 0;
+        FiltroUP2 = 1024;
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -974,7 +976,6 @@ static void config_module()
     fap.ReleExtItlkSts               = 0;
     fap.RelayOpenItlkSts             = 0;
     fap.RelayContactStickingItlkSts  = 0;
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

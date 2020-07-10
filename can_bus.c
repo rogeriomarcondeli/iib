@@ -277,7 +277,7 @@ void InitCan(uint32_t ui32SysClock)
     //message object 1
     tx_message_data_iib.ui32MsgID           = MESSAGE_DATA_IIB_ID;
     tx_message_data_iib.ui32MsgIDMask       = 0;
-    tx_message_data_iib.ui32Flags           = MSG_OBJ_TX_INT_ENABLE;
+    tx_message_data_iib.ui32Flags           = (MSG_OBJ_TX_INT_ENABLE | MSG_OBJ_FIFO);
     tx_message_data_iib.ui32MsgLen          = MESSAGE_DATA_IIB_LEN;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,7 +285,7 @@ void InitCan(uint32_t ui32SysClock)
     //message object 2
     tx_message_itlk_iib.ui32MsgID           = MESSAGE_ITLK_IIB_ID;
     tx_message_itlk_iib.ui32MsgIDMask       = 0;
-    tx_message_itlk_iib.ui32Flags           = MSG_OBJ_TX_INT_ENABLE;
+    tx_message_itlk_iib.ui32Flags           = (MSG_OBJ_TX_INT_ENABLE | MSG_OBJ_FIFO);
     tx_message_itlk_iib.ui32MsgLen          = MESSAGE_ITLK_IIB_LEN;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,7 +293,7 @@ void InitCan(uint32_t ui32SysClock)
     //message object 3
     tx_message_alarm_iib.ui32MsgID          = MESSAGE_ALARM_IIB_ID;
     tx_message_alarm_iib.ui32MsgIDMask      = 0;
-    tx_message_alarm_iib.ui32Flags          = MSG_OBJ_TX_INT_ENABLE;
+    tx_message_alarm_iib.ui32Flags          = (MSG_OBJ_TX_INT_ENABLE | MSG_OBJ_FIFO);
     tx_message_alarm_iib.ui32MsgLen         = MESSAGE_ALARM_IIB_LEN;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,7 +301,7 @@ void InitCan(uint32_t ui32SysClock)
     //message object 4
     tx_message_param_iib.ui32MsgID          = MESSAGE_PARAM_IIB_ID;
     tx_message_param_iib.ui32MsgIDMask      = 0;
-    tx_message_param_iib.ui32Flags          = MSG_OBJ_TX_INT_ENABLE;
+    tx_message_param_iib.ui32Flags          = (MSG_OBJ_TX_INT_ENABLE | MSG_OBJ_FIFO);
     tx_message_param_iib.ui32MsgLen         = MESSAGE_PARAM_IIB_LEN;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -310,8 +310,8 @@ void InitCan(uint32_t ui32SysClock)
 
     //message object 5
     rx_message_reset_udc.ui32MsgID          = MESSAGE_RESET_UDC_ID;
-    rx_message_reset_udc.ui32MsgIDMask      = 0;
-    rx_message_reset_udc.ui32Flags          = MSG_OBJ_RX_INT_ENABLE;
+    rx_message_reset_udc.ui32MsgIDMask      = 0xfffff;
+    rx_message_reset_udc.ui32Flags          = (MSG_OBJ_RX_INT_ENABLE | MSG_OBJ_USE_ID_FILTER | MSG_OBJ_FIFO);
     rx_message_reset_udc.ui32MsgLen         = MESSAGE_RESET_UDC_LEN;
 
     CANMessageSet(CAN0_BASE, MESSAGE_RESET_UDC_OBJ_ID, &rx_message_reset_udc, MSG_OBJ_TYPE_RX);
@@ -320,8 +320,8 @@ void InitCan(uint32_t ui32SysClock)
 
     //message object 6
     rx_message_param_udc.ui32MsgID         = MESSAGE_PARAM_UDC_ID;
-    rx_message_param_udc.ui32MsgIDMask     = 0;
-    rx_message_param_udc.ui32Flags         = MSG_OBJ_RX_INT_ENABLE;
+    rx_message_param_udc.ui32MsgIDMask     = 0xfffff;
+    rx_message_param_udc.ui32Flags         = (MSG_OBJ_RX_INT_ENABLE | MSG_OBJ_USE_ID_FILTER | MSG_OBJ_FIFO);
     rx_message_param_udc.ui32MsgLen        = MESSAGE_PARAM_UDC_LEN;
 
     CANMessageSet(CAN0_BASE, MESSAGE_PARAM_UDC_OBJ_ID, &rx_message_param_udc, MSG_OBJ_TYPE_RX);
