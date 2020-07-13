@@ -45,56 +45,6 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * TODO: Put here your defines. Just what is local. If you don't
- * need to access it from other module, consider use a constant (const)
- */
-
-// Potencia nominal
-#define FAP_INPUT_OVERVOLTAGE_ALM_LIM           555.0
-#define FAP_INPUT_OVERVOLTAGE_ITLK_LIM          560.0
-
-#define FAP_OUTPUT_OVERVOLTAGE_ALM_LIM          260.0
-#define FAP_OUTPUT_OVERVOLTAGE_ITLK_LIM         270.0
-
-#define FAP_OUTPUT_OVERCURRENT_1_ALM_LIM        115.0
-#define FAP_OUTPUT_OVERCURRENT_1_ITLK_LIM       120.0
-
-#define FAP_OUTPUT_OVERCURRENT_2_ALM_LIM        115.0
-#define FAP_OUTPUT_OVERCURRENT_2_ITLK_LIM       120.0
-
-#define FAP_GROUND_LEAKAGE_ALM_LIM              40.0
-#define FAP_GROUND_LEAKAGE_ITLK_LIM             45.0
-
-#define FAP_IGBT1_OVERTEMP_ALM_LIM              60
-#define FAP_IGBT1_OVERTEMP_ITLK_LIM             80
-
-#define FAP_IGBT2_OVERTEMP_ALM_LIM              60
-#define FAP_IGBT2_OVERTEMP_ITLK_LIM             80
-
-#define FAP_DRIVER_OVERVOLTAGE_ALM_LIM          16.0
-#define FAP_DRIVER_OVERVOLTAGE_ITLK_LIM         17.0
-
-#define FAP_DRIVER1_OVERCURRENT_ALM_LIM         2.0
-#define FAP_DRIVER1_OVERCURRENT_ITLK_LIM        2.4
-
-#define FAP_DRIVER2_OVERCURRENT_ALM_LIM         2.0
-#define FAP_DRIVER2_OVERCURRENT_ITLK_LIM        2.4
-
-#define FAP_INDUC_OVERTEMP_ALM_LIM              50
-#define FAP_INDUC_OVERTEMP_ITLK_LIM             60
-
-#define FAP_HS_OVERTEMP_ALM_LIM                 50
-#define FAP_HS_OVERTEMP_ITLK_LIM                60
-
-#define FAP_RH_ALM_LIM                          45
-#define FAP_RH_ITLK_LIM                         90
-
-#define FAP_BOARD_TEMP_ALM_LIM                  50
-#define FAP_BOARD_TEMP_ITLK_LIM                 60
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
 typedef struct
 {
     union {
@@ -746,8 +696,8 @@ static void get_alarms_id()
 static void config_module()
 {
     //Set current range FAP 130 A
-    CurrentCh1Init(130.0, 0.130, 50.0, 3); //Corrente braço1: Sensor Hall
-    CurrentCh2Init(130.0, 0.130, 50.0, 3); //Corrente braço2: LEM LA 130-P
+    CurrentCh1Init(LA_Primary_Current, LA_Secondary_Current, LA_Burden_Resistor, LA_Delay); //Corrente braço1: Sensor Hall
+    CurrentCh2Init(LA_Primary_Current, LA_Secondary_Current, LA_Burden_Resistor, LA_Delay); //Corrente braço2: LEM LA 130-P
 
     CurrentCh1Enable();  //CurrentCh1 enable
     CurrentCh2Enable();  //CurrentCh2 enable
@@ -763,9 +713,9 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Leitura de tensão isolada
-    LvCurrentCh1Init(720, 0.025, 120.0, 100); // Vin
-    LvCurrentCh2Init(300, 0.025, 120.0, 100); // Vout
-    LvCurrentCh3Init(50.0, 0.025, 120.0, 3); // Ground Leakage
+    LvCurrentCh1Init(LV_Primary_Voltage_Vin , LV_Secondary_Current_Vin, LV_Burden_Resistor, Delay_Vin); // Vin
+    LvCurrentCh2Init(LV_Primary_Voltage_Vout , LV_Secondary_Current_Vin, LV_Burden_Resistor, Delay_Vout); // Vout
+    LvCurrentCh3Init(LV_Primary_Voltage_GND_Leakage, LV_Secondary_Current_Vin, LV_Burden_Resistor, Delay_GND_Leakage); // Ground Leakage
 
     LvCurrentCh1Enable(); //LvCurrentCh1 enable
     LvCurrentCh2Enable(); //LvCurrentCh2 enable
@@ -781,9 +731,9 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //PT100 configuration
-    //Delay 4 seconds
-    Pt100SetCh1Delay(4);
-    Pt100SetCh2Delay(4);
+    //Debouncing Delay seconds
+    Pt100SetCh1Delay(Delay_PT100CH1);
+    Pt100SetCh2Delay(Delay_PT100CH2);
 
     //PT100 channel enable
     Pt100Ch1Enable(); //Temperatura Dissipador
@@ -800,7 +750,7 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperature igbt1 configuration
-    TempIgbt1Delay(3); //Inserir valor de delay
+    TempIgbt1Delay(Delay_IGBT1); //Inserir valor de delay
 
     TempIgbt1Enable(); //TempIgbt1 enable
 
@@ -811,7 +761,7 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperature igbt2 configuration
-    TempIgbt2Delay(3); //Inserir valor de delay
+    TempIgbt2Delay(Delay_IGBT2); //Inserir valor de delay
 
     TempIgbt2Enable(); //TempIgbt2 enable
 
@@ -822,7 +772,7 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperature Board configuration
-    BoardTempDelay(3); //Inserir valor de delay
+    BoardTempDelay(Delay_BoardTemp); //Inserir valor de delay
 
     BoardTempEnable(); //BoardTemp enable
 
@@ -833,7 +783,7 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Humidity Board configuration
-    RhDelay(3); //Inserir valor de delay
+    RhDelay(Delay_BoardRh); //Inserir valor de delay
 
     RhEnable(); //Rh enable
 
@@ -858,7 +808,7 @@ static void config_module()
     //Driver Voltage configuration
     DriverVoltageInit();
 
-    DriverVoltageDelay(3); //Inserir valor de delay
+    DriverVoltageDelay(Delay_DriverVoltage); //Inserir valor de delay
 
     DriverVoltageEnable(); //DriverVoltage enable
 
@@ -871,7 +821,7 @@ static void config_module()
     //Driver Current configuration
     DriverCurrentInit();
 
-    DriverCurrentDelay(3); //Inserir valor de delay
+    DriverCurrentDelay(Delay_DriverCurrent); //Inserir valor de delay
 
     Driver1CurrentEnable(); //Driver1Current enable
     Driver2CurrentEnable(); //Driver2Current enable

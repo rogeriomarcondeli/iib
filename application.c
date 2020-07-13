@@ -37,11 +37,7 @@ void AppConfiguration(void)
     // This parameter guide the firmware behavior
     // Each Model has a different variable list that need to be check
 
-    PowerModuleModel = FAP;
-    //PowerModuleModel = FAC_OS;
-    //PowerModuleModel = FAC_IS;
-    //PowerModuleModel = FAC_CMD_MODULE;
-    //PowerModuleModel = FAP_300A;
+    PowerModuleModel = PowerModuleModelSelect;
 
     switch(PowerModuleModel)
     {

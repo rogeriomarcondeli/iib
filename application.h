@@ -6,6 +6,23 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+#define PowerModuleModelSelect      FAP
+
+//#define SI_FAM_PS_QFA
+//#define SI_FAM_PS_QFP
+//#define SI_FAM_PS_QFB
+//#define SI_FAM_PS_QDA_QDP1_QDP2
+//#define SI_FAM_PS_QDB1_QDB2
+//#define SI_FAM_PS_Q1_Q2_Q3_Q4
+//#define SI_FAM_PS_SDA0_SDP0_SFA0_SFP0_SDA1_SDA2_SDA3_SFA1_SFA2_SDP1_SDP2_SDP3_SFP1_SFP2
+//#define SI_FAM_PS_SDB0_SDB1_SDB2_SDB3_SFB0_SFB1_SFB2
+//#define SI_FAM_PS_B1B2_1_and_B1B2_2
+//#define TS_FAM_PS_B
+#define TB_FAM_PS_B
+//#define TS_01_PS_QF1A_TS_01_PS_QF1B_TS_02_PS_QF2_TS_02_PS_QD2_TS_03_PS_QF3_TS_04_PS_QF4_TS_04_PS_QD4A_TS_04_PS_QD4B
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 #define  FAP                        0
 #define  FAC_OS                     1
 #define  FAC_IS                     2
