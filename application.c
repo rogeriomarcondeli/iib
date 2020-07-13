@@ -16,7 +16,6 @@
 #include "fac_is.h"
 #include "fac_os.h"
 #include "fap.h"
-#include "fap_300A.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,12 +61,6 @@ void AppConfiguration(void)
     case FAC_CMD_MODULE:
 
         init_fac_cmd();
-
-        break;
-
-    case FAP_300A:
-
-        init_fap_300A();
 
         break;
 
@@ -154,13 +147,6 @@ void InterlockClearCheck(void)
 
             break;
 
-        case FAP_300A:
-
-            clear_fap_300A_interlocks();
-            clear_fap_300A_alarms();
-
-            break;
-
         default:
             break;
         }
@@ -209,13 +195,6 @@ void AppInterlock(void)
         break;
 
     case FAC_CMD_MODULE:
-
-        ReleAuxTurnOff();
-        ReleExtItlkTurnOff();
-
-        break;
-
-    case FAP_300A:
 
         ReleAuxTurnOff();
         ReleExtItlkTurnOff();
@@ -282,12 +261,6 @@ void InterlockAppCheck(void)
 
         break;
 
-    case FAP_300A:
-
-        test = check_fap_300A_interlocks();
-
-        break;
-
     default:
         break;
     }
@@ -323,12 +296,6 @@ void InterlockAppCheck(void)
             case FAC_CMD_MODULE:
 
                 send_fac_cmd_itlk_msg();
-
-                break;
-
-            case FAP_300A:
-
-                send_fap_300A_itlk_msg();
 
                 break;
 
@@ -368,12 +335,6 @@ void AlarmAppCheck(void)
     case FAC_CMD_MODULE:
 
         test = check_fac_cmd_alarms();
-
-        break;
-
-    case FAP_300A:
-
-        test = check_fap_300A_alarms();
 
         break;
 
@@ -419,12 +380,6 @@ void LedIndicationStatus(void)
 
         break;
 
-    case FAP_300A:
-
-        check_fap_300A_indication_leds();
-
-        break;
-
     default:
         break;
     }
@@ -459,12 +414,6 @@ void Application(void)
     case FAC_CMD_MODULE:
 
         fac_cmd_application_readings();
-
-        break;
-
-    case FAP_300A:
-
-        fap_300A_application_readings();
 
         break;
 
@@ -517,13 +466,6 @@ void Application(void)
 
             break;
 
-        case FAP_300A:
-
-            ReleAuxTurnOn();
-            ReleExtItlkTurnOff();
-
-            break;
-
         default:
             break;
         }
@@ -562,12 +504,6 @@ void send_data_schedule()
 
         break;
 
-    case FAP_300A:
-
-        send_fap_300A_data();
-
-        break;
-
     default:
         break;
     }
@@ -600,12 +536,6 @@ void power_on_check()
     case FAC_CMD_MODULE:
 
         fac_cmd_power_on_check();
-
-        break;
-
-    case FAP_300A:
-
-        fap_300A_power_on_check();
 
         break;
 
