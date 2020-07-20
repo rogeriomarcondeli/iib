@@ -87,7 +87,7 @@
 #define FAP_HS_OVERTEMP_ALM_LIM                 50
 #define FAP_HS_OVERTEMP_ITLK_LIM                60
 
-#define FAP_RH_ALM_LIM                          45
+#define FAP_RH_ALM_LIM                          60
 #define FAP_RH_ITLK_LIM                         90
 
 #define FAP_BOARD_TEMP_ALM_LIM                  50
@@ -763,9 +763,9 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Leitura de tensão isolada
-    LvCurrentCh1Init(720, 0.025, 120.0, 100); // Vin
-    LvCurrentCh2Init(300, 0.025, 120.0, 100); // Vout
-    LvCurrentCh3Init(50.0, 0.025, 120.0, 3); // Ground Leakage
+    LvCurrentCh1Init(722.5, 0.025, 120.0, 100); // Vin
+    LvCurrentCh2Init(302.5, 0.025, 120.0, 100); // Vout
+    LvCurrentCh3Init(52.5, 0.025, 120.0, 3); // Ground Leakage
 
     LvCurrentCh1Enable(); //LvCurrentCh1 enable
     LvCurrentCh2Enable(); //LvCurrentCh2 enable
