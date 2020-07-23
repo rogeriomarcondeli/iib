@@ -87,11 +87,11 @@
 #define FAP_HS_OVERTEMP_ALM_LIM                 50
 #define FAP_HS_OVERTEMP_ITLK_LIM                60
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  50
-#define FAP_BOARD_TEMP_ITLK_LIM                 60
+#define FAP_BOARD_OVERTEMP_ALM_LIM              50
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             60
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -534,26 +534,26 @@ void fap_application_readings()
     //Tensao de Saida
     fap.Vout.f = LvCurrentCh2Read();
     fap.VoutAlarmSts = LvCurrentCh2AlarmStatusRead();
-    if(!fap.VoutItlkSts) fap.VoutItlkSts = LvCurrentCh2TripStatusRead();
+    if(!fap.VoutItlkSts)fap.VoutItlkSts = LvCurrentCh2TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Medida de Fuga para o Terra
     fap.GroundLeakage.f = LvCurrentCh3Read();
     fap.GroundLeakageAlarmSts = LvCurrentCh3AlarmStatusRead();
-    if(!fap.GroundLeakageItlkSts) fap.GroundLeakageItlkSts = LvCurrentCh3TripStatusRead();
+    if(!fap.GroundLeakageItlkSts)fap.GroundLeakageItlkSts = LvCurrentCh3TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock externo
     fap.ExternalItlk = Gpdi5Read();//Variavel usada para debug
-    if(!fap.ExternalItlkSts) fap.ExternalItlkSts = Gpdi5Read();
+    if(!fap.ExternalItlkSts)fap.ExternalItlkSts = Gpdi5Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock do Rack
     fap.Rack = Gpdi6Read();//Variavel usada para debug
-    if(!fap.RackItlkSts) fap.RackItlkSts = Gpdi6Read();
+    if(!fap.RackItlkSts)fap.RackItlkSts = Gpdi6Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -564,13 +564,13 @@ void fap_application_readings()
 
     //Erro do Driver 1
     fap.Driver1Error = Driver1TopErrorRead();//Variavel usada para debug
-    if(!fap.Driver1ErrorItlkSts) fap.Driver1ErrorItlkSts = Driver1TopErrorRead();
+    if(!fap.Driver1ErrorItlkSts)fap.Driver1ErrorItlkSts = Driver1TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 2
     fap.Driver2Error = Driver2TopErrorRead();//Variavel usada para debug
-    if(!fap.Driver2ErrorItlkSts) fap.Driver2ErrorItlkSts = Driver2TopErrorRead();
+    if(!fap.Driver2ErrorItlkSts)fap.Driver2ErrorItlkSts = Driver2TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -827,8 +827,8 @@ static void config_module()
     BoardTempEnable(); //BoardTemp enable
 
     //Temp board configuration limits
-    BoardTempAlarmLevelSet(FAP_BOARD_TEMP_ALM_LIM);
-    BoardTempTripLevelSet(FAP_BOARD_TEMP_ITLK_LIM);
+    BoardTempAlarmLevelSet(FAP_BOARD_OVERTEMP_ALM_LIM);
+    BoardTempTripLevelSet(FAP_BOARD_OVERTEMP_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -838,8 +838,8 @@ static void config_module()
     RhEnable(); //Rh enable
 
     //Rh configuration limits
-    RhAlarmLevelSet(FAP_RH_ALM_LIM);
-    RhTripLevelSet(FAP_RH_ITLK_LIM);
+    RhAlarmLevelSet(FAP_RH_OVERHUMIDITY_ALM_LIM);
+    RhTripLevelSet(FAP_RH_OVERHUMIDITY_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -877,7 +877,7 @@ static void config_module()
     Driver2CurrentEnable(); //Driver2Current enable
 
     //Limite de alarme e interlock da corrente do driver 1
-    Driver1CurrentAlarmLevelSet(FAP_DRIVER1_OVERCURRENT_ALM_LIM );
+    Driver1CurrentAlarmLevelSet(FAP_DRIVER1_OVERCURRENT_ALM_LIM);
     Driver1CurrentTripLevelSet(FAP_DRIVER1_OVERCURRENT_ITLK_LIM);
 
     //Limite de alarme e interlock da corrente do driver 2

@@ -320,7 +320,7 @@ void InterlockAppCheck(void)
 
             case FAC_IS:
 
-                send_fac_is_itlk_msg();
+                send_input_fac_is_itlk_msg();
 
                 break;
 
