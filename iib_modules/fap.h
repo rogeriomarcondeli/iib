@@ -135,11 +135,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -265,11 +265,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -395,11 +395,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -525,11 +525,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -655,11 +655,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -785,11 +785,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 45
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -917,11 +917,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1049,11 +1049,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1179,11 +1179,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 45
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1311,11 +1311,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1443,11 +1443,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 60
 #define FAP_HS_OVERTEMP_ITLK_LIM                70
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1573,11 +1573,11 @@ extern void send_fap_data(void);
 #define FAP_HS_OVERTEMP_ALM_LIM                 40
 #define FAP_HS_OVERTEMP_ITLK_LIM                50
 
-#define FAP_RH_ALM_LIM                          60
-#define FAP_RH_ITLK_LIM                         90
+#define FAP_RH_OVERHUMIDITY_ALM_LIM             60
+#define FAP_RH_OVERHUMIDITY_ITLK_LIM            90
 
-#define FAP_BOARD_TEMP_ALM_LIM                  40
-#define FAP_BOARD_TEMP_ITLK_LIM                 50
+#define FAP_BOARD_OVERTEMP_ALM_LIM              40
+#define FAP_BOARD_OVERTEMP_ITLK_LIM             50
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

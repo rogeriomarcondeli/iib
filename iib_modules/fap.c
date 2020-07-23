@@ -777,8 +777,8 @@ static void config_module()
     BoardTempEnable(); //BoardTemp enable
 
     //Temp board configuration limits
-    BoardTempAlarmLevelSet(FAP_BOARD_TEMP_ALM_LIM);
-    BoardTempTripLevelSet(FAP_BOARD_TEMP_ITLK_LIM);
+    BoardTempAlarmLevelSet(FAP_BOARD_OVERTEMP_ALM_LIM);
+    BoardTempTripLevelSet(FAP_BOARD_OVERTEMP_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -788,8 +788,8 @@ static void config_module()
     RhEnable(); //Rh enable
 
     //Rh configuration limits
-    RhAlarmLevelSet(FAP_RH_ALM_LIM);
-    RhTripLevelSet(FAP_RH_ITLK_LIM);
+    RhAlarmLevelSet(FAP_RH_OVERHUMIDITY_ALM_LIM);
+    RhTripLevelSet(FAP_RH_OVERHUMIDITY_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
