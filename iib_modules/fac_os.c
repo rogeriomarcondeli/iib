@@ -419,8 +419,8 @@ void fac_os_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperatura IGBT1 Hardware
-    fac_os.TempIGBT1HwrItlk = Driver2OverTempRead();//Variavel usada para debug
-    if(!fac_os.TempIGBT1HwrItlkSts)fac_os.TempIGBT1HwrItlkSts = Driver2OverTempRead();
+    fac_os.TempIGBT1HwrItlk = Driver1OverTempRead();//Variavel usada para debug
+    if(!fac_os.TempIGBT1HwrItlkSts)fac_os.TempIGBT1HwrItlkSts = Driver1OverTempRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -432,8 +432,8 @@ void fac_os_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperatura IGBT2 Hardware
-    fac_os.TempIGBT2HwrItlk = Driver1OverTempRead();//Variavel usada para debug
-    if(!fac_os.TempIGBT2HwrItlkSts)fac_os.TempIGBT2HwrItlkSts = Driver1OverTempRead();
+    fac_os.TempIGBT2HwrItlk = Driver2OverTempRead();//Variavel usada para debug
+    if(!fac_os.TempIGBT2HwrItlkSts)fac_os.TempIGBT2HwrItlkSts = Driver2OverTempRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -491,26 +491,26 @@ void fac_os_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 1 Top
-    fac_os.Driver1ErrorTop = Driver2TopErrorRead();//Variavel usada para debug
-    if(!fac_os.Driver1ErrorTopItlkSts)fac_os.Driver1ErrorTopItlkSts = Driver2TopErrorRead();
+    fac_os.Driver1ErrorTop = Driver1TopErrorRead();//Variavel usada para debug
+    if(!fac_os.Driver1ErrorTopItlkSts)fac_os.Driver1ErrorTopItlkSts = Driver1TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 1 Bot
-    fac_os.Driver1ErrorBot = Driver2BotErrorRead();//Variavel usada para debug
-    if(!fac_os.Driver1ErrorBotItlkSts)fac_os.Driver1ErrorBotItlkSts = Driver2BotErrorRead();
+    fac_os.Driver1ErrorBot = Driver1BotErrorRead();//Variavel usada para debug
+    if(!fac_os.Driver1ErrorBotItlkSts)fac_os.Driver1ErrorBotItlkSts = Driver1BotErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 2 Top
-    fac_os.Driver2ErrorTop = Driver1TopErrorRead();//Variavel usada para debug
-    if(!fac_os.Driver2ErrorTopItlkSts)fac_os.Driver2ErrorTopItlkSts = Driver1TopErrorRead();
+    fac_os.Driver2ErrorTop = Driver2TopErrorRead();//Variavel usada para debug
+    if(!fac_os.Driver2ErrorTopItlkSts)fac_os.Driver2ErrorTopItlkSts = Driver2TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 2 Bot
-    fac_os.Driver2ErrorBot = Driver1BotErrorRead();//Variavel usada para debug
-    if(!fac_os.Driver2ErrorBotItlkSts)fac_os.Driver2ErrorBotItlkSts = Driver1BotErrorRead();
+    fac_os.Driver2ErrorBot = Driver2BotErrorRead();//Variavel usada para debug
+    if(!fac_os.Driver2ErrorBotItlkSts)fac_os.Driver2ErrorBotItlkSts = Driver2BotErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

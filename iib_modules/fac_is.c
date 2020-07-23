@@ -360,8 +360,8 @@ void fac_is_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperatura IGBT1 Hardware
-    fac_is.TempIGBT1HwrItlk = Driver2OverTempRead();//Variavel usada para debug
-    if(!fac_is.TempIGBT1HwrItlkSts)fac_is.TempIGBT1HwrItlkSts = Driver2OverTempRead();
+    fac_is.TempIGBT1HwrItlk = Driver1OverTempRead();//Variavel usada para debug
+    if(!fac_is.TempIGBT1HwrItlkSts)fac_is.TempIGBT1HwrItlkSts = Driver1OverTempRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -406,14 +406,14 @@ void fac_is_application_readings()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 1 Top
-    fac_is.Driver1ErrorTop = Driver2TopErrorRead();//Variavel usada para debug
-    if(!fac_is.Driver1ErrorTopItlkSts)fac_is.Driver1ErrorTopItlkSts = Driver2TopErrorRead();
+    fac_is.Driver1ErrorTop = Driver1TopErrorRead();//Variavel usada para debug
+    if(!fac_is.Driver1ErrorTopItlkSts)fac_is.Driver1ErrorTopItlkSts = Driver1TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 1 Bot
-    fac_is.Driver1ErrorBot = Driver2BotErrorRead();//Variavel usada para debug
-    if(!fac_is.Driver1ErrorBotItlkSts)fac_is.Driver1ErrorBotItlkSts = Driver2BotErrorRead();
+    fac_is.Driver1ErrorBot = Driver1BotErrorRead();//Variavel usada para debug
+    if(!fac_is.Driver1ErrorBotItlkSts)fac_is.Driver1ErrorBotItlkSts = Driver1BotErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
