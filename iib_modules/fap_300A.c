@@ -523,26 +523,26 @@ void fap_300A_application_readings()
     //Tensao de Saida
     fap_300A.Vout.f = LvCurrentCh2Read();
     fap_300A.VoutAlarmSts = LvCurrentCh2AlarmStatusRead();
-    if(!fap_300A.VoutItlkSts) fap_300A.VoutItlkSts = LvCurrentCh2TripStatusRead();
+    if(!fap_300A.VoutItlkSts)fap_300A.VoutItlkSts = LvCurrentCh2TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Medida de Fuga para o Terra
     fap_300A.GroundLeakage.f = LvCurrentCh3Read();
     fap_300A.GroundLeakageAlarmSts = LvCurrentCh3AlarmStatusRead();
-    if(!fap_300A.GroundLeakageItlkSts) fap_300A.GroundLeakageItlkSts = LvCurrentCh3TripStatusRead();
+    if(!fap_300A.GroundLeakageItlkSts)fap_300A.GroundLeakageItlkSts = LvCurrentCh3TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock externo
     fap_300A.ExternalItlk = Gpdi5Read();//Variavel usada para debug
-    if(!fap_300A.ExternalItlkSts) fap_300A.ExternalItlkSts = Gpdi5Read();
+    if(!fap_300A.ExternalItlkSts)fap_300A.ExternalItlkSts = Gpdi5Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock do Rack
     fap_300A.Rack = Gpdi6Read();//Variavel usada para debug
-    if(!fap_300A.RackItlkSts) fap_300A.RackItlkSts = Gpdi6Read();
+    if(!fap_300A.RackItlkSts)fap_300A.RackItlkSts = Gpdi6Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -553,13 +553,13 @@ void fap_300A_application_readings()
 
     //Erro do Driver 1
     fap_300A.Driver1Error = Driver1TopErrorRead();//Variavel usada para debug
-    if(!fap_300A.Driver1ErrorItlkSts) fap_300A.Driver1ErrorItlkSts = Driver1TopErrorRead();
+    if(!fap_300A.Driver1ErrorItlkSts)fap_300A.Driver1ErrorItlkSts = Driver1TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Erro do Driver 2
     fap_300A.Driver2Error = Driver2TopErrorRead();//Variavel usada para debug
-    if(!fap_300A.Driver2ErrorItlkSts) fap_300A.Driver2ErrorItlkSts = Driver2TopErrorRead();
+    if(!fap_300A.Driver2ErrorItlkSts)fap_300A.Driver2ErrorItlkSts = Driver2TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -852,7 +852,7 @@ static void config_module()
     Driver2CurrentEnable(); //Driver2Current enable
 
     //Limite de alarme e interlock da corrente do driver 1
-    Driver1CurrentAlarmLevelSet(FAP_300A_DRIVER1_OVERCURRENT_ALM_LIM );
+    Driver1CurrentAlarmLevelSet(FAP_300A_DRIVER1_OVERCURRENT_ALM_LIM);
     Driver1CurrentTripLevelSet(FAP_300A_DRIVER1_OVERCURRENT_ITLK_LIM);
 
     //Limite de alarme e interlock da corrente do driver 2

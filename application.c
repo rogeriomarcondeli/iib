@@ -502,8 +502,8 @@ void Application(void)
             ReleAuxTurnOn();
             ReleExtItlkTurnOn();
 
-            Gpdo1TurnOn();
-            Gpdo2TurnOn();
+            Gpdo1TurnOn();// Verificar se e isso mesmo
+            Gpdo2TurnOn();// Verificar se e isso mesmo
 
             break;
 
