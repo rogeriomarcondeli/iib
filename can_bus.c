@@ -336,7 +336,7 @@ void handle_reset_message(void)
 
     id = message_reset_udc[0];
 
-    if (id == 1)
+    if (id == can_address)
     {
         InterlockClear();
 
