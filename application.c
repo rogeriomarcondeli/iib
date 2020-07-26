@@ -182,8 +182,9 @@ void AppInterlock(void)
 
         ReleAuxTurnOff();
         ReleExtItlkTurnOff();
-        Gpdo1TurnOff();
-        Gpdo2TurnOff();
+
+        Gpdo1TurnOff();// Verificar se e isso mesmo
+        Gpdo2TurnOff();// Verificar se e isso mesmo
 
         break;
 
@@ -289,7 +290,7 @@ void InterlockAppCheck(void)
 
             case FAC_IS:
 
-                send_fac_is_itlk_msg();
+                send_input_fac_is_itlk_msg();
 
                 break;
 
@@ -447,8 +448,8 @@ void Application(void)
             ReleAuxTurnOn();
             ReleExtItlkTurnOn();
 
-            Gpdo1TurnOn();
-            Gpdo2TurnOn();
+            Gpdo1TurnOn();// Verificar se e isso mesmo
+            Gpdo2TurnOn();// Verificar se e isso mesmo
 
             break;
 

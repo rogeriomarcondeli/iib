@@ -45,46 +45,41 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * TODO: Put here your defines. Just what is local. If you don't
- * need to access it from other module, consider use a constant (const)
- */
+#define FAC_OS_INPUT_OVERVOLTAGE_ALM_LIM            290.0
+#define FAC_OS_INPUT_OVERVOLTAGE_ITLK_LIM           295.0
 
-#define FAC_OS_INPUT_VOLTAGE_ALM_LIM            290.0
-#define FAC_OS_INPUT_VOLTAGE_ITLK_LIM           295.0
+#define FAC_OS_INPUT_OVERCURRENT_ALM_LIM            430.0
+#define FAC_OS_INPUT_OVERCURRENT_ITLK_LIM           440.0
 
-#define FAC_OS_INPUT_CURRENT_ALM_LIM            430.0
-#define FAC_OS_INPUT_CURRENT_ITLK_LIM           440.0
+#define FAC_OS_OUTPUT_OVERCURRENT_ALM_LIM           570.0
+#define FAC_OS_OUTPUT_OVERCURRENT_ITLK_LIM          590.0
 
-#define FAC_OS_OUTPUT_CURRENT_ALM_LIM           570.0
-#define FAC_OS_OUTPUT_CURRENT_ITLK_LIM          590.0
+#define FAC_OS_IGBT1_OVERTEMP_ALM_LIM               60
+#define FAC_OS_IGBT1_OVERTEMP_ITLK_LIM              80
 
-#define FAC_OS_IGBT1_OVERTEMP_ALM_LIM           60
-#define FAC_OS_IGBT1_OVERTEMP_ITLK_LIM          80
+#define FAC_OS_IGBT2_OVERTEMP_ALM_LIM               60
+#define FAC_OS_IGBT2_OVERTEMP_ITLK_LIM              80
 
-#define FAC_OS_IGBT2_OVERTEMP_ALM_LIM           60
-#define FAC_OS_IGBT2_OVERTEMP_ITLK_LIM          80
+#define FAC_OS_DRIVER_OVERVOLTAGE_ALM_LIM           16.0
+#define FAC_OS_DRIVER_OVERVOLTAGE_ITLK_LIM          17.0
 
-#define FAC_OS_DRIVER_OVERVOLTAGE_ALM_LIM       16.0
-#define FAC_OS_DRIVER_OVERVOLTAGE_ITLK_LIM      17.0
+#define FAC_OS_DRIVER1_OVERCURRENT_ALM_LIM          2.0
+#define FAC_OS_DRIVER1_OVERCURRENT_ITLK_LIM         2.4
 
-#define FAC_OS_DRIVER1_OVERCURRENT_ALM_LIM      2.0
-#define FAC_OS_DRIVER1_OVERCURRENT_ITLK_LIM     2.4
+#define FAC_OS_DRIVER2_OVERCURRENT_ALM_LIM          2.0
+#define FAC_OS_DRIVER2_OVERCURRENT_ITLK_LIM         2.4
 
-#define FAC_OS_DRIVER2_OVERCURRENT_ALM_LIM      2.0
-#define FAC_OS_DRIVER2_OVERCURRENT_ITLK_LIM     2.4
+#define FAC_OS_INDUC_OVERTEMP_ALM_LIM               40
+#define FAC_OS_INDUC_OVERTEMP_ITLK_LIM              45
 
-#define FAC_OS_INDUC_TEMP_ALM_LIM               40
-#define FAC_OS_INDUC_TEMP_ITLK_LIM              45
+#define FAC_OS_HS_OVERTEMP_ALM_LIM                  40
+#define FAC_OS_HS_OVERTEMP_ITLK_LIM                 45
 
-#define FAC_OS_HS_TEMP_ALM_LIM                  40
-#define FAC_OS_HS_TEMP_ITLK_LIM                 45
+#define FAC_OS_RH_OVERHUMIDITY_ALM_LIM              50
+#define FAC_OS_RH_OVERHUMIDITY_ITLK_LIM             90
 
-#define FAC_OS_RH_ALM_LIM                       50
-#define FAC_OS_RH_ITLK_LIM                      90
-
-#define FAC_OS_BOARD_TEMP_ALM_LIM               50
-#define FAC_OS_BOARD_TEMP_ITLK_LIM              60
+#define FAC_OS_BOARD_OVERTEMP_ALM_LIM               50
+#define FAC_OS_BOARD_OVERTEMP_ITLK_LIM              60
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -121,6 +116,8 @@ typedef struct
 
     bool TempIGBT1AlarmSts;
     bool TempIGBT1ItlkSts;
+    bool TempIGBT1HwrItlk;
+    bool TempIGBT1HwrItlkSts;
 
     union {
         float    f;
@@ -129,6 +126,8 @@ typedef struct
 
     bool TempIGBT2AlarmSts;
     bool TempIGBT2ItlkSts;
+    bool TempIGBT2HwrItlk;
+    bool TempIGBT2HwrItlkSts;
 
     union {
         float   f;
@@ -154,10 +153,17 @@ typedef struct
     bool Drive2CurrentAlarmSts;
     bool Drive2CurrentItlkSts;
 
-    bool Driver1Error;
-    bool Driver1ErrorItlkSts;
-    bool Driver2Error;
-    bool Driver2ErrorItlkSts;
+    bool Driver1ErrorTop;
+    bool Driver1ErrorTopItlkSts;
+
+    bool Driver1ErrorBot;
+    bool Driver1ErrorBotItlkSts;
+
+    bool Driver2ErrorTop;
+    bool Driver2ErrorTopItlkSts;
+
+    bool Driver2ErrorBot;
+    bool Driver2ErrorBotItlkSts;
 
     union {
         float    f;
@@ -230,9 +236,13 @@ void clear_fac_os_interlocks()
     fac_os.IinItlkSts               = 0;
     fac_os.IoutItlkSts              = 0;
     fac_os.TempIGBT1ItlkSts         = 0;
+    fac_os.TempIGBT1HwrItlkSts      = 0;
     fac_os.TempIGBT2ItlkSts         = 0;
-    fac_os.Driver1ErrorItlkSts      = 0;
-    fac_os.Driver2ErrorItlkSts      = 0;
+    fac_os.TempIGBT2HwrItlkSts      = 0;
+    fac_os.Driver1ErrorTopItlkSts   = 0;
+    fac_os.Driver1ErrorBotItlkSts   = 0;
+    fac_os.Driver2ErrorTopItlkSts   = 0;
+    fac_os.Driver2ErrorBotItlkSts   = 0;
     fac_os.TempLItlkSts             = 0;
     fac_os.TempHeatSinkItlkSts      = 0;
     fac_os.DriveVoltageItlkSts      = 0;
@@ -256,9 +266,13 @@ uint8_t check_fac_os_interlocks()
     test |= fac_os.IinItlkSts;
     test |= fac_os.IoutItlkSts;
     test |= fac_os.TempIGBT1ItlkSts;
+    test |= fac_os.TempIGBT1HwrItlkSts;
     test |= fac_os.TempIGBT2ItlkSts;
-    test |= fac_os.Driver1ErrorItlkSts;
-    test |= fac_os.Driver2ErrorItlkSts;
+    test |= fac_os.TempIGBT2HwrItlkSts;
+    test |= fac_os.Driver1ErrorTopItlkSts;
+    test |= fac_os.Driver1ErrorBotItlkSts;
+    test |= fac_os.Driver2ErrorTopItlkSts;
+    test |= fac_os.Driver2ErrorBotItlkSts;
     test |= fac_os.TempLItlkSts;
     test |= fac_os.TempHeatSinkItlkSts;
     test |= fac_os.DriveVoltageItlkSts;
@@ -272,7 +286,7 @@ uint8_t check_fac_os_interlocks()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void clear_fac_os_alarms(void)
+void clear_fac_os_alarms()
 {
     fac_os.VdcLinkAlarmSts           = 0;
     fac_os.IinAlarmSts               = 0;
@@ -294,7 +308,7 @@ void clear_fac_os_alarms(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-uint8_t check_fac_os_alarms(void)
+uint8_t check_fac_os_alarms()
 {
     uint8_t test = 0;
 
@@ -340,7 +354,7 @@ void check_fac_os_indication_leds()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlocks dos Drivers
-    if(fac_os.Driver1ErrorItlkSts || fac_os.Driver2ErrorItlkSts) Led5TurnOff();
+    if(fac_os.Driver1ErrorTopItlkSts || fac_os.Driver1ErrorBotItlkSts || fac_os.Driver2ErrorTopItlkSts || fac_os.Driver2ErrorBotItlkSts) Led5TurnOff();
     else Led5TurnOn();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -360,7 +374,7 @@ void check_fac_os_indication_leds()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Over temperature igbt1 and igbt2
-    if(fac_os.TempIGBT1ItlkSts || fac_os.TempIGBT2ItlkSts) Led8TurnOff();
+    if(fac_os.TempIGBT1ItlkSts || fac_os.TempIGBT1HwrItlkSts || fac_os.TempIGBT2ItlkSts || fac_os.TempIGBT2HwrItlkSts) Led8TurnOff();
     else if(fac_os.TempIGBT1AlarmSts || fac_os.TempIGBT2AlarmSts) Led8Toggle();
     else Led8TurnOn();
 
@@ -404,10 +418,22 @@ void fac_os_application_readings()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Temperatura IGBT1 Hardware
+    fac_os.TempIGBT1HwrItlk = Driver1OverTempRead();//Variavel usada para debug
+    if(!fac_os.TempIGBT1HwrItlkSts)fac_os.TempIGBT1HwrItlkSts = Driver1OverTempRead();
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
     //Temperatura IGBT2
     fac_os.TempIGBT2.f = (float) TempIgbt2Read();
     fac_os.TempIGBT2AlarmSts = TempIgbt2AlarmStatusRead();
     if(!fac_os.TempIGBT2ItlkSts)fac_os.TempIGBT2ItlkSts = TempIgbt2TripStatusRead();
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Temperatura IGBT2 Hardware
+    fac_os.TempIGBT2HwrItlk = Driver2OverTempRead();//Variavel usada para debug
+    if(!fac_os.TempIGBT2HwrItlkSts)fac_os.TempIGBT2HwrItlkSts = Driver2OverTempRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -448,36 +474,49 @@ void fac_os_application_readings()
 
     fac_os.VdcLink.f = LvCurrentCh1Read();
     fac_os.VdcLinkAlarmSts = LvCurrentCh1AlarmStatusRead();
-    if(!fac_os.VdcLinkItlkSts) fac_os.VdcLinkItlkSts = LvCurrentCh1TripStatusRead();
+    if(!fac_os.VdcLinkItlkSts)fac_os.VdcLinkItlkSts = LvCurrentCh1TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     fac_os.Iin.f = CurrentCh1Read();
     fac_os.IinAlarmSts = CurrentCh1AlarmStatusRead();
-    if(!fac_os.IinItlkSts) fac_os.IinItlkSts = CurrentCh1TripStatusRead();
+    if(!fac_os.IinItlkSts)fac_os.IinItlkSts = CurrentCh1TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     fac_os.Iout.f = CurrentCh2Read();
     fac_os.IoutAlarmSts = CurrentCh2AlarmStatusRead();
-    if(!fac_os.IoutItlkSts) fac_os.IoutItlkSts = CurrentCh2TripStatusRead();
+    if(!fac_os.IoutItlkSts)fac_os.IoutItlkSts = CurrentCh2TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Erro do Driver 1
-    fac_os.Driver1Error = Driver1TopErrorRead();//Variavel usada para debug
-    if(!fac_os.Driver1ErrorItlkSts) fac_os.Driver1ErrorItlkSts = Driver1TopErrorRead();
+    //Erro do Driver 1 Top
+    fac_os.Driver1ErrorTop = Driver1TopErrorRead();//Variavel usada para debug
+    if(!fac_os.Driver1ErrorTopItlkSts)fac_os.Driver1ErrorTopItlkSts = Driver1TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Erro do Driver 2
-    fac_os.Driver2Error = Driver2TopErrorRead();//Variavel usada para debug
-    if(!fac_os.Driver2ErrorItlkSts) fac_os.Driver2ErrorItlkSts = Driver2TopErrorRead();
+    //Erro do Driver 1 Bot
+    fac_os.Driver1ErrorBot = Driver1BotErrorRead();//Variavel usada para debug
+    if(!fac_os.Driver1ErrorBotItlkSts)fac_os.Driver1ErrorBotItlkSts = Driver1BotErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Se nao houver sinal na entrada digital dos 2 sinais, defina a acao como Interlock.
-    if(fac_os.Driver1ErrorItlkSts || fac_os.Driver2ErrorItlkSts) InterlockSet();
+    //Erro do Driver 2 Top
+    fac_os.Driver2ErrorTop = Driver2TopErrorRead();//Variavel usada para debug
+    if(!fac_os.Driver2ErrorTopItlkSts)fac_os.Driver2ErrorTopItlkSts = Driver2TopErrorRead();
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Erro do Driver 2 Bot
+    fac_os.Driver2ErrorBot = Driver2BotErrorRead();//Variavel usada para debug
+    if(!fac_os.Driver2ErrorBotItlkSts)fac_os.Driver2ErrorBotItlkSts = Driver2BotErrorRead();
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Se nao houver sinal na entrada digital dos 6 sinais, defina a acao como Interlock.
+    if(fac_os.Driver1ErrorTopItlkSts || fac_os.Driver1ErrorBotItlkSts || fac_os.Driver2ErrorTopItlkSts || fac_os.Driver2ErrorBotItlkSts
+       || fac_os.TempIGBT1HwrItlkSts || fac_os.TempIGBT2HwrItlkSts) InterlockSet();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -541,12 +580,16 @@ static void get_itlks_id()
     if (fac_os.IinItlkSts)                  itlk_id |= FAC_OS_INPUT_OVERCURRENT_ITLK;
     if (fac_os.IoutItlkSts)                 itlk_id |= FAC_OS_OUTPUT_OVERCURRENT_ITLK;
     if (fac_os.TempIGBT1ItlkSts)            itlk_id |= FAC_OS_IGBT1_OVERTEMP_ITLK;
+    if (fac_os.TempIGBT1HwrItlkSts)         itlk_id |= FAC_OS_IGBT1_HWR_OVERTEMP_ITLK;
     if (fac_os.TempIGBT2ItlkSts)            itlk_id |= FAC_OS_IGBT2_OVERTEMP_ITLK;
+    if (fac_os.TempIGBT2HwrItlkSts)         itlk_id |= FAC_OS_IGBT2_HWR_OVERTEMP_ITLK;
     if (fac_os.DriveVoltageItlkSts)         itlk_id |= FAC_OS_DRIVER_OVERVOLTAGE_ITLK;
     if (fac_os.Drive1CurrentItlkSts)        itlk_id |= FAC_OS_DRIVER1_OVERCURRENT_ITLK;
     if (fac_os.Drive2CurrentItlkSts)        itlk_id |= FAC_OS_DRIVER2_OVERCURRENT_ITLK;
-    if (fac_os.Driver1ErrorItlkSts)         itlk_id |= FAC_OS_DRIVER1_ERROR_ITLK;
-    if (fac_os.Driver2ErrorItlkSts)         itlk_id |= FAC_OS_DRIVER2_ERROR_ITLK;
+    if (fac_os.Driver1ErrorTopItlkSts)      itlk_id |= FAC_OS_DRIVER1_ERROR_TOP_ITLK;
+    if (fac_os.Driver1ErrorBotItlkSts)      itlk_id |= FAC_OS_DRIVER1_ERROR_BOT_ITLK;
+    if (fac_os.Driver2ErrorTopItlkSts)      itlk_id |= FAC_OS_DRIVER2_ERROR_TOP_ITLK;
+    if (fac_os.Driver2ErrorBotItlkSts)      itlk_id |= FAC_OS_DRIVER2_ERROR_BOT_ITLK;
     if (fac_os.TempLItlkSts)                itlk_id |= FAC_OS_INDUC_OVERTEMP_ITLK;
     if (fac_os.TempHeatSinkItlkSts)         itlk_id |= FAC_OS_HS_OVERTEMP_ITLK;
     if (fac_os.BoardTemperatureItlkSts)     itlk_id |= FAC_OS_BOARD_IIB_OVERTEMP_ITLK;
@@ -592,10 +635,10 @@ static void config_module()
     CurrentCh4Disable(); //CurrentCh4 disable
 
     /* Protection Limits */
-    CurrentCh1AlarmLevelSet(FAC_OS_INPUT_CURRENT_ALM_LIM);
-    CurrentCh1TripLevelSet(FAC_OS_INPUT_CURRENT_ITLK_LIM);
-    CurrentCh2AlarmLevelSet(FAC_OS_OUTPUT_CURRENT_ALM_LIM);
-    CurrentCh2TripLevelSet(FAC_OS_OUTPUT_CURRENT_ITLK_LIM);
+    CurrentCh1AlarmLevelSet(FAC_OS_INPUT_OVERCURRENT_ALM_LIM);
+    CurrentCh1TripLevelSet(FAC_OS_INPUT_OVERCURRENT_ITLK_LIM);
+    CurrentCh2AlarmLevelSet(FAC_OS_OUTPUT_OVERCURRENT_ALM_LIM);
+    CurrentCh2TripLevelSet(FAC_OS_OUTPUT_OVERCURRENT_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -606,13 +649,14 @@ static void config_module()
     LvCurrentCh2Disable(); //LvCurrentCh2 disable
     LvCurrentCh3Disable(); //LvCurrentCh3 disable
 
-    LvCurrentCh1AlarmLevelSet(FAC_OS_INPUT_VOLTAGE_ALM_LIM); //Tensão de entrada Alarme
-    LvCurrentCh1TripLevelSet(FAC_OS_INPUT_VOLTAGE_ITLK_LIM); //Tensão de entrada Interlock
+    /* Protection Limits */
+    LvCurrentCh1AlarmLevelSet(FAC_OS_INPUT_OVERVOLTAGE_ALM_LIM);
+    LvCurrentCh1TripLevelSet(FAC_OS_INPUT_OVERVOLTAGE_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //PT100 configuration
-    //Delay 4 seconds
+    //Delay 2 seconds
     Pt100SetCh1Delay(2);
     Pt100SetCh2Delay(2);
 
@@ -623,10 +667,10 @@ static void config_module()
     Pt100Ch4Disable();
 
     /* Pt-100 Configuration Limits */
-    Pt100SetCh1AlarmLevel(FAC_OS_HS_TEMP_ALM_LIM);
-    Pt100SetCh1TripLevel(FAC_OS_HS_TEMP_ITLK_LIM);
-    Pt100SetCh2AlarmLevel(FAC_OS_INDUC_TEMP_ALM_LIM);
-    Pt100SetCh2TripLevel(FAC_OS_INDUC_TEMP_ITLK_LIM);
+    Pt100SetCh1AlarmLevel(FAC_OS_HS_OVERTEMP_ALM_LIM);
+    Pt100SetCh1TripLevel(FAC_OS_HS_OVERTEMP_ITLK_LIM);
+    Pt100SetCh2AlarmLevel(FAC_OS_INDUC_OVERTEMP_ALM_LIM);
+    Pt100SetCh2TripLevel(FAC_OS_INDUC_OVERTEMP_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -658,8 +702,8 @@ static void config_module()
     BoardTempEnable(); //BoardTemp enable
 
     //Temp board configuration limits
-    BoardTempAlarmLevelSet(FAC_OS_BOARD_TEMP_ALM_LIM);
-    BoardTempTripLevelSet(FAC_OS_BOARD_TEMP_ITLK_LIM);
+    BoardTempAlarmLevelSet(FAC_OS_BOARD_OVERTEMP_ALM_LIM);
+    BoardTempTripLevelSet(FAC_OS_BOARD_OVERTEMP_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -669,8 +713,8 @@ static void config_module()
     RhEnable(); //Rh enable
 
     //Rh configuration limits
-    RhAlarmLevelSet(FAC_OS_RH_ALM_LIM);
-    RhTripLevelSet(FAC_OS_RH_ITLK_LIM);
+    RhAlarmLevelSet(FAC_OS_RH_OVERHUMIDITY_ALM_LIM);
+    RhTripLevelSet(FAC_OS_RH_OVERHUMIDITY_ITLK_LIM);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -708,7 +752,7 @@ static void config_module()
     Driver2CurrentEnable(); //Driver2Current enable
 
     //Limite de alarme e interlock da corrente do driver 1
-    Driver1CurrentAlarmLevelSet(FAC_OS_DRIVER1_OVERCURRENT_ALM_LIM );
+    Driver1CurrentAlarmLevelSet(FAC_OS_DRIVER1_OVERCURRENT_ALM_LIM);
     Driver1CurrentTripLevelSet(FAC_OS_DRIVER1_OVERCURRENT_ITLK_LIM);
 
     //Limite de alarme e interlock da corrente do driver 2
@@ -764,9 +808,13 @@ static void config_module()
     fac_os.TempIGBT1.f                  = 0.0;
     fac_os.TempIGBT1AlarmSts            = 0;
     fac_os.TempIGBT1ItlkSts             = 0;
+    fac_os.TempIGBT1HwrItlk             = 0;
+    fac_os.TempIGBT1HwrItlkSts          = 0;
     fac_os.TempIGBT2.f                  = 0.0;
     fac_os.TempIGBT2AlarmSts            = 0;
     fac_os.TempIGBT2ItlkSts             = 0;
+    fac_os.TempIGBT2HwrItlk             = 0;
+    fac_os.TempIGBT2HwrItlkSts          = 0;
     fac_os.DriveVoltage.f               = 0.0;
     fac_os.DriveVoltageAlarmSts         = 0;
     fac_os.DriveVoltageItlkSts          = 0;
@@ -776,10 +824,14 @@ static void config_module()
     fac_os.Drive2Current.f              = 0.0;
     fac_os.Drive2CurrentAlarmSts        = 0;
     fac_os.Drive2CurrentItlkSts         = 0;
-    fac_os.Driver1Error                 = 0;
-    fac_os.Driver1ErrorItlkSts          = 0;
-    fac_os.Driver2Error                 = 0;
-    fac_os.Driver2ErrorItlkSts          = 0;
+    fac_os.Driver1ErrorTop              = 0;
+    fac_os.Driver1ErrorTopItlkSts       = 0;
+    fac_os.Driver1ErrorBot              = 0;
+    fac_os.Driver1ErrorBotItlkSts       = 0;
+    fac_os.Driver2ErrorTop              = 0;
+    fac_os.Driver2ErrorTopItlkSts       = 0;
+    fac_os.Driver2ErrorBot              = 0;
+    fac_os.Driver2ErrorBotItlkSts       = 0;
     fac_os.TempL.f                      = 0.0;
     fac_os.TempLAlarmSts                = 0;
     fac_os.TempLItlkSts                 = 0;

@@ -348,7 +348,7 @@ void check_fap_indication_leds()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Output over current
-    if (fap.IoutA1ItlkSts || fap.IoutA2ItlkSts) Led4TurnOff();
+    if(fap.IoutA1ItlkSts || fap.IoutA2ItlkSts) Led4TurnOff();
     else if(fap.IoutA1AlarmSts || fap.IoutA2AlarmSts) Led4Toggle();
     else Led4TurnOn();
 
@@ -484,26 +484,26 @@ void fap_application_readings()
     //Tensao de Saida
     fap.Vout.f = LvCurrentCh2Read();
     fap.VoutAlarmSts = LvCurrentCh2AlarmStatusRead();
-    if(!fap.VoutItlkSts) fap.VoutItlkSts = LvCurrentCh2TripStatusRead();
+    if(!fap.VoutItlkSts)fap.VoutItlkSts = LvCurrentCh2TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Medida de Fuga para o Terra
     fap.GroundLeakage.f = LvCurrentCh3Read();
     fap.GroundLeakageAlarmSts = LvCurrentCh3AlarmStatusRead();
-    if(!fap.GroundLeakageItlkSts) fap.GroundLeakageItlkSts = LvCurrentCh3TripStatusRead();
+    if(!fap.GroundLeakageItlkSts)fap.GroundLeakageItlkSts = LvCurrentCh3TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock externo
     fap.ExternalItlk = Gpdi5Read();//Variavel usada para debug
-    if(!fap.ExternalItlkSts) fap.ExternalItlkSts = Gpdi5Read();
+    if(!fap.ExternalItlkSts)fap.ExternalItlkSts = Gpdi5Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Interlock do Rack
     fap.Rack = Gpdi6Read();//Variavel usada para debug
-    if(!fap.RackItlkSts) fap.RackItlkSts = Gpdi6Read();
+    if(!fap.RackItlkSts)fap.RackItlkSts = Gpdi6Read();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -520,7 +520,7 @@ void fap_application_readings()
 
     //Erro do Driver 2
     fap.Driver2Error = Driver2TopErrorRead();//Variavel usada para debug
-    if(!fap.Driver2ErrorItlkSts) fap.Driver2ErrorItlkSts = Driver2TopErrorRead();
+    if(!fap.Driver2ErrorItlkSts)fap.Driver2ErrorItlkSts = Driver2TopErrorRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -584,7 +584,7 @@ void fap_application_readings()
 
 void fap_power_on_check()
 {
-    if (fap.Relay) {
+    if(fap.Relay) {
         Led1TurnOff();
         ReleExtItlkTurnOff();
     }
@@ -827,7 +827,7 @@ static void config_module()
     Driver2CurrentEnable(); //Driver2Current enable
 
     //Limite de alarme e interlock da corrente do driver 1
-    Driver1CurrentAlarmLevelSet(FAP_DRIVER1_OVERCURRENT_ALM_LIM );
+    Driver1CurrentAlarmLevelSet(FAP_DRIVER1_OVERCURRENT_ALM_LIM);
     Driver1CurrentTripLevelSet(FAP_DRIVER1_OVERCURRENT_ITLK_LIM);
 
     //Limite de alarme e interlock da corrente do driver 2
