@@ -398,7 +398,7 @@ void check_fap_indication_leds()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Output over current
-    if (fap.IoutA1ItlkSts || fap.IoutA2ItlkSts) Led4TurnOff();
+    if(fap.IoutA1ItlkSts || fap.IoutA2ItlkSts) Led4TurnOff();
     else if(fap.IoutA1AlarmSts || fap.IoutA2AlarmSts) Led4Toggle();
     else Led4TurnOn();
 
@@ -634,7 +634,7 @@ void fap_application_readings()
 
 void fap_power_on_check()
 {
-    if (fap.Relay) {
+    if(fap.Relay) {
         Led1TurnOff();
         ReleExtItlkTurnOff();
     }

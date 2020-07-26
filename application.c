@@ -200,8 +200,9 @@ void AppInterlock(void)
 
         ReleAuxTurnOff();
         ReleExtItlkTurnOff();
-        Gpdo1TurnOff();
-        Gpdo2TurnOff();
+
+        Gpdo1TurnOff();// Verificar se e isso mesmo
+        Gpdo2TurnOff();// Verificar se e isso mesmo
 
         break;
 
