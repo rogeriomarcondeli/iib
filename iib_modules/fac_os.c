@@ -86,32 +86,32 @@
 typedef struct
 {
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } Iin;
 
     bool IinAlarmSts;
     bool IinItlkSts;
 
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } Iout;
 
     bool IoutAlarmSts;
     bool IoutItlkSts;
 
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } VdcLink;
 
     bool VdcLinkAlarmSts;
     bool VdcLinkItlkSts;
 
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } TempIGBT1;
 
     bool TempIGBT1AlarmSts;
@@ -120,8 +120,8 @@ typedef struct
     bool TempIGBT1HwrItlkSts;
 
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } TempIGBT2;
 
     bool TempIGBT2AlarmSts;
@@ -130,24 +130,24 @@ typedef struct
     bool TempIGBT2HwrItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } DriveVoltage;
 
     bool DriveVoltageAlarmSts;
     bool DriveVoltageItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } Drive1Current;
 
     bool Drive1CurrentAlarmSts;
     bool Drive1CurrentItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } Drive2Current;
 
     bool Drive2CurrentAlarmSts;
@@ -166,32 +166,32 @@ typedef struct
     bool Driver2ErrorBotItlkSts;
 
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } TempL;
 
     bool TempLAlarmSts;
     bool TempLItlkSts;
 
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } TempHeatSink;
 
     bool TempHeatSinkAlarmSts;
     bool TempHeatSinkItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } BoardTemperature;
 
     bool BoardTemperatureAlarmSts;
     bool BoardTemperatureItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } RelativeHumidity;
 
     bool RelativeHumidityAlarmSts;
@@ -677,7 +677,7 @@ static void config_module()
     //Temperature igbt1 configuration
     TempIgbt1Delay(3); //Inserir valor de delay
 
-    TempIgbt1Enable(); //TempIgbt1 enable
+    TempIgbt1Disable(); //TempIgbt1 disable
 
     //Temp Igbt1 configuration limits
     TempIgbt1AlarmLevelSet(FAC_OS_IGBT1_OVERTEMP_ALM_LIM);
@@ -688,7 +688,7 @@ static void config_module()
     //Temperature igbt2 configuration
     TempIgbt2Delay(3); //Inserir valor de delay
 
-    TempIgbt2Enable(); //TempIgbt2 enable
+    TempIgbt2Disable(); //TempIgbt2 disable
 
     //Temp Igbt2 configuration limits
     TempIgbt2AlarmLevelSet(FAC_OS_IGBT2_OVERTEMP_ALM_LIM);
@@ -735,7 +735,7 @@ static void config_module()
 
     DriverVoltageDelay(3); //Inserir valor de delay
 
-    DriverVoltageEnable(); //DriverVoltage enable
+    DriverVoltageDisable(); //DriverVoltage disable
 
     //Limite de alarme e interlock da tensao dos drivers
     DriverVoltageAlarmLevelSet(FAC_OS_DRIVER_OVERVOLTAGE_ALM_LIM);
@@ -748,8 +748,8 @@ static void config_module()
 
     DriverCurrentDelay(3); //Inserir valor de delay
 
-    Driver1CurrentEnable(); //Driver1Current enable
-    Driver2CurrentEnable(); //Driver2Current enable
+    Driver1CurrentDisable(); //Driver1Current disable
+    Driver2CurrentDisable(); //Driver2Current disable
 
     //Limite de alarme e interlock da corrente do driver 1
     Driver1CurrentAlarmLevelSet(FAC_OS_DRIVER1_OVERCURRENT_ALM_LIM);
@@ -784,8 +784,8 @@ static void config_module()
     Gpdi12Disable(); //Gpdi12 disable
 
     //Gpdo configuration
-    Gpdo1Disable();  //Gpdo1 disable
-    Gpdo2Disable();  //Gpdo2 disable
+    Gpdo1Enable();   //Gpdo1 enable
+    Gpdo2Enable();   //Gpdo2 enable
     Gpdo3Disable();  //Gpdo3 disable
     Gpdo4Disable();  //Gpdo4 disable
 

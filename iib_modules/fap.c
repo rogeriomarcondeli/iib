@@ -98,80 +98,80 @@
 typedef struct
 {
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } Vin;
 
     bool VinAlarmSts;
     bool VinItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } Vout;
 
     bool VoutAlarmSts;
     bool VoutItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } IoutA1;
 
     bool IoutA1AlarmSts;
     bool IoutA1ItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } IoutA2;
 
     bool IoutA2AlarmSts;
     bool IoutA2ItlkSts;
 
     union {
-        float f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } GroundLeakage;
 
     bool GroundLeakageItlkSts;
     bool GroundLeakageAlarmSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } TempIGBT1;
 
     bool TempIGBT1AlarmSts;
     bool TempIGBT1ItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } TempIGBT2;
 
     bool TempIGBT2AlarmSts;
     bool TempIGBT2ItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } DriveVoltage;
 
     bool DriveVoltageAlarmSts;
     bool DriveVoltageItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } Drive1Current;
 
     bool Drive1CurrentAlarmSts;
     bool Drive1CurrentItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } Drive2Current;
 
     bool Drive2CurrentAlarmSts;
@@ -183,32 +183,32 @@ typedef struct
     bool Driver2ErrorItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } TempL;
 
     bool TempLAlarmSts;
     bool TempLItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } TempHeatSink;
 
     bool TempHeatSinkAlarmSts;
     bool TempHeatSinkItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } BoardTemperature;
 
     bool BoardTemperatureAlarmSts;
     bool BoardTemperatureItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } RelativeHumidity;
 
     bool RelativeHumidityAlarmSts;
@@ -684,7 +684,7 @@ void send_fap_data()
 
     i++;
 
-    if (i > 13) i = 0;
+    if (i > 4) i = 0;
 
 }
 

@@ -45,11 +45,11 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-#define FAC_CMD_CAPBANK_OVERVOLTAGE_ALM_LIM                 250.0
-#define FAC_CMD_CAPBANK_OVERVOLTAGE_ITLK_LIM                300.0
+#define FAC_CMD_CAPBANK_OVERVOLTAGE_ALM_LIM                 270.0
+#define FAC_CMD_CAPBANK_OVERVOLTAGE_ITLK_LIM                290.0
 
-#define FAC_CMD_OUTPUT_OVERVOLTAGE_ALM_LIM                  180.0
-#define FAC_CMD_OUTPUT_OVERVOLTAGE_ITLK_LIM                 210.0
+#define FAC_CMD_OUTPUT_OVERVOLTAGE_ALM_LIM                  220.0
+#define FAC_CMD_OUTPUT_OVERVOLTAGE_ITLK_LIM                 240.0
 
 #define FAC_CMD_AUX_AND_IDB_SUPPLY_OVERVOLTAGE_ALM_LIM      16.0
 #define FAC_CMD_AUX_AND_IDB_SUPPLY_OVERVOLTAGE_ITLK_LIM     17.0
@@ -104,16 +104,16 @@ typedef struct
     bool AuxIdbVoltageItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } AuxCurrent;
 
     bool AuxCurrentAlarmSts;
     bool AuxCurrentItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } IdbCurrent;
 
     bool IdbCurrentAlarmSts;
@@ -156,16 +156,16 @@ typedef struct
     bool GroundLeakageItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } BoardTemperature;
 
     bool BoardTemperatureAlarmSts;
     bool BoardTemperatureItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } RelativeHumidity;
 
     bool RelativeHumidityAlarmSts;
@@ -550,8 +550,8 @@ static void get_alarms_id()
 static void config_module()
 {
     /* Isolated Voltage */
-    LvCurrentCh1Init(250.0, 0.025, 120.0, 3); /* Output Voltage */
-    LvCurrentCh2Init(330.0, 0.025, 120.0, 3); /* Voltage Capacitor Bank */
+    LvCurrentCh1Init(300.0, 0.025, 120.0, 3); /* Output Voltage */
+    LvCurrentCh2Init(600.0, 0.025, 120.0, 3); /* Voltage Capacitor Bank */
     LvCurrentCh3Init(50.0, 0.025, 120.0, 3);  /* GND Leakage */
 
     LvCurrentCh1Enable();  //LvCurrentCh1 enable

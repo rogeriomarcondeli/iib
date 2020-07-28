@@ -45,8 +45,8 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-#define FAC_IS_DCLINK_OVERVOLTAGE_ALM_LIM           550.0
-#define FAC_IS_DCLINK_OVERVOLTAGE_ITLK_LIM          555.0
+#define FAC_IS_DCLINK_OVERVOLTAGE_ALM_LIM           560.0
+#define FAC_IS_DCLINK_OVERVOLTAGE_ITLK_LIM          570.0
 
 #define FAC_IS_INPUT_OVERCURRENT_ALM_LIM            160.0
 #define FAC_IS_INPUT_OVERCURRENT_ITLK_LIM           170.0
@@ -77,24 +77,24 @@
 typedef struct
 {
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } Iin;
 
     bool IinAlarmSts;
     bool IinItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } VdcLink;
 
     bool VdcLinkAlarmSts;
     bool VdcLinkItlkSts;
 
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } TempIGBT1;
 
     bool TempIGBT1AlarmSts;
@@ -103,16 +103,16 @@ typedef struct
     bool TempIGBT1HwrItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } DriveVoltage;
 
     bool DriveVoltageAlarmSts;
     bool DriveVoltageItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } Drive1Current;
 
     bool Drive1CurrentAlarmSts;
@@ -125,32 +125,32 @@ typedef struct
     bool Driver1ErrorBotItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } TempL;
 
     bool TempLAlarmSts;
     bool TempLItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } TempHeatSink;
 
     bool TempHeatSinkAlarmSts;
     bool TempHeatSinkItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } BoardTemperature;
 
     bool BoardTemperatureAlarmSts;
     bool BoardTemperatureItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } RelativeHumidity;
 
     bool RelativeHumidityAlarmSts;
@@ -564,7 +564,7 @@ static void config_module()
     //Temperature igbt1 configuration
     TempIgbt1Delay(3); //Inserir valor de delay
 
-    TempIgbt1Enable(); //TempIgbt1 enable
+    TempIgbt1Disable(); //TempIgbt1 disable
     TempIgbt2Disable(); //TempIgbt1 disable
 
     //Temp Igbt1 configuration limits
@@ -612,7 +612,7 @@ static void config_module()
 
     DriverVoltageDelay(3); //Inserir valor de delay
 
-    DriverVoltageEnable(); //DriverVoltage enable
+    DriverVoltageDisable(); //DriverVoltage disable
 
     //Limite de alarme e interlock da tensao dos drivers
     DriverVoltageAlarmLevelSet(FAC_IS_DRIVER_OVERVOLTAGE_ALM_LIM);
@@ -625,7 +625,7 @@ static void config_module()
 
     DriverCurrentDelay(3); //Inserir valor de delay
 
-    Driver1CurrentEnable(); //Driver1Current enable
+    Driver1CurrentDisable(); //Driver1Current disable
     Driver2CurrentDisable(); //Driver2Current disable
 
     //Limite de alarme e interlock da corrente do driver 1

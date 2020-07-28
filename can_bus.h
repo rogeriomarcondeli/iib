@@ -7,6 +7,9 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <stdint.h>
+#include <stdbool.h>
+#include "inc/hw_can.h"
+#include "driverlib/can.h"
 
 #define MESSAGE_DATA_IIB_LEN          8
 #define MESSAGE_DATA_IIB_OBJ_ID       1
@@ -48,6 +51,9 @@ extern void send_data_message(uint8_t var);
 extern uint16_t get_can_address(void);
 extern void send_itlk_message(uint8_t var);
 extern void send_alarm_message(uint8_t var);
+extern void InitConsole(void);
+extern tCANMsgObject tx_message_data_iib;
+extern void PrintCANMessageInfo(tCANMsgObject *psCANMsg, uint32_t ui32MsgObj);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

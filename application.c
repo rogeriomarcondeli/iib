@@ -20,7 +20,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-static unsigned char PowerModuleModel = 0;
+unsigned char PowerModuleModel = 0;
 static unsigned char Interlock = 0;
 static unsigned char InterlockOld = 0;
 static unsigned char ItlkClrCmd = 0;
@@ -201,8 +201,8 @@ void AppInterlock(void)
         ReleAuxTurnOff();
         ReleExtItlkTurnOff();
 
-        Gpdo1TurnOff();// Verificar se e isso mesmo
-        Gpdo2TurnOff();// Verificar se e isso mesmo
+        Gpdo1TurnOff();
+        Gpdo2TurnOff();
 
         break;
 
@@ -503,8 +503,8 @@ void Application(void)
             ReleAuxTurnOn();
             ReleExtItlkTurnOn();
 
-            Gpdo1TurnOn();// Verificar se e isso mesmo
-            Gpdo2TurnOn();// Verificar se e isso mesmo
+            Gpdo1TurnOn();
+            Gpdo2TurnOn();
 
             break;
 

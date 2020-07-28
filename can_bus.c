@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include "inc/hw_can.h"
 #include "inc/hw_ints.h"
 #include "inc/hw_memmap.h"
@@ -71,8 +72,67 @@ uint8_t message_param_udc[MESSAGE_PARAM_UDC_LEN];
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 volatile uint8_t can_address    = 0;
+volatile uint8_t can_id    = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+//*****************************************************************************
+//
+// This function sets up UART0 to be used for a console to display information
+// as the example is running.
+//
+//*****************************************************************************
+void InitConsole(void)
+{
+    //
+    // Enable GPIO port A which is used for UART2 pins.
+    // TODO: change this to whichever GPIO port you are using.
+    //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+
+    //
+    // Configure the pin muxing for UART2 functions on port A6 and A7.
+    // This step is not necessary if your part does not support pin muxing.
+    // TODO: change this to select the port/pin you are using.
+    //
+    GPIOPinConfigure(GPIO_PA6_U2RX);
+    GPIOPinConfigure(GPIO_PA7_U2TX);
+
+    //
+    // Enable UART2 so that we can configure the clock.
+    //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART2);
+
+    //
+    // Select the alternate (UART) function for these pins.
+    // TODO: change this to select the port/pin you are using.
+    //
+    GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_6 | GPIO_PIN_7);
+
+    //
+    // Initialize the UART for console I/O.
+    //
+    UARTStdioConfig(2, 115200, 120000000);
+}
+
+//*****************************************************************************
+//
+// This function prints some information about the CAN message to the
+// serial port for information purposes only.
+//
+//*****************************************************************************
+void PrintCANMessageInfo(tCANMsgObject *psCANMsg, uint32_t ui32MsgObj)
+{
+    unsigned int uIdx;
+
+    UARTprintf("Sending msg: obj=%d ID=0x%04X msg=0x", ui32MsgObj,
+               psCANMsg->ui32MsgID);
+    for(uIdx = 0; uIdx < psCANMsg->ui32MsgLen; uIdx++)
+    {
+        UARTprintf("%02X ", psCANMsg->pui8MsgData[uIdx]);
+    }
+    UARTprintf("\n");
+}
 
 //*****************************************************************************
 //
@@ -246,10 +306,10 @@ void InitCan(uint32_t ui32SysClock)
     // Set up the bit rate for the CAN bus 1Mbps
     CANBitRateSet(CAN0_BASE, ui32SysClock, 1000000);
 
+    CANIntRegister(CAN0_BASE, &can_isr); // using dynamic vectors
+
     // Enable interrupts on the CAN peripheral.
     CANIntEnable(CAN0_BASE, CAN_INT_MASTER | CAN_INT_ERROR | CAN_INT_STATUS);
-
-    CANIntRegister(CAN0_BASE, &can_isr);
 
     IntPrioritySet(INT_CAN0, 1);
 
@@ -264,34 +324,38 @@ void InitCan(uint32_t ui32SysClock)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //message object 1
-    tx_message_data_iib.ui32MsgID           = MESSAGE_DATA_IIB_ID;
+    tx_message_data_iib.ui32MsgID           = 0;
     tx_message_data_iib.ui32MsgIDMask       = 0;
-    tx_message_data_iib.ui32Flags           = (MSG_OBJ_TX_INT_ENABLE | MSG_OBJ_FIFO);
-    tx_message_data_iib.ui32MsgLen          = MESSAGE_DATA_IIB_LEN;
+    tx_message_data_iib.ui32Flags           = MSG_OBJ_TX_INT_ENABLE;
+    tx_message_data_iib.ui32MsgLen          = sizeof(message_data_iib);
+    tx_message_data_iib.pui8MsgData         = message_data_iib;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //message object 2
     tx_message_itlk_iib.ui32MsgID           = MESSAGE_ITLK_IIB_ID;
     tx_message_itlk_iib.ui32MsgIDMask       = 0;
-    tx_message_itlk_iib.ui32Flags           = (MSG_OBJ_TX_INT_ENABLE | MSG_OBJ_FIFO);
-    tx_message_itlk_iib.ui32MsgLen          = MESSAGE_ITLK_IIB_LEN;
+    tx_message_itlk_iib.ui32Flags           = MSG_OBJ_TX_INT_ENABLE;
+    tx_message_itlk_iib.ui32MsgLen          = sizeof(message_itlk_iib);
+    tx_message_itlk_iib.pui8MsgData         = message_itlk_iib;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //message object 3
     tx_message_alarm_iib.ui32MsgID          = MESSAGE_ALARM_IIB_ID;
     tx_message_alarm_iib.ui32MsgIDMask      = 0;
-    tx_message_alarm_iib.ui32Flags          = (MSG_OBJ_TX_INT_ENABLE | MSG_OBJ_FIFO);
-    tx_message_alarm_iib.ui32MsgLen         = MESSAGE_ALARM_IIB_LEN;
+    tx_message_alarm_iib.ui32Flags          = MSG_OBJ_TX_INT_ENABLE;
+    tx_message_alarm_iib.ui32MsgLen         = sizeof(message_alarm_iib);
+    tx_message_alarm_iib.pui8MsgData        = message_alarm_iib;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //message object 4
     tx_message_param_iib.ui32MsgID          = MESSAGE_PARAM_IIB_ID;
     tx_message_param_iib.ui32MsgIDMask      = 0;
-    tx_message_param_iib.ui32Flags          = (MSG_OBJ_TX_INT_ENABLE | MSG_OBJ_FIFO);
-    tx_message_param_iib.ui32MsgLen         = MESSAGE_PARAM_IIB_LEN;
+    tx_message_param_iib.ui32Flags          = MSG_OBJ_TX_INT_ENABLE;
+    tx_message_param_iib.ui32MsgLen         = sizeof(message_param_iib);
+    tx_message_param_iib.pui8MsgData        = message_param_iib;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
     /*configuration receiving messages*/
@@ -300,7 +364,7 @@ void InitCan(uint32_t ui32SysClock)
     //message object 5
     rx_message_reset_udc.ui32MsgID          = MESSAGE_RESET_UDC_ID;
     rx_message_reset_udc.ui32MsgIDMask      = 0xfffff;
-    rx_message_reset_udc.ui32Flags          = (MSG_OBJ_RX_INT_ENABLE | MSG_OBJ_USE_ID_FILTER | MSG_OBJ_FIFO);
+    rx_message_reset_udc.ui32Flags          = (MSG_OBJ_RX_INT_ENABLE | MSG_OBJ_USE_ID_FILTER | MSG_OBJ_EXTENDED_ID);
     rx_message_reset_udc.ui32MsgLen         = MESSAGE_RESET_UDC_LEN;
 
     CANMessageSet(CAN0_BASE, MESSAGE_RESET_UDC_OBJ_ID, &rx_message_reset_udc, MSG_OBJ_TYPE_RX);
@@ -310,7 +374,7 @@ void InitCan(uint32_t ui32SysClock)
     //message object 6
     rx_message_param_udc.ui32MsgID         = MESSAGE_PARAM_UDC_ID;
     rx_message_param_udc.ui32MsgIDMask     = 0xfffff;
-    rx_message_param_udc.ui32Flags         = (MSG_OBJ_RX_INT_ENABLE | MSG_OBJ_USE_ID_FILTER | MSG_OBJ_FIFO);
+    rx_message_param_udc.ui32Flags         = (MSG_OBJ_RX_INT_ENABLE | MSG_OBJ_USE_ID_FILTER | MSG_OBJ_EXTENDED_ID);
     rx_message_param_udc.ui32MsgLen        = MESSAGE_PARAM_UDC_LEN;
 
     CANMessageSet(CAN0_BASE, MESSAGE_PARAM_UDC_OBJ_ID, &rx_message_param_udc, MSG_OBJ_TYPE_RX);
@@ -320,8 +384,23 @@ void InitCan(uint32_t ui32SysClock)
     // Module ID
     can_address = BoardAddressRead();
 
-    if (can_address == 0) can_address = 1;
+    if (can_address == 0){ can_address = 1; can_id = 10;}
 
+    if (can_address == 1){ can_id = 10;}
+
+    if (can_address == 2){ can_id = 20;}
+
+    if (can_address == 3){ can_id = 30;}
+
+    if (can_address == 4){ can_id = 40;}
+
+    if (can_address == 5){ can_id = 50;}
+
+    if (can_address == 6){ can_id = 60;}
+
+    if (can_address == 7){ can_id = 70;}
+
+    if (can_address == 8){ can_id = 80;}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -348,6 +427,142 @@ void handle_reset_message(void)
 
 void send_data_message(uint8_t var)
 {
+    switch(PowerModuleModel)
+    {
+    case FAP:
+
+        switch(var)
+        {
+        case 0:
+
+            message_data_iib[0] = g_controller_iib.iib_signals[0].u8[0];
+            message_data_iib[1] = g_controller_iib.iib_signals[0].u8[1];
+            message_data_iib[2] = g_controller_iib.iib_signals[0].u8[2];
+            message_data_iib[3] = g_controller_iib.iib_signals[0].u8[3];
+            message_data_iib[4] = g_controller_iib.iib_signals[1].u8[0];
+            message_data_iib[5] = g_controller_iib.iib_signals[1].u8[1];
+            message_data_iib[6] = g_controller_iib.iib_signals[1].u8[2];
+            message_data_iib[7] = g_controller_iib.iib_signals[1].u8[3];
+
+            tx_message_data_iib.pui8MsgData = message_data_iib;
+
+            tx_message_data_iib.ui32MsgID = (can_id + 1); //11, 21, 31, 41
+
+            PrintCANMessageInfo(&tx_message_data_iib, MESSAGE_DATA_IIB_OBJ_ID);
+
+            break;
+
+        case 1:
+
+            message_data_iib[0] = g_controller_iib.iib_signals[2].u8[0];
+            message_data_iib[1] = g_controller_iib.iib_signals[2].u8[1];
+            message_data_iib[2] = g_controller_iib.iib_signals[2].u8[2];
+            message_data_iib[3] = g_controller_iib.iib_signals[2].u8[3];
+            message_data_iib[4] = g_controller_iib.iib_signals[3].u8[0];
+            message_data_iib[5] = g_controller_iib.iib_signals[3].u8[1];
+            message_data_iib[6] = g_controller_iib.iib_signals[3].u8[2];
+            message_data_iib[7] = g_controller_iib.iib_signals[3].u8[3];
+
+            tx_message_data_iib.pui8MsgData = message_data_iib;
+
+            tx_message_data_iib.ui32MsgID = (can_id + 2); //12, 22, 32, 42
+
+            PrintCANMessageInfo(&tx_message_data_iib, MESSAGE_DATA_IIB_OBJ_ID);
+
+            break;
+
+        case 2:
+
+            message_data_iib[0] = g_controller_iib.iib_signals[6].u8[0];
+            message_data_iib[1] = g_controller_iib.iib_signals[6].u8[1];
+            message_data_iib[2] = g_controller_iib.iib_signals[6].u8[2];
+            message_data_iib[3] = g_controller_iib.iib_signals[6].u8[3];
+            message_data_iib[4] = g_controller_iib.iib_signals[11].u8[0];
+            message_data_iib[5] = g_controller_iib.iib_signals[11].u8[1];
+            message_data_iib[6] = g_controller_iib.iib_signals[11].u8[2];
+            message_data_iib[7] = g_controller_iib.iib_signals[11].u8[3];
+
+            tx_message_data_iib.pui8MsgData = message_data_iib;
+
+            tx_message_data_iib.ui32MsgID = (can_id + 3); //13, 23, 33, 43
+
+            PrintCANMessageInfo(&tx_message_data_iib, MESSAGE_DATA_IIB_OBJ_ID);
+
+            break;
+
+        case 3:
+
+            message_data_iib[0] = g_controller_iib.iib_signals[7].u8[0];
+            message_data_iib[1] = g_controller_iib.iib_signals[7].u8[1];
+            message_data_iib[2] = g_controller_iib.iib_signals[7].u8[2];
+            message_data_iib[3] = g_controller_iib.iib_signals[7].u8[3];
+            message_data_iib[4] = g_controller_iib.iib_signals[8].u8[0];
+            message_data_iib[5] = g_controller_iib.iib_signals[8].u8[1];
+            message_data_iib[6] = g_controller_iib.iib_signals[8].u8[2];
+            message_data_iib[7] = g_controller_iib.iib_signals[8].u8[3];
+
+            tx_message_data_iib.pui8MsgData = message_data_iib;
+
+            tx_message_data_iib.ui32MsgID = (can_id + 4); //14, 24, 34, 44
+
+            PrintCANMessageInfo(&tx_message_data_iib, MESSAGE_DATA_IIB_OBJ_ID);
+
+            break;
+
+        case 4:
+
+            message_data_iib[0] = g_controller_iib.iib_signals[4].u8[0];
+            message_data_iib[1] = g_controller_iib.iib_signals[5].u8[1];
+            message_data_iib[2] = g_controller_iib.iib_signals[9].u8[2];
+            message_data_iib[3] = g_controller_iib.iib_signals[10].u8[3];
+            message_data_iib[4] = g_controller_iib.iib_signals[12].u8[0];
+            message_data_iib[5] = g_controller_iib.iib_signals[13].u8[1];
+            message_data_iib[6] = 0;
+            message_data_iib[7] = 0;
+
+            tx_message_data_iib.pui8MsgData = message_data_iib;
+
+            tx_message_data_iib.ui32MsgID = (can_id + 5); //15, 25, 35, 45
+
+            PrintCANMessageInfo(&tx_message_data_iib, MESSAGE_DATA_IIB_OBJ_ID);
+
+            break;
+
+        }
+
+        break;
+
+    case FAC_OS:
+
+
+
+        break;
+
+    case FAC_IS:
+
+
+
+        break;
+
+    case FAC_CMD_MODULE:
+
+
+
+        break;
+
+    case FAP_300A:
+
+
+
+        break;
+
+    default:
+        break;
+
+    }
+
+    /*tx_message_data_iib.ui32MsgID = 11;
+
     message_data_iib[0] = can_address;
     message_data_iib[1] = var;
     message_data_iib[2] = 0;
@@ -358,6 +573,8 @@ void send_data_message(uint8_t var)
     message_data_iib[7] = g_controller_iib.iib_signals[var].u8[3];
 
     tx_message_data_iib.pui8MsgData = message_data_iib;
+
+    PrintCANMessageInfo(&tx_message_data_iib, MESSAGE_DATA_IIB_OBJ_ID);*/
 
     CANMessageSet(CAN0_BASE, MESSAGE_DATA_IIB_OBJ_ID, &tx_message_data_iib, MSG_OBJ_TYPE_TX);
 }

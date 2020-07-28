@@ -190,6 +190,8 @@ int main(void)
 
     //PWM1SoftwareInit();
 
+    InitConsole();
+
     //PT100 channels initialization
     Pt100Init();
 

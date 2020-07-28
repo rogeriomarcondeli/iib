@@ -12,6 +12,8 @@
 #define  FAC_CMD_MODULE             3
 #define  FAP_300A                   4
 
+extern unsigned char PowerModuleModel;
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 void LedIndicationStatus(void);
