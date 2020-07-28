@@ -77,24 +77,24 @@
 typedef struct
 {
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } Iin;
 
     bool IinAlarmSts;
     bool IinItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } VdcLink;
 
     bool VdcLinkAlarmSts;
     bool VdcLinkItlkSts;
 
     union {
-        float    f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } TempIGBT1;
 
     bool TempIGBT1AlarmSts;
@@ -103,16 +103,16 @@ typedef struct
     bool TempIGBT1HwrItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } DriveVoltage;
 
     bool DriveVoltageAlarmSts;
     bool DriveVoltageItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } Drive1Current;
 
     bool Drive1CurrentAlarmSts;
@@ -125,32 +125,32 @@ typedef struct
     bool Driver1ErrorBotItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } TempL;
 
     bool TempLAlarmSts;
     bool TempLItlkSts;
 
     union {
-        float   f;
-        uint8_t u8[4];
+        float       f;
+        uint8_t     u8[4];
     } TempHeatSink;
 
     bool TempHeatSinkAlarmSts;
     bool TempHeatSinkItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } BoardTemperature;
 
     bool BoardTemperatureAlarmSts;
     bool BoardTemperatureItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } RelativeHumidity;
 
     bool RelativeHumidityAlarmSts;

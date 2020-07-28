@@ -104,16 +104,16 @@ typedef struct
     bool AuxIdbVoltageItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } AuxCurrent;
 
     bool AuxCurrentAlarmSts;
     bool AuxCurrentItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } IdbCurrent;
 
     bool IdbCurrentAlarmSts;
@@ -156,16 +156,16 @@ typedef struct
     bool GroundLeakageItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } BoardTemperature;
 
     bool BoardTemperatureAlarmSts;
     bool BoardTemperatureItlkSts;
 
     union {
-        float   f;
-        uint8_t u[4];
+        float       f;
+        uint8_t     u8[4];
     } RelativeHumidity;
 
     bool RelativeHumidityAlarmSts;
