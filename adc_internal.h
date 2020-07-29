@@ -6,6 +6,46 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+typedef struct
+{
+    unsigned char Ch;
+    unsigned char Enable;
+    float Gain;
+    float Value;
+    unsigned int Offset;
+    float AlarmLimit;
+    float TripLimit;
+    unsigned char Alarm;
+    unsigned char Trip;
+    unsigned char InvertPol;
+    unsigned char Alarm_Delay_ms;  // milisecond
+    unsigned char Alarm_DelayCount;
+    unsigned char Itlk_Delay_ms;   // milisecond
+    unsigned char Itlk_DelayCount;
+}adc_t;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern adc_t VoltageCh1;
+extern adc_t VoltageCh2;
+extern adc_t VoltageCh3;
+extern adc_t VoltageCh4;
+
+extern adc_t CurrentCh1;
+extern adc_t CurrentCh2;
+extern adc_t CurrentCh3;
+extern adc_t CurrentCh4;
+
+extern adc_t LvCurrentCh1;
+extern adc_t LvCurrentCh2;
+extern adc_t LvCurrentCh3;
+
+extern adc_t DriverVolt;
+extern adc_t Driver1Curr;
+extern adc_t Driver2Curr;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern void AdcsInit(void);
 extern void sample_adc(void);
 extern float CurrentRange(float nFstCurr, float nSecCurr, float nBurden, float MaxVoltInput);

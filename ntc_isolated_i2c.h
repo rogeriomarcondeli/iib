@@ -21,6 +21,29 @@ extern "C" {
 
 #include <stdint.h>
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef struct
+{
+    unsigned char Enable;
+    unsigned char Value;
+    unsigned char AlarmLimit;
+    unsigned char TripLimit;
+    unsigned char Alarm;
+    unsigned char Trip;
+    unsigned char Alarm_Delay_ms; // milisecond
+    unsigned char Alarm_DelayCount;
+    unsigned char Itlk_Delay_ms; // milisecond
+    unsigned char Itlk_DelayCount;
+}ntc_t;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern ntc_t TempNtcIgbt1;
+extern ntc_t TempNtcIgbt2;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void NtcInit(void);
 unsigned char TempIgbt1Read(void);
 unsigned char TempIgbt2Read(void);

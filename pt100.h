@@ -6,6 +6,34 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+typedef struct
+{
+    unsigned char Ch;
+    unsigned char Enable;
+    unsigned char Calibration;
+    unsigned char Temperature;
+    unsigned char AlarmLimit;
+    unsigned char TripLimit;
+    unsigned char CanNotCommunicate;
+    unsigned char Error;
+    unsigned char RtdOutOfRange;
+    unsigned char Alarm;
+    unsigned char Trip;
+    unsigned char Alarm_Delay_s; // second
+    unsigned char Alarm_DelayCount;
+    unsigned char Itlk_Delay_s; // second
+    unsigned char Itlk_DelayCount;
+}pt100_t;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern pt100_t Pt100Ch1;
+extern pt100_t Pt100Ch2;
+extern pt100_t Pt100Ch3;
+extern pt100_t Pt100Ch4;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern void Pt100Init(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////

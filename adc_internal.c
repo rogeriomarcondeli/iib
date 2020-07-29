@@ -17,43 +17,23 @@ static int Adc_Value = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef struct
-{
- unsigned char Ch;
- unsigned char Enable;
- float Gain;
- float Value;
- unsigned int Offset;
- float AlarmLimit;
- float TripLimit;
- unsigned char Alarm;
- unsigned char Trip;
- unsigned char InvertPol;
- unsigned char Alarm_Delay_ms;  // milisecond
- unsigned char Alarm_DelayCount;
- unsigned char Itlk_Delay_ms;   // milisecond
- unsigned char Itlk_DelayCount;
-}adc_t;
+adc_t VoltageCh1;
+adc_t VoltageCh2;
+adc_t VoltageCh3;
+adc_t VoltageCh4;
 
-/////////////////////////////////////////////////////////////////////////////////////////////
+adc_t CurrentCh1;
+adc_t CurrentCh2;
+adc_t CurrentCh3;
+adc_t CurrentCh4;
 
-static adc_t VoltageCh1;
-static adc_t VoltageCh2;
-static adc_t VoltageCh3;
-static adc_t VoltageCh4;
+adc_t LvCurrentCh1;
+adc_t LvCurrentCh2;
+adc_t LvCurrentCh3;
 
-static adc_t CurrentCh1;
-static adc_t CurrentCh2;
-static adc_t CurrentCh3;
-static adc_t CurrentCh4;
-
-static adc_t LvCurrentCh1;
-static adc_t LvCurrentCh2;
-static adc_t LvCurrentCh3;
-
-static adc_t DriverVolt;
-static adc_t Driver1Curr;
-static adc_t Driver2Curr;
+adc_t DriverVolt;
+adc_t Driver1Curr;
+adc_t Driver2Curr;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
