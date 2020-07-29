@@ -452,6 +452,11 @@ void fac_cmd_application_readings()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Se nao houver sinal na entrada digital dos 4 sinais, defina a acao como Interlock.
+    if(fac_cmd.MainOverCurrentItlkSts || fac_cmd.EmergencyButtonItlkSts || fac_cmd.MainUnderVoltageItlkSts || fac_cmd.MainOverVoltageItlkSts) InterlockSet();
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
     map_vars();
     get_itlks_id();
     get_alarms_id();

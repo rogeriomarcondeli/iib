@@ -72,35 +72,10 @@ float RTD_Resistance = 100.0; //RTD Resistance at 0 Degrees. Please refer to you
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-//******************************************************************************
-// Declaração das variaveis globais
-//******************************************************************************
-
-typedef struct
-{
-    unsigned char Ch;
-    unsigned char Enable;
-    unsigned char Calibration;
-    unsigned char Temperature;
-    unsigned char AlarmLimit;
-    unsigned char TripLimit;
-    unsigned char CanNotCommunicate;
-    unsigned char Error;
-    unsigned char RtdOutOfRange;
-    unsigned char Alarm;
-    unsigned char Trip;
-    unsigned char Alarm_Delay_s; // second
-    unsigned char Alarm_DelayCount;
-    unsigned char Itlk_Delay_s; // second
-    unsigned char Itlk_DelayCount;
-}pt100_t;
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-static pt100_t Pt100Ch1;
-static pt100_t Pt100Ch2;
-static pt100_t Pt100Ch3;
-static pt100_t Pt100Ch4;
+pt100_t Pt100Ch1;
+pt100_t Pt100Ch2;
+pt100_t Pt100Ch3;
+pt100_t Pt100Ch4;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

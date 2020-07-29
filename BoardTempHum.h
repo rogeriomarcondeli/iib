@@ -6,6 +6,27 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+typedef struct
+{
+    unsigned char Enable;
+    unsigned char Value;
+    unsigned char AlarmLimit;
+    unsigned char TripLimit;
+    unsigned char Alarm;
+    unsigned char Trip;
+    unsigned char Alarm_Delay_ms; // milisecond
+    unsigned char Alarm_DelayCount;
+    unsigned char Itlk_Delay_ms; // milisecond
+    unsigned char Itlk_DelayCount;
+}rh_tempboard_t;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern rh_tempboard_t TemperatureBoard;
+extern rh_tempboard_t RelativeHumidity;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 void RhBoardTempSenseInit(void);
 unsigned char RhRead(void);
 unsigned char BoardTempRead(void);
