@@ -55,23 +55,23 @@ unsigned int _8Hz = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-bool TempCh1Read = 0;
-bool TempCh2Read = 0;
-bool TempCh3Read = 0;
-bool TempCh4Read = 0;
-bool RhSample = 0;
-bool RhSampleRead = 0;
-bool BoardTempSample = 0;
-bool BoardTempSampleRead = 0;
-bool ErrorCheck = 0;
-bool LedUpdate = 0;
-bool AlarmCheckTask = 0;
-bool DriverVoltReadTask = 0;
-bool Driver1CurrtReadTask = 0;
-bool Driver2CurrtReadTask = 0;
-bool SendCanData          = 0;
-bool NtcSample = 0;
-bool NtcSampleRead = 0;
+bool TempCh1Read             = 0;
+bool TempCh2Read             = 0;
+bool TempCh3Read             = 0;
+bool TempCh4Read             = 0;
+bool RhSample                = 0;
+bool RhSampleRead            = 0;
+bool BoardTempSample         = 0;
+bool BoardTempSampleRead     = 0;
+bool ErrorCheck              = 0;
+bool LedUpdate               = 0;
+bool InterlockAlarmCheckTask = 0;
+bool DriverVoltReadTask      = 0;
+bool Driver1CurrtReadTask    = 0;
+bool Driver2CurrtReadTask    = 0;
+bool SendCanData             = 0;
+bool NtcSample               = 0;
+bool NtcSampleRead           = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -148,8 +148,6 @@ void task_100_us(void)
     else if(uSecond == 9)
     {
         if(LvCurrentCh3.Enable) LvCurrentCh3Sample();
-
-        InterlockAppCheck();
     }
 
 }
@@ -223,7 +221,7 @@ void task_1_ms(void)
        ErrorCheck = 1;
        break;
     case 990:
-       AlarmCheckTask = 1;
+       InterlockAlarmCheckTask = 1;
        break;
     case 1000:
 
@@ -331,11 +329,13 @@ void BoardTask(void)
       ErrorCheck = 0;
   }
 
-  else if(AlarmCheckTask)
+  else if(InterlockAlarmCheckTask)
   {
+      InterlockAppCheck();
+
       AlarmAppCheck();
 
-      AlarmCheckTask = 0;
+      InterlockAlarmCheckTask = 0;
   }
 
   else if(LedUpdate)

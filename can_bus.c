@@ -340,7 +340,13 @@ void handle_reset_message(void)
     {
         InterlockClear();
 
+        send_itlk_message(1);
+
         AlarmClear();
+
+        send_alarm_message(1);
+
+        message_reset_udc[0] = 0;
     }
 }
 
@@ -378,6 +384,9 @@ void send_itlk_message(uint8_t var)
     tx_message_itlk_iib.pui8MsgData = message_itlk_iib;
 
     CANMessageSet(CAN0_BASE, MESSAGE_ITLK_IIB_OBJ_ID, &tx_message_itlk_iib, MSG_OBJ_TYPE_TX);
+
+    message_itlk_iib[0] = 0;
+    message_itlk_iib[1] = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -396,6 +405,9 @@ void send_alarm_message(uint8_t var)
     tx_message_alarm_iib.pui8MsgData = message_alarm_iib;
 
     CANMessageSet(CAN0_BASE, MESSAGE_ALARM_IIB_OBJ_ID, &tx_message_alarm_iib, MSG_OBJ_TYPE_TX);
+
+    message_alarm_iib[0] = 0;
+    message_alarm_iib[1] = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

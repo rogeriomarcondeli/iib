@@ -26,7 +26,6 @@ static unsigned char InterlockOld = 0;
 static unsigned char ItlkClrCmd = 0;
 static unsigned char InitApp = 0;
 static unsigned char Alarm = 0;
-static bool itlk_send_flag = false;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,8 +124,6 @@ void InterlockClearCheck(void)
         TempIgbt1TempIgbt2ClearAlarmTrip();
 
         ItlkClrCmd = 0;
-
-        itlk_send_flag = false;
 
         switch(PowerModuleModel)
         {
@@ -297,50 +294,46 @@ void InterlockAppCheck(void)
         break;
     }
 
-    if(test){
-
+    if(test)
+    {
         InterlockSet();
 
-        if(!itlk_send_flag){
+        switch (PowerModuleModel)
+        {
+        case FAP:
 
-            itlk_send_flag = false;
+            send_fap_itlk_msg();
 
-            switch (PowerModuleModel)
-            {
-            case FAP:
+            break;
 
-                send_fap_itlk_msg();
+        case FAC_OS:
 
-                break;
+            send_output_fac_os_itlk_msg();
 
-            case FAC_OS:
+            break;
 
-                send_output_fac_os_itlk_msg();
+        case FAC_IS:
 
-                break;
+            send_input_fac_is_itlk_msg();
 
-            case FAC_IS:
+            break;
 
-                send_input_fac_is_itlk_msg();
+        case FAC_CMD_MODULE:
 
-                break;
+            send_fac_cmd_itlk_msg();
 
-            case FAC_CMD_MODULE:
+            break;
 
-                send_fac_cmd_itlk_msg();
+        case FAP_300A:
 
-                break;
+            send_fap_300A_itlk_msg();
 
-            case FAP_300A:
+            break;
 
-                send_fap_300A_itlk_msg();
-
-                break;
-
-            default:
-                break;
-            }
+        default:
+            break;
         }
+
     }
 }
 
@@ -386,8 +379,8 @@ void AlarmAppCheck(void)
         break;
     }
 
-    if(test){
-
+    if(test)
+    {
         AlarmSet();
 
         send_alarm_message(0);
