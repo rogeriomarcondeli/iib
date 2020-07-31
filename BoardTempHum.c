@@ -309,7 +309,7 @@ void BoardTempTripLevelSet(unsigned char nValue)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void BoardTempDelay(unsigned char Delay_Set)
+void BoardTempDelay(unsigned int Delay_Set)
 {
     TemperatureBoard.Alarm_Delay_ms = Delay_Set;
     TemperatureBoard.Itlk_Delay_ms = Delay_Set;
@@ -348,7 +348,7 @@ void RhTripLevelSet(unsigned char nValue)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void RhDelay(unsigned char Delay_Set)
+void RhDelay(unsigned int Delay_Set)
 {
     RelativeHumidity.Alarm_Delay_ms = Delay_Set;
     RelativeHumidity.Itlk_Delay_ms = Delay_Set;

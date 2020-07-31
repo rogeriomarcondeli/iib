@@ -363,9 +363,7 @@ void Pt100Init(void)
 // Channel 1 Temperature Sample
 void Pt100Ch1Sample(void)
 {
-    //Led1TurnOn();
     Pt100ReadChannel(&Pt100Ch1);
-    //Led1TurnOff();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -373,9 +371,7 @@ void Pt100Ch1Sample(void)
 // Channel 2 Temperature Sample
 void Pt100Ch2Sample(void)
 {
-    //Led2TurnOn();
-    Pt100ReadChannel(&Pt100Ch2);
-    //Led2TurnOff();
+   Pt100ReadChannel(&Pt100Ch2);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -383,9 +379,7 @@ void Pt100Ch2Sample(void)
 // Channel 3 Temperature Sample
 void Pt100Ch3Sample(void)
 {
-    //Led3TurnOn();
     Pt100ReadChannel(&Pt100Ch3);
-    //Led3TurnOff();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -393,9 +387,7 @@ void Pt100Ch3Sample(void)
 // Channel 4 Temperature Sample
 void Pt100Ch4Sample(void)
 {
-    //Led4TurnOn();
     Pt100ReadChannel(&Pt100Ch4);
-    //Led4TurnOff();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -536,7 +528,7 @@ unsigned char Pt100ReadCh1TripLevel(void)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // Set Channel 1 Interlock and Alarm Delay
-void Pt100SetCh1Delay(unsigned char Delay_Set)
+void Pt100SetCh1Delay(unsigned int Delay_Set)
 {
     Pt100Ch1.Alarm_Delay_s = Delay_Set;
     Pt100Ch1.Itlk_Delay_s = Delay_Set;
@@ -577,7 +569,7 @@ unsigned char Pt100ReadCh2TripLevel(void)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // Set Channel 2 Interlock and Alarm Delay
-void Pt100SetCh2Delay(unsigned char Delay_Set)
+void Pt100SetCh2Delay(unsigned int Delay_Set)
 {
     Pt100Ch2.Alarm_Delay_s = Delay_Set;
     Pt100Ch2.Itlk_Delay_s = Delay_Set;
@@ -618,7 +610,7 @@ unsigned char Pt100ReadCh3TripLevel(void)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // Set Channel 3 Interlock and Alarm Delay
-void Pt100SetCh3Delay(unsigned char Delay_Set)
+void Pt100SetCh3Delay(unsigned int Delay_Set)
 {
     Pt100Ch3.Alarm_Delay_s = Delay_Set;
     Pt100Ch3.Itlk_Delay_s = Delay_Set;
@@ -659,7 +651,7 @@ unsigned char Pt100ReadCh4TripLevel(void)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // Set Channel 4 Interlock and Alarm Delay
-void Pt100SetCh4Delay(unsigned char Delay_Set)
+void Pt100SetCh4Delay(unsigned int Delay_Set)
 {
     Pt100Ch4.Alarm_Delay_s = Delay_Set;
     Pt100Ch4.Itlk_Delay_s = Delay_Set;

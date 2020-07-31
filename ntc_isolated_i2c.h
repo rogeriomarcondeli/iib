@@ -31,10 +31,10 @@ typedef struct
     unsigned char TripLimit;
     unsigned char Alarm;
     unsigned char Trip;
-    unsigned char Alarm_Delay_ms; // milisecond
-    unsigned char Alarm_DelayCount;
-    unsigned char Itlk_Delay_ms; // milisecond
-    unsigned char Itlk_DelayCount;
+    unsigned int  Alarm_Delay_ms; // milisecond
+    unsigned int  Alarm_DelayCount;
+    unsigned int  Itlk_Delay_ms; // milisecond
+    unsigned int  Itlk_DelayCount;
 }ntc_t;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,8 @@ extern ntc_t TempNtcIgbt2;
 void NtcInit(void);
 unsigned char TempIgbt1Read(void);
 unsigned char TempIgbt2Read(void);
-float GetTemperature(float VoutADS1014);
+float GetTemperatureIgbt1(float VoutADS1014);
+float GetTemperatureIgbt2(float VoutADS1014);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -69,7 +70,7 @@ extern void TempIgbt1Disable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void TempIgbt1Delay(unsigned char Delay_Set);
+extern void TempIgbt1Delay(unsigned int Delay_Set);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -91,7 +92,7 @@ extern void TempIgbt2Disable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void TempIgbt2Delay(unsigned char Delay_Set);
+extern void TempIgbt2Delay(unsigned int Delay_Set);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

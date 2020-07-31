@@ -19,10 +19,10 @@ typedef struct
     unsigned char RtdOutOfRange;
     unsigned char Alarm;
     unsigned char Trip;
-    unsigned char Alarm_Delay_s; // second
-    unsigned char Alarm_DelayCount;
-    unsigned char Itlk_Delay_s; // second
-    unsigned char Itlk_DelayCount;
+    unsigned int  Alarm_Delay_s; // second
+    unsigned int  Alarm_DelayCount;
+    unsigned int  Itlk_Delay_s; // second
+    unsigned int  Itlk_DelayCount;
 }pt100_t;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,10 +127,10 @@ extern unsigned char Pt100ReadCh4TripSts(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void Pt100SetCh1Delay(unsigned char Delay_Set);
-extern void Pt100SetCh2Delay(unsigned char Delay_Set);
-extern void Pt100SetCh3Delay(unsigned char Delay_Set);
-extern void Pt100SetCh4Delay(unsigned char Delay_Set);
+extern void Pt100SetCh1Delay(unsigned int Delay_Set);
+extern void Pt100SetCh2Delay(unsigned int Delay_Set);
+extern void Pt100SetCh3Delay(unsigned int Delay_Set);
+extern void Pt100SetCh4Delay(unsigned int Delay_Set);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

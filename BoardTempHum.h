@@ -14,10 +14,10 @@ typedef struct
     unsigned char TripLimit;
     unsigned char Alarm;
     unsigned char Trip;
-    unsigned char Alarm_Delay_ms; // milisecond
-    unsigned char Alarm_DelayCount;
-    unsigned char Itlk_Delay_ms; // milisecond
-    unsigned char Itlk_DelayCount;
+    unsigned int  Alarm_Delay_ms; // milisecond
+    unsigned int  Alarm_DelayCount;
+    unsigned int  Itlk_Delay_ms; // milisecond
+    unsigned int  Itlk_DelayCount;
 }rh_tempboard_t;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ extern void BoardTempDisable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void BoardTempDelay(unsigned char Delay_Set);
+extern void BoardTempDelay(unsigned int Delay_Set);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -74,7 +74,7 @@ extern void RhDisable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void RhDelay(unsigned char Delay_Set);
+extern void RhDelay(unsigned int Delay_Set);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
