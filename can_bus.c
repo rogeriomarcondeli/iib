@@ -419,7 +419,13 @@ void handle_reset_message(void)
     {
         InterlockClear();
 
+        send_itlk_message(1);
+
         AlarmClear();
+
+        send_alarm_message(1);
+
+        message_reset_udc[0] = 0;
     }
 }
 
@@ -544,13 +550,7 @@ void send_data_message(uint8_t var)
 
         break;
 
-    case FAC_CMD_MODULE:
-
-
-
-        break;
-
-    case FAP_300A:
+    case FAC_CMD:
 
 
 
@@ -560,21 +560,6 @@ void send_data_message(uint8_t var)
         break;
 
     }
-
-    /*tx_message_data_iib.ui32MsgID = 11;
-
-    message_data_iib[0] = can_address;
-    message_data_iib[1] = var;
-    message_data_iib[2] = 0;
-    message_data_iib[3] = 0;
-    message_data_iib[4] = g_controller_iib.iib_signals[var].u8[0];
-    message_data_iib[5] = g_controller_iib.iib_signals[var].u8[1];
-    message_data_iib[6] = g_controller_iib.iib_signals[var].u8[2];
-    message_data_iib[7] = g_controller_iib.iib_signals[var].u8[3];
-
-    tx_message_data_iib.pui8MsgData = message_data_iib;
-
-    PrintCANMessageInfo(&tx_message_data_iib, MESSAGE_DATA_IIB_OBJ_ID);*/
 
     CANMessageSet(CAN0_BASE, MESSAGE_DATA_IIB_OBJ_ID, &tx_message_data_iib, MSG_OBJ_TYPE_TX);
 }
@@ -595,6 +580,9 @@ void send_itlk_message(uint8_t var)
     tx_message_itlk_iib.pui8MsgData = message_itlk_iib;
 
     CANMessageSet(CAN0_BASE, MESSAGE_ITLK_IIB_OBJ_ID, &tx_message_itlk_iib, MSG_OBJ_TYPE_TX);
+
+    message_itlk_iib[0] = 0;
+    message_itlk_iib[1] = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -613,6 +601,9 @@ void send_alarm_message(uint8_t var)
     tx_message_alarm_iib.pui8MsgData = message_alarm_iib;
 
     CANMessageSet(CAN0_BASE, MESSAGE_ALARM_IIB_OBJ_ID, &tx_message_alarm_iib, MSG_OBJ_TYPE_TX);
+
+    message_alarm_iib[0] = 0;
+    message_alarm_iib[1] = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

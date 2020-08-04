@@ -55,23 +55,23 @@ unsigned int _8Hz = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-bool TempCh1Read = 0;
-bool TempCh2Read = 0;
-bool TempCh3Read = 0;
-bool TempCh4Read = 0;
-bool RhSample = 0;
-bool RhSampleRead = 0;
-bool BoardTempSample = 0;
-bool BoardTempSampleRead = 0;
-bool ErrorCheck = 0;
-bool LedUpdate = 0;
-bool AlarmCheckTask = 0;
-bool DriverVoltReadTask = 0;
-bool Driver1CurrtReadTask = 0;
-bool Driver2CurrtReadTask = 0;
-bool SendCanData          = 0;
-bool NtcSample = 0;
-bool NtcSampleRead = 0;
+bool TempCh1Read             = 0;
+bool TempCh2Read             = 0;
+bool TempCh3Read             = 0;
+bool TempCh4Read             = 0;
+bool RhSample                = 0;
+bool RhSampleRead            = 0;
+bool BoardTempSample         = 0;
+bool BoardTempSampleRead     = 0;
+bool ErrorCheck              = 0;
+bool LedUpdate               = 0;
+bool InterlockAlarmCheckTask = 0;
+bool DriverVoltReadTask      = 0;
+bool Driver1CurrtReadTask    = 0;
+bool Driver2CurrtReadTask    = 0;
+bool SendCanData             = 0;
+bool NtcSample               = 0;
+bool NtcSampleRead           = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,46 +108,46 @@ void task_100_us(void)
 
     if(uSecond == 0)
     {
-        VoltageCh1Sample();
-        VoltageCh2Sample();
+        if(VoltageCh1.Enable) VoltageCh1Sample();
+
+        if(VoltageCh2.Enable) VoltageCh2Sample();
     }
     else if(uSecond == 1)
     {
-        VoltageCh3Sample();
+        if(VoltageCh3.Enable) VoltageCh3Sample();
     }
     else if(uSecond == 2)
     {
-        VoltageCh4Sample();
+        if(VoltageCh4.Enable) VoltageCh4Sample();
     }
     else if(uSecond == 3)
     {
-        CurrentCh1Sample();
+        if(CurrentCh1.Enable) CurrentCh1Sample();
     }
     else if(uSecond == 4)
     {
-        CurrentCh2Sample();
+        if(CurrentCh2.Enable) CurrentCh2Sample();
     }
     else if(uSecond == 5)
     {
-        CurrentCh3Sample();
+        if(CurrentCh3.Enable) CurrentCh3Sample();
     }
     else if(uSecond == 6)
     {
-        CurrentCh4Sample();
+        if(CurrentCh4.Enable) CurrentCh4Sample();
     }
     else if(uSecond == 7)
     {
-        LvCurrentCh1Sample();
+        if(LvCurrentCh1.Enable) LvCurrentCh1Sample();
     }
 
     else if(uSecond == 8)
     {
-        LvCurrentCh2Sample();
+        if(LvCurrentCh2.Enable) LvCurrentCh2Sample();
     }
     else if(uSecond == 9)
     {
-        LvCurrentCh3Sample();
-        InterlockAppCheck();
+        if(LvCurrentCh3.Enable) LvCurrentCh3Sample();
     }
 
 }
@@ -221,7 +221,7 @@ void task_1_ms(void)
        ErrorCheck = 1;
        break;
     case 990:
-       AlarmCheckTask = 1;
+       InterlockAlarmCheckTask = 1;
        break;
     case 1000:
 
@@ -243,93 +243,112 @@ void BoardTask(void)
 
   if(TempCh1Read)
   {
-      Pt100Ch1Sample();
+      if(Pt100Ch1.Enable) Pt100Ch1Sample();
+
       TempCh1Read = 0;
   }
   else if(TempCh2Read)
   {
-      Pt100Ch2Sample();
+      if(Pt100Ch2.Enable) Pt100Ch2Sample();
+
       TempCh2Read = 0;
   }
   else if(TempCh3Read)
   {
-      Pt100Ch3Sample();
+      if(Pt100Ch3.Enable) Pt100Ch3Sample();
+
       TempCh3Read = 0;
   }
   else if(TempCh4Read)
   {
-      Pt100Ch4Sample();
+      if(Pt100Ch4.Enable) Pt100Ch4Sample();
+
       TempCh4Read = 0;
   }
   else if(RhSample)
   {
-      RelativeHumidityStartConversion();
+      if(RelativeHumidity.Enable) RelativeHumidityStartConversion();
+
       RhSample = 0;
   }
   else if(RhSampleRead)
   {
-      RelativeHumidityRead();
+      if(RelativeHumidity.Enable) RelativeHumidityRead();
+
       RhSampleRead = 0;
   }
   else if(BoardTempSample)
   {
-      BoardTemperatureStartConversion();
+      if(TemperatureBoard.Enable) BoardTemperatureStartConversion();
+
       BoardTempSample = 0;
   }
   else if(BoardTempSampleRead)
   {
-      BoardTemperatureRead();
+      if(TemperatureBoard.Enable) BoardTemperatureRead();
+
       BoardTempSampleRead = 0;
   }
   else if(NtcSample)
   {
-      NtcStartConversion();
+      if(TempNtcIgbt1.Enable || TempNtcIgbt2.Enable) NtcStartConversion();
+
       NtcSample = 0;
   }
   else if(NtcSampleRead)
   {
-      NtcRead();
+      if(TempNtcIgbt1.Enable || TempNtcIgbt2.Enable) NtcRead();
+
       NtcSampleRead = 0;
   }
   else if(DriverVoltReadTask)
   {
-      DriverVoltageSample();
+      if(DriverVolt.Enable) DriverVoltageSample();
+
       DriverVoltReadTask = 0;
   }
 
   else if(Driver1CurrtReadTask)
   {
-      Driver1CurrentSample();
+      if(Driver1Curr.Enable) Driver1CurrentSample();
+
       Driver1CurrtReadTask = 0;
   }
 
   else if(Driver2CurrtReadTask)
   {
-      Driver2CurrentSample();
+      if(Driver2Curr.Enable) Driver2CurrentSample();
+
       Driver2CurrtReadTask = 0;
   }
 
   else if(ErrorCheck)
   {
       ErrorCheckHandle();
+
       ErrorCheck = 0;
   }
 
-  else if(AlarmCheckTask)
+  else if(InterlockAlarmCheckTask)
   {
+      InterlockAppCheck();
+
       AlarmAppCheck();
-      AlarmCheckTask = 0;
+
+      InterlockAlarmCheckTask = 0;
   }
 
   else if(LedUpdate)
   {
       LedIndicationStatus();
+
       LedUpdate = 0;
   }
 
   else if (SendCanData)
   {
       send_data_schedule();
+
       SendCanData = 0;
   }
 

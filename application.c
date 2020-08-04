@@ -16,7 +16,6 @@
 #include "fac_is.h"
 #include "fac_os.h"
 #include "fap.h"
-#include "fap_300A.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,7 +25,6 @@ static unsigned char InterlockOld = 0;
 static unsigned char ItlkClrCmd = 0;
 static unsigned char InitApp = 0;
 static unsigned char Alarm = 0;
-static bool itlk_send_flag = false;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,11 +35,7 @@ void AppConfiguration(void)
     // This parameter guide the firmware behavior
     // Each Model has a different variable list that need to be check
 
-    PowerModuleModel = FAP;
-    //PowerModuleModel = FAC_OS;
-    //PowerModuleModel = FAC_IS;
-    //PowerModuleModel = FAC_CMD_MODULE;
-    //PowerModuleModel = FAP_300A;
+    PowerModuleModel = PowerModuleModelSelect;
 
     switch(PowerModuleModel)
     {
@@ -63,15 +57,9 @@ void AppConfiguration(void)
 
         break;
 
-    case FAC_CMD_MODULE:
+    case FAC_CMD:
 
         init_fac_cmd();
-
-        break;
-
-    case FAP_300A:
-
-        init_fap_300A();
 
         break;
 
@@ -126,8 +114,6 @@ void InterlockClearCheck(void)
 
         ItlkClrCmd = 0;
 
-        itlk_send_flag = false;
-
         switch(PowerModuleModel)
         {
         case FAP:
@@ -151,17 +137,10 @@ void InterlockClearCheck(void)
 
             break;
 
-        case FAC_CMD_MODULE:
+        case FAC_CMD:
 
             clear_fac_cmd_interlocks();
             clear_fac_cmd_alarms();
-
-            break;
-
-        case FAP_300A:
-
-            clear_fap_300A_interlocks();
-            clear_fap_300A_alarms();
 
             break;
 
@@ -213,14 +192,7 @@ void AppInterlock(void)
 
         break;
 
-    case FAC_CMD_MODULE:
-
-        ReleAuxTurnOff();
-        ReleExtItlkTurnOff();
-
-        break;
-
-    case FAP_300A:
+    case FAC_CMD:
 
         ReleAuxTurnOff();
         ReleExtItlkTurnOff();
@@ -281,15 +253,9 @@ void InterlockAppCheck(void)
 
         break;
 
-    case FAC_CMD_MODULE:
+    case FAC_CMD:
 
         test = check_fac_cmd_interlocks();
-
-        break;
-
-    case FAP_300A:
-
-        test = check_fap_300A_interlocks();
 
         break;
 
@@ -297,50 +263,40 @@ void InterlockAppCheck(void)
         break;
     }
 
-    if(test){
-
+    if(test)
+    {
         InterlockSet();
 
-        if(!itlk_send_flag){
+        switch (PowerModuleModel)
+        {
+        case FAP:
 
-            itlk_send_flag = false;
+            send_fap_itlk_msg();
 
-            switch (PowerModuleModel)
-            {
-            case FAP:
+            break;
 
-                send_fap_itlk_msg();
+        case FAC_OS:
 
-                break;
+            send_output_fac_os_itlk_msg();
 
-            case FAC_OS:
+            break;
 
-                send_output_fac_os_itlk_msg();
+        case FAC_IS:
 
-                break;
+            send_input_fac_is_itlk_msg();
 
-            case FAC_IS:
+            break;
 
-                send_input_fac_is_itlk_msg();
+        case FAC_CMD:
 
-                break;
+            send_fac_cmd_itlk_msg();
 
-            case FAC_CMD_MODULE:
+            break;
 
-                send_fac_cmd_itlk_msg();
-
-                break;
-
-            case FAP_300A:
-
-                send_fap_300A_itlk_msg();
-
-                break;
-
-            default:
-                break;
-            }
+        default:
+            break;
         }
+
     }
 }
 
@@ -370,15 +326,9 @@ void AlarmAppCheck(void)
 
         break;
 
-    case FAC_CMD_MODULE:
+    case FAC_CMD:
 
         test = check_fac_cmd_alarms();
-
-        break;
-
-    case FAP_300A:
-
-        test = check_fap_300A_alarms();
 
         break;
 
@@ -386,8 +336,8 @@ void AlarmAppCheck(void)
         break;
     }
 
-    if(test){
-
+    if(test)
+    {
         AlarmSet();
 
         send_alarm_message(0);
@@ -418,15 +368,9 @@ void LedIndicationStatus(void)
 
         break;
 
-    case FAC_CMD_MODULE:
+    case FAC_CMD:
 
         check_fac_cmd_indication_leds();
-
-        break;
-
-    case FAP_300A:
-
-        check_fap_300A_indication_leds();
 
         break;
 
@@ -461,15 +405,9 @@ void Application(void)
 
         break;
 
-    case FAC_CMD_MODULE:
+    case FAC_CMD:
 
         fac_cmd_application_readings();
-
-        break;
-
-    case FAP_300A:
-
-        fap_300A_application_readings();
 
         break;
 
@@ -515,17 +453,10 @@ void Application(void)
 
             break;
 
-        case FAC_CMD_MODULE:
+        case FAC_CMD:
 
             ReleAuxTurnOn();
             ReleExtItlkTurnOn();
-
-            break;
-
-        case FAP_300A:
-
-            ReleAuxTurnOn();
-            ReleExtItlkTurnOff();
 
             break;
 
@@ -561,15 +492,9 @@ void send_data_schedule()
 
         break;
 
-    case FAC_CMD_MODULE:
+    case FAC_CMD:
 
         send_fac_cmd_data();
-
-        break;
-
-    case FAP_300A:
-
-        send_fap_300A_data();
 
         break;
 
@@ -602,15 +527,9 @@ void power_on_check()
 
         break;
 
-    case FAC_CMD_MODULE:
+    case FAC_CMD:
 
         fac_cmd_power_on_check();
-
-        break;
-
-    case FAP_300A:
-
-        fap_300A_power_on_check();
 
         break;
 

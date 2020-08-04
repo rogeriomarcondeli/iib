@@ -6,6 +6,46 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+typedef struct
+{
+    unsigned char Ch;
+    unsigned char Enable;
+    float Gain;
+    float Value;
+    unsigned int Offset;
+    float AlarmLimit;
+    float TripLimit;
+    unsigned char Alarm;
+    unsigned char Trip;
+    unsigned char InvertPol;
+    unsigned int  Alarm_Delay_ms;  // milisecond
+    unsigned int  Alarm_DelayCount;
+    unsigned int  Itlk_Delay_ms;   // milisecond
+    unsigned int  Itlk_DelayCount;
+}adc_t;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern adc_t VoltageCh1;
+extern adc_t VoltageCh2;
+extern adc_t VoltageCh3;
+extern adc_t VoltageCh4;
+
+extern adc_t CurrentCh1;
+extern adc_t CurrentCh2;
+extern adc_t CurrentCh3;
+extern adc_t CurrentCh4;
+
+extern adc_t LvCurrentCh1;
+extern adc_t LvCurrentCh2;
+extern adc_t LvCurrentCh3;
+
+extern adc_t DriverVolt;
+extern adc_t Driver1Curr;
+extern adc_t Driver2Curr;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern void AdcsInit(void);
 extern void sample_adc(void);
 extern float CurrentRange(float nFstCurr, float nSecCurr, float nBurden, float MaxVoltInput);
@@ -19,10 +59,10 @@ extern void ConfigPolVoltCh4(unsigned char sts);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void VoltageCh1Init(float nValue, unsigned char Delay);
-extern void VoltageCh2Init(float nValue, unsigned char Delay);
-extern void VoltageCh3Init(float nValue, unsigned char Delay);
-extern void VoltageCh4Init(float nValue, unsigned char Delay);
+extern void VoltageCh1Init(float nValue, unsigned int Delay);
+extern void VoltageCh2Init(float nValue, unsigned int Delay);
+extern void VoltageCh3Init(float nValue, unsigned int Delay);
+extern void VoltageCh4Init(float nValue, unsigned int Delay);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,10 +73,10 @@ extern void ConfigPolCurrCh4(unsigned char sts);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void CurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
-extern void CurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
-extern void CurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
-extern void CurrentCh4Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
+extern void CurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms);
+extern void CurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms);
+extern void CurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms);
+extern void CurrentCh4Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,9 +86,9 @@ extern void ConfigPolLvCurrCh3(unsigned char sts);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void LvCurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
-extern void LvCurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
-extern void LvCurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms);
+extern void LvCurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms);
+extern void LvCurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms);
+extern void LvCurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -229,7 +269,7 @@ extern void DriverVoltageDisable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void DriverVoltageDelay(unsigned char Delay_Set);
+extern void DriverVoltageDelay(unsigned int Delay_Set);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -269,7 +309,7 @@ extern void Driver2CurrentDisable(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void DriverCurrentDelay(unsigned char Delay_Set);
+extern void DriverCurrentDelay(unsigned int Delay_Set);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

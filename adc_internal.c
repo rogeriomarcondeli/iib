@@ -17,43 +17,23 @@ static int Adc_Value = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef struct
-{
- unsigned char Ch;
- unsigned char Enable;
- float Gain;
- float Value;
- unsigned int Offset;
- float AlarmLimit;
- float TripLimit;
- unsigned char Alarm;
- unsigned char Trip;
- unsigned char InvertPol;
- unsigned char Alarm_Delay_ms;  // milisecond
- unsigned char Alarm_DelayCount;
- unsigned char Itlk_Delay_ms;   // milisecond
- unsigned char Itlk_DelayCount;
-}adc_t;
+adc_t VoltageCh1;
+adc_t VoltageCh2;
+adc_t VoltageCh3;
+adc_t VoltageCh4;
 
-/////////////////////////////////////////////////////////////////////////////////////////////
+adc_t CurrentCh1;
+adc_t CurrentCh2;
+adc_t CurrentCh3;
+adc_t CurrentCh4;
 
-static adc_t VoltageCh1;
-static adc_t VoltageCh2;
-static adc_t VoltageCh3;
-static adc_t VoltageCh4;
+adc_t LvCurrentCh1;
+adc_t LvCurrentCh2;
+adc_t LvCurrentCh3;
 
-static adc_t CurrentCh1;
-static adc_t CurrentCh2;
-static adc_t CurrentCh3;
-static adc_t CurrentCh4;
-
-static adc_t LvCurrentCh1;
-static adc_t LvCurrentCh2;
-static adc_t LvCurrentCh3;
-
-static adc_t DriverVolt;
-static adc_t Driver1Curr;
-static adc_t Driver2Curr;
+adc_t DriverVolt;
+adc_t Driver1Curr;
+adc_t Driver2Curr;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -172,7 +152,7 @@ void sample_adc(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void VoltageCh1Init(float nValue, unsigned char Delay)
+void VoltageCh1Init(float nValue, unsigned int Delay)
 {
     VoltageCh1.Ch = 1;
     VoltageCh1.Enable = 0;
@@ -192,7 +172,7 @@ void VoltageCh1Init(float nValue, unsigned char Delay)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void VoltageCh2Init(float nValue, unsigned char Delay)
+void VoltageCh2Init(float nValue, unsigned int Delay)
 {
     VoltageCh2.Ch = 2;
     VoltageCh2.Enable = 0;
@@ -212,7 +192,7 @@ void VoltageCh2Init(float nValue, unsigned char Delay)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void VoltageCh3Init(float nValue, unsigned char Delay)
+void VoltageCh3Init(float nValue, unsigned int Delay)
 {
     VoltageCh3.Ch = 3;
     VoltageCh3.Enable = 0;
@@ -232,7 +212,7 @@ void VoltageCh3Init(float nValue, unsigned char Delay)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void VoltageCh4Init(float nValue, unsigned char Delay)
+void VoltageCh4Init(float nValue, unsigned int Delay)
 {
     VoltageCh4.Ch = 4;
     VoltageCh4.Enable = 0;
@@ -265,7 +245,7 @@ float CurrentRange(float nFstCurr, float nSecCurr, float nBurden, float MaxVoltI
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void CurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms)
+void CurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms)
 {
     CurrentCh1.Ch = 1;
     CurrentCh1.Enable = 0;
@@ -285,7 +265,7 @@ void CurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void CurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms)
+void CurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms)
 {
     CurrentCh2.Ch = 2;
     CurrentCh2.Enable = 0;
@@ -305,7 +285,7 @@ void CurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void CurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms)
+void CurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms)
 {
     CurrentCh3.Ch = 3;
     CurrentCh3.Enable = 0;
@@ -325,7 +305,7 @@ void CurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void CurrentCh4Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms)
+void CurrentCh4Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms)
 {
     CurrentCh4.Ch = 4;
     CurrentCh4.Enable = 0;
@@ -345,7 +325,7 @@ void CurrentCh4Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void LvCurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms)
+void LvCurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms)
 {
     LvCurrentCh1.Ch = 1;
     LvCurrentCh1.Enable = 0;
@@ -365,7 +345,7 @@ void LvCurrentCh1Init(float nFstCurr, float nSecCurr, float nBurden, unsigned ch
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void LvCurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms)
+void LvCurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms)
 {
     LvCurrentCh2.Ch = 2;
     LvCurrentCh2.Enable = 0;
@@ -385,7 +365,7 @@ void LvCurrentCh2Init(float nFstCurr, float nSecCurr, float nBurden, unsigned ch
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void LvCurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned char delay_ms)
+void LvCurrentCh3Init(float nFstCurr, float nSecCurr, float nBurden, unsigned int delay_ms)
 {
     LvCurrentCh3.Ch = 3;
     LvCurrentCh3.Enable = 0;
@@ -1498,7 +1478,7 @@ void Driver2CurrentTripLevelSet(float nValue)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 //Set DriverVoltage Interlock and Alarm Delay
-void DriverVoltageDelay(unsigned char Delay_Set)
+void DriverVoltageDelay(unsigned int Delay_Set)
 {
     DriverVolt.Alarm_Delay_ms = Delay_Set;
     DriverVolt.Itlk_Delay_ms = Delay_Set;
@@ -1507,7 +1487,7 @@ void DriverVoltageDelay(unsigned char Delay_Set)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 //Set DriverCurrent 1 and 2 Interlock and Alarm Delay
-void DriverCurrentDelay(unsigned char Delay_Set)
+void DriverCurrentDelay(unsigned int Delay_Set)
 {
     Driver1Curr.Alarm_Delay_ms = Delay_Set;
     Driver1Curr.Itlk_Delay_ms = Delay_Set;
@@ -1788,4 +1768,9 @@ void AdcClearAlarmTrip(void)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 

@@ -223,7 +223,6 @@ void clear_fac_cmd_interlocks()
 
     itlk_id = 0;
 
-    send_itlk_message(1);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,7 +266,6 @@ void clear_fac_cmd_alarms()
 
     alarm_id = 0;
 
-    send_alarm_message(1);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -449,6 +447,11 @@ void fac_cmd_application_readings()
     //Interlock Main Over Voltage
     fac_cmd.MainOverVoltageItlk = Gpdi8Read();//Variavel usada para debug
     if(!fac_cmd.MainOverVoltageItlkSts)fac_cmd.MainOverVoltageItlkSts = Gpdi8Read();
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+    //Se nao houver sinal na entrada digital dos 4 sinais, defina a acao como Interlock.
+    if(fac_cmd.MainOverCurrentItlkSts || fac_cmd.EmergencyButtonItlkSts || fac_cmd.MainUnderVoltageItlkSts || fac_cmd.MainOverVoltageItlkSts) InterlockSet();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

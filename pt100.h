@@ -6,6 +6,34 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+typedef struct
+{
+    unsigned char Ch;
+    unsigned char Enable;
+    unsigned char Calibration;
+    unsigned char Temperature;
+    unsigned char AlarmLimit;
+    unsigned char TripLimit;
+    unsigned char CanNotCommunicate;
+    unsigned char Error;
+    unsigned char RtdOutOfRange;
+    unsigned char Alarm;
+    unsigned char Trip;
+    unsigned int  Alarm_Delay_s; // second
+    unsigned int  Alarm_DelayCount;
+    unsigned int  Itlk_Delay_s; // second
+    unsigned int  Itlk_DelayCount;
+}pt100_t;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+extern pt100_t Pt100Ch1;
+extern pt100_t Pt100Ch2;
+extern pt100_t Pt100Ch3;
+extern pt100_t Pt100Ch4;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern void Pt100Init(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,10 +127,10 @@ extern unsigned char Pt100ReadCh4TripSts(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void Pt100SetCh1Delay(unsigned char Delay_Set);
-extern void Pt100SetCh2Delay(unsigned char Delay_Set);
-extern void Pt100SetCh3Delay(unsigned char Delay_Set);
-extern void Pt100SetCh4Delay(unsigned char Delay_Set);
+extern void Pt100SetCh1Delay(unsigned int Delay_Set);
+extern void Pt100SetCh2Delay(unsigned int Delay_Set);
+extern void Pt100SetCh3Delay(unsigned int Delay_Set);
+extern void Pt100SetCh4Delay(unsigned int Delay_Set);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

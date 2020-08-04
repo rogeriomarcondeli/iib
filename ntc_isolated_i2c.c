@@ -30,13 +30,14 @@
 #include "peripheral_drivers/i2c/i2c_driver.h"
 #include "board_drivers/hardware_def.h"
 
+#include <iib_modules/fap.h>
+#include <iib_modules/fac_os.h>
+#include <iib_modules/fac_is.h>
+#include <iib_modules/fac_cmd.h>
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 #define SeriesResistance       10000.00 //Resistor de 10K Ohms
-
-#define Vin                     3.3 //Tensão 3,3V de entrada do divisor resistivo
-
-float GetTemperature(float VoutADS1014);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -52,34 +53,40 @@ static float C = 0.000000164677;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef struct
-{
-    unsigned char Enable;
-    unsigned char Value;
-    unsigned char AlarmLimit;
-    unsigned char TripLimit;
-    unsigned char Alarm;
-    unsigned char Trip;
-    unsigned char Alarm_Delay_ms; // milisecond
-    unsigned char Alarm_DelayCount;
-    unsigned char Itlk_Delay_ms; // milisecond
-    unsigned char Itlk_DelayCount;
-}ntc_t;
+ntc_t TempNtcIgbt1;
+ntc_t TempNtcIgbt2;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-static ntc_t TempNtcIgbt1;
-static ntc_t TempNtcIgbt2;
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-float GetTemperature(float VoutADS1014)
+float GetTemperatureIgbt1(float VoutADS1014)
 {
     double NtcResistance;
     double Thermistortemperature;
     float Temperature;
 
-    NtcResistance = (((SeriesResistance * Vin) / VoutADS1014) - SeriesResistance); /* calculate the resistance */
+    NtcResistance = (((SeriesResistance * VinIgbt1) / VoutADS1014) - SeriesResistance); /* calculate the resistance */
+
+    Thermistortemperature = log(NtcResistance); /* calculate natural log of resistance */
+
+    /*  Steinhart-Hart Thermistor Equation: */
+    /*  Temperature in Kelvin = 1 / (A + B[ln(R)] + C[ln(R)]^3)   */
+
+    Temperature = ( 1 / ( A + ( B * Thermistortemperature ) + ( C * (pow(Thermistortemperature,3) )) ) );  // temperatura em Kelvin
+
+    Temperature = Temperature - 273.15; // temperatura em graus Celsius
+
+    return Temperature;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+float GetTemperatureIgbt2(float VoutADS1014)
+{
+    double NtcResistance;
+    double Thermistortemperature;
+    float Temperature;
+
+    NtcResistance = (((SeriesResistance * VinIgbt2) / VoutADS1014) - SeriesResistance); /* calculate the resistance */
 
     Thermistortemperature = log(NtcResistance); /* calculate natural log of resistance */
 
@@ -374,7 +381,7 @@ void NtcStartConversion(void)
 //******************************************************************************
 void NtcRead(void)
 {
-    TempNtcIgbt1.Value = GetTemperature((((float)ADS1x1x_read(&ntc_igbt1)*6.144)/2047.0));
+    TempNtcIgbt1.Value = GetTemperatureIgbt1((((float)ADS1x1x_read(&ntc_igbt1)*6.144)/2047.0));
 
     if(TempNtcIgbt1.Value > TempNtcIgbt1.AlarmLimit)
     {
@@ -400,7 +407,7 @@ void NtcRead(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    TempNtcIgbt2.Value = GetTemperature((((float)ADS1x1x_read(&ntc_igbt2)*6.144)/2047.0));
+    TempNtcIgbt2.Value = GetTemperatureIgbt2((((float)ADS1x1x_read(&ntc_igbt2)*6.144)/2047.0));
 
     if(TempNtcIgbt2.Value > TempNtcIgbt2.AlarmLimit)
     {
@@ -494,7 +501,7 @@ void TempIgbt1TripLevelSet(unsigned char nValue)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void TempIgbt1Delay(unsigned char Delay_Set)
+void TempIgbt1Delay(unsigned int Delay_Set)
 {
     TempNtcIgbt1.Alarm_Delay_ms = Delay_Set;
     TempNtcIgbt1.Itlk_Delay_ms = Delay_Set;
@@ -533,7 +540,7 @@ void TempIgbt2TripLevelSet(unsigned char nValue)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void TempIgbt2Delay(unsigned char Delay_Set)
+void TempIgbt2Delay(unsigned int Delay_Set)
 {
     TempNtcIgbt2.Alarm_Delay_ms = Delay_Set;
     TempNtcIgbt2.Itlk_Delay_ms = Delay_Set;
