@@ -448,42 +448,42 @@ void check_fap_indication_leds()
 void fap_application_readings()
 {
     //PT100 CH1 Dissipador
-    fap.TempHeatSink.f = (float) Pt100ReadCh1();
+    fap.TempHeatSink.u8[0] = Pt100ReadCh1();
     fap.TempHeatSinkAlarmSts = Pt100ReadCh1AlarmSts();
     if(!fap.TempHeatSinkItlkSts)fap.TempHeatSinkItlkSts = Pt100ReadCh1TripSts();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //PT100 CH2 Indutor
-    fap.TempL.f = (float) Pt100ReadCh2();
+    fap.TempL.u8[0] = Pt100ReadCh2();
     fap.TempLAlarmSts = Pt100ReadCh2AlarmSts();
     if(!fap.TempLItlkSts)fap.TempLItlkSts = Pt100ReadCh2TripSts();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperatura IGBT1
-    fap.TempIGBT1.f = (float) TempIgbt1Read();
+    fap.TempIGBT1.u8[0] = TempIgbt1Read();
     fap.TempIGBT1AlarmSts = TempIgbt1AlarmStatusRead();
     if(!fap.TempIGBT1ItlkSts)fap.TempIGBT1ItlkSts = TempIgbt1TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperatura IGBT2
-    fap.TempIGBT2.f = (float) TempIgbt2Read();
+    fap.TempIGBT2.u8[0] = TempIgbt2Read();
     fap.TempIGBT2AlarmSts = TempIgbt2AlarmStatusRead();
     if(!fap.TempIGBT2ItlkSts)fap.TempIGBT2ItlkSts = TempIgbt2TripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Temperatura PCB IIB
-    fap.BoardTemperature.f = (float) BoardTempRead();
+    fap.BoardTemperature.u8[0] = BoardTempRead();
     fap.BoardTemperatureAlarmSts = BoardTempAlarmStatusRead();
     if(!fap.BoardTemperatureItlkSts)fap.BoardTemperatureItlkSts = BoardTempTripStatusRead();
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     //Umidade Relativa
-    fap.RelativeHumidity.f = (float) RhRead();
+    fap.RelativeHumidity.u8[0] = RhRead();
     fap.RelativeHumidityAlarmSts = RhAlarmStatusRead();
     if(!fap.RelativeHumidityItlkSts)fap.RelativeHumidityItlkSts = RhTripStatusRead();
 
@@ -662,16 +662,16 @@ static void map_vars()
     g_controller_iib.iib_signals[1].f       = fap.Vout.f;
     g_controller_iib.iib_signals[2].f       = fap.IoutA1.f;
     g_controller_iib.iib_signals[3].f       = fap.IoutA2.f;
-    g_controller_iib.iib_signals[4].f       = fap.TempIGBT1.f;
-    g_controller_iib.iib_signals[5].f       = fap.TempIGBT2.f;
+    g_controller_iib.iib_signals[4].u8[0]   = fap.TempIGBT1.u8[0];
+    g_controller_iib.iib_signals[5].u8[0]   = fap.TempIGBT2.u8[0];
     g_controller_iib.iib_signals[6].f       = fap.DriveVoltage.f;
     g_controller_iib.iib_signals[7].f       = fap.Drive1Current.f;
     g_controller_iib.iib_signals[8].f       = fap.Drive2Current.f;
-    g_controller_iib.iib_signals[9].f       = fap.TempL.f;
-    g_controller_iib.iib_signals[10].f      = fap.TempHeatSink.f;
+    g_controller_iib.iib_signals[9].u8[0]   = fap.TempL.u8[0];
+    g_controller_iib.iib_signals[10].u8[0]  = fap.TempHeatSink.u8[0];
     g_controller_iib.iib_signals[11].f      = fap.GroundLeakage.f;
-    g_controller_iib.iib_signals[12].f      = fap.BoardTemperature.f;
-    g_controller_iib.iib_signals[13].f      = fap.RelativeHumidity.f;
+    g_controller_iib.iib_signals[12].u8[0]  = fap.BoardTemperature.u8[0];
+    g_controller_iib.iib_signals[13].u8[0]  = fap.RelativeHumidity.u8[0];
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

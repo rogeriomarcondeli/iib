@@ -384,23 +384,23 @@ void InitCan(uint32_t ui32SysClock)
     // Module ID
     can_address = BoardAddressRead();
 
-    if (can_address == 0){ can_address = 1; can_id = 10;}
+    if (can_address == 0) {can_address = 1; can_id = 10;}
 
-    if (can_address == 1){ can_id = 10;}
+    if (can_address == 1) {can_id = 10;}
 
-    if (can_address == 2){ can_id = 20;}
+    if (can_address == 2) {can_id = 20;}
 
-    if (can_address == 3){ can_id = 30;}
+    if (can_address == 3) {can_id = 30;}
 
-    if (can_address == 4){ can_id = 40;}
+    if (can_address == 4) {can_id = 40;}
 
-    if (can_address == 5){ can_id = 50;}
+    if (can_address == 5) {can_id = 50;}
 
-    if (can_address == 6){ can_id = 60;}
+    if (can_address == 6) {can_id = 60;}
 
-    if (can_address == 7){ can_id = 70;}
+    if (can_address == 7) {can_id = 70;}
 
-    if (can_address == 8){ can_id = 80;}
+    if (can_address == 8) {can_id = 80;}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -512,11 +512,11 @@ void send_data_message(uint8_t var)
         case 4:
 
             message_data_iib[0] = g_controller_iib.iib_signals[4].u8[0];
-            message_data_iib[1] = g_controller_iib.iib_signals[5].u8[1];
-            message_data_iib[2] = g_controller_iib.iib_signals[9].u8[2];
-            message_data_iib[3] = g_controller_iib.iib_signals[10].u8[3];
+            message_data_iib[1] = g_controller_iib.iib_signals[5].u8[0];
+            message_data_iib[2] = g_controller_iib.iib_signals[9].u8[0];
+            message_data_iib[3] = g_controller_iib.iib_signals[10].u8[0];
             message_data_iib[4] = g_controller_iib.iib_signals[12].u8[0];
-            message_data_iib[5] = g_controller_iib.iib_signals[13].u8[1];
+            message_data_iib[5] = g_controller_iib.iib_signals[13].u8[0];
             message_data_iib[6] = 0;
             message_data_iib[7] = 0;
 
