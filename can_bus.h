@@ -44,6 +44,15 @@ typedef enum {
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+typedef enum {
+    ID_MODULE_1 = 0x00b,
+    ID_MODULE_2 = 0x01b,
+    ID_MODULE_3 = 0x02b,
+    ID_MODULE_4 = 0x03b,
+}id_module_t;
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 extern void can_isr(void);
 extern void InitCan(uint32_t ui32SysClock);
 extern void handle_reset_message(void);
@@ -52,7 +61,6 @@ extern uint16_t get_can_address(void);
 extern void send_itlk_message(uint8_t var);
 extern void send_alarm_message(uint8_t var);
 extern void InitConsole(void);
-extern tCANMsgObject tx_message_data_iib;
 extern void PrintCANMessageInfo(tCANMsgObject *psCANMsg, uint32_t ui32MsgObj);
 
 /////////////////////////////////////////////////////////////////////////////////////////////
