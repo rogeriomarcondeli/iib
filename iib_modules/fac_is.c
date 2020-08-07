@@ -528,7 +528,7 @@ static void config_module()
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     /* Isolated Voltage */
-    LvCurrentCh1Init(555.0, 0.025, 120.0, 10); /* Input Voltage */
+    LvCurrentCh1Init(600.0, 0.025, 120.0, 10); /* Input Voltage */
 
     LvCurrentCh1Enable();  //LvCurrentCh1 enable
     LvCurrentCh2Disable(); //LvCurrentCh2 disable
